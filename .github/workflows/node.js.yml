@@ -25,5 +25,6 @@ jobs:
       uses: actions/setup-node@v3
 
     - run: npm run build --if-present
+      working-directory: ./src/infra/Lambda/package.json
     - run: npm run test && npm lint:check
       working-directory: ./src/infra/Lambda
