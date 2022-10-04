@@ -29,7 +29,6 @@ jobs:
         cache-dependency-path: '**/package-lock.json'
     
     - run: npm test
-      working-directory: 'src/infra/Lambda/package.json'
     defaults:
      run:
       working-directory: Lambda
