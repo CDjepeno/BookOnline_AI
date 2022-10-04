@@ -29,4 +29,4 @@ jobs:
         cache-dependency-path: '**/package-lock.json'
     
     - run: npm test
-      working-directory: 'src/infra/Lambda/package.json'
+      working-directory: 'sub-project/**/package.json'
