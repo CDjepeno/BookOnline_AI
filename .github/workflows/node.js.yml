@@ -31,4 +31,4 @@ jobs:
     - run: npm test
     defaults:
      run:
-      working-directory: OnlineBookApi
+      working-directory: $HOME
