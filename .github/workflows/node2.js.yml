@@ -26,7 +26,12 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        
+    - name: Install node-sass
+      run: npm i node-sass
+
     - name: Install dependencies
-      run: npm install --frozen-lockfile
+      run: npm ci
+ 
     - run: npm test
       working-directory: src/infra/Lambda
