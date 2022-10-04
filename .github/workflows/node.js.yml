@@ -26,3 +26,4 @@ jobs:
 
    
     - run: npm test
+      working-directory: ./src/infra/Lambda
