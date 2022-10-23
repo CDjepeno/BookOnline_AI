@@ -1,17 +1,20 @@
 //import { getConnexion } from "../../../clients/aurora"
 
 // import { AuroraConfig } from "../../../clients/aurora"
-/* import { config } from "../../../clients/config" */
+import { ClientAurora } from "../../../clients/aurora"
 
 
 
 describe('Stack', () => { 
 
-  /* it('test cnx', async () => {
-    const response = await  getConnexion()
-    expect(response).toBe(2)
+  it('test cnx', async () => {
+    ClientAurora.getConnection().then((response:any) => {
+      expect(response).toBe(2)
+      console.log(response)
+    })
+   
   })
- */
+
 
 /*   it('instance signleton',  () => {
     
