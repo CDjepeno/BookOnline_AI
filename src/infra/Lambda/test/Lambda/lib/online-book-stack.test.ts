@@ -1,7 +1,13 @@
+import { ClientAurora } from "../../../clients/aurora"
+
 
 describe('Stack', () => { 
-  xit('Test',() => {
-    expect(2).toBe(2)
-  })
 
+  it('test cnx', async () => {
+    ClientAurora.getConnection().then((response:any) => {
+      expect(response).toBe(2)
+      console.log(response)
+    })
+  })
+  
  })
