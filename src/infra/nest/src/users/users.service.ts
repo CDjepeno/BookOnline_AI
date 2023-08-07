@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { validate } from 'class-validator';
-import { UserDTO } from 'src/dtos/user.dtos';
-// import { UserDTO } from "../../../../core/dtos/user.dtos"
+import { UserDTO } from '../core/dtos/user.dtos';
 
 
 @Injectable()
@@ -29,4 +28,4 @@ this.userRepository.save
       throw new Error(error);
     }
   }
-} 
+}
