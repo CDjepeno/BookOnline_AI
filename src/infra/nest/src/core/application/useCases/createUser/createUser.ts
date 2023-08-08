@@ -6,15 +6,12 @@ export class createUser {
 
   async execute(request: UserDTO) {
     try {
-
       const user = new UserDTO(
         request.email,
         request.password,
         request.firstName,
         request.lastName,
       );
-
-      console.log(user);
 
       return await this.repository.createUser(user);
     } catch (e: any) {
