@@ -7,4 +7,3 @@ export interface IUserRepository {
     createUser(user: UserDTO): Promise<string | ValidationError[]>
 }
 
-export const IUserRepository = Symbol('IUserRepository');
