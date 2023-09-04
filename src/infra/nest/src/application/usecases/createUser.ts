@@ -1,8 +1,10 @@
-import { UserDTO } from 'src/core/dtos/user.dtos';
-import { IUserRepository } from 'src/core/repository/userRepository';
+import { UserDTO } from 'src/dtos/user.dtos';
+import { UserRepository } from '../user.repository';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class createUser {
-  constructor(private repository: IUserRepository) {}
+  constructor(private userRepository: UserRepository) {}
 
   async execute(request: UserDTO) {
     try {
@@ -13,7 +15,7 @@ export class createUser {
         request.lastName,
       );
 
-      return await this.repository.createUser(user);
+      await this.userRepository.createUser(user);
     } catch (e: any) {
       throw new Error(e);
     }
