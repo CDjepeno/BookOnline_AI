@@ -6,4 +6,4 @@ import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.modul
   imports: [UsecaseProxyModule.register()],
   controllers: [UsersController],
 })
-export class UsersModule {}
+export class UserControllerModule {}

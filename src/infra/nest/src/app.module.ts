@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsecaseProxyModule } from './infras/usecase-proxy/usecase-proxy.module';
-import { UsersModule } from './presentations/user/users.module';
+import { UserControllerModule } from './presentations/user/users.controller.module';
 import { UsersController } from './presentations/user/users.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,7 +9,7 @@ import { User } from './infras/entities/user.entity';
 @Module({
   imports: [
     UsecaseProxyModule.register(),
-    UsersModule,
+    UserControllerModule,
 
     ConfigModule.forRoot(),
 

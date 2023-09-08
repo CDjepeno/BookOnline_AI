@@ -4,7 +4,7 @@ import { User } from '../entities/user.entity';
 import { UserRepositoryTyperom } from './user.repository.typeorm';
 
 @Module({
-  imports: [ TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UserRepositoryTyperom],
   exports: [UserRepositoryTyperom],
 })
