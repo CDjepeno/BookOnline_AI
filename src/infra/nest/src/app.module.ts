@@ -1,15 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UsecaseProxyModule } from './infras/usecase-proxy/usecase-proxy.module';
-import { UserControllerModule } from './presentations/user/users.controller.module';
-import { UsersController } from './presentations/user/users.controller';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './infras/entities/user.entity';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    UsecaseProxyModule.register(),
-    UserControllerModule,
 
     ConfigModule.forRoot(),
 
@@ -22,13 +18,13 @@ import { User } from './infras/entities/user.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User],
+        entities: [],
         synchronize: true,
       }),
       inject: [ConfigService],
-    }),
+    })
   ],
-  controllers: [UsersController],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
