@@ -8,9 +8,10 @@ import { UserModel } from 'src/domaine/model/user.model';
 
 @Injectable()
 export class UserRepositoryTyperom implements UsersRepository {
-  constructor(@InjectRepository(User) 
-  private repository: Repository<User>) 
-  {}
+  constructor(
+    @InjectRepository(User)
+    private repository: Repository<User>,
+  ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<UserModel> {
     const user = new User();

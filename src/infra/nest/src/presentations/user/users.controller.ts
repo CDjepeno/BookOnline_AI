@@ -6,11 +6,12 @@ import { CreateUserDto } from 'src/domaine/model/user.dtos';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 
-
 @Controller('users')
 export class UsersController {
-  constructor(@Inject(UsecaseProxyModule.CREATE_USER_USE_CASE)
-  private readonly createUserUsecaseProxy: UseCaseProxy<CreateUserUseCase>,) {}
+  constructor(
+    @Inject(UsecaseProxyModule.CREATE_USER_USE_CASE)
+    private readonly createUserUsecaseProxy: UseCaseProxy<CreateUserUseCase>,
+  ) {}
 
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
