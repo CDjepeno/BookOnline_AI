@@ -7,8 +7,10 @@ import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.modul
 
 @Controller('users')
 export class UsersController {
-  constructor(@Inject(UsecaseProxyModule.CREATE_USER_USE_CASE)
-  private readonly createUserUsecaseProxy: UseCaseProxy<CreateUserUseCase>,) {}
+  constructor(
+    @Inject(UsecaseProxyModule.CREATE_USER_USE_CASE)
+    private readonly createUserUsecaseProxy: UseCaseProxy<CreateUserUseCase>,
+  ) {}
 
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
