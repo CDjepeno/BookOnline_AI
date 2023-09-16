@@ -30,6 +30,10 @@ export class User {
 
   @Column()
   @IsString()
+  phone: string
+
+  @Column()
+  @IsString()
   @Length(6, 24)
   @Matches(REGEX.PASSWORD_RULE, { message: MESSAGES.PASSWORD_RULE_MESSAGE })
   password: string;

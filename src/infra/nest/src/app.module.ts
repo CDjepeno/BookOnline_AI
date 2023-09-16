@@ -5,6 +5,7 @@ import { UserControllerModule } from './presentations/user/users.controller.modu
 import { UsecaseProxyModule } from './infras/usecase-proxy/usecase-proxy.module';
 import { UsersController } from './presentations/user/users.controller';
 import { User } from './infras/entities/user.entity';
+import { TwilioModule } from 'nestjs-twilio';
 
 @Module({
   imports: [
@@ -25,7 +26,17 @@ import { User } from './infras/entities/user.entity';
         synchronize: true,
       }),
       inject: [ConfigService],
-    })
+    }),
+
+    TwilioModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (cfg: ConfigService) => ({
+        accountSid: cfg.get('TWILIO_ACCOUNT_SID'),
+        authToken: cfg.get('TWILIO_AUTH_TOKEN'),
+      }),
+      inject: [ConfigService],
+    }),
+
   ],
   controllers: [UsersController],
   providers: [],
