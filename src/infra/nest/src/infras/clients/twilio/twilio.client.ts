@@ -5,16 +5,19 @@ import Twilio from 'twilio/lib/rest/Twilio';
 @Injectable()
 export class TwilioClient {
   private twilioClient: Twilio;
-  accountSid = process.env.TWILIO_ACCOUNT_SID;
-  authToken = process.env.TWILIO_AUTH_TOKEN;
-  constructor() {
-    this.twilioClient = new Twilio(this.accountSid, this.authToken);
+
+  constructor(private configService: ConfigService) {
+    const accountSid = configService.get('TWILIO_ACCOUNT_SID');
+    const authToken = configService.get('TWILIO_AUTH_TOKEN');
+    this.twilioClient = new Twilio(accountSid, authToken);
   }
 
-  async sendMessage(receiverPhoneNumber: string, message: string) {
-    const senderPhoneNumber = process.env.TWILIO_SENDER_PHONE_NUMBER
+  async sendMessage(receiverPhoneNumber: string) {
+    const senderPhoneNumber = this.configService.get(
+      'TWILIO_SENDER_PHONE_NUMBER',
+    );
     return this.twilioClient.messages.create({
-      body: message,
+      body: 'Votre compte a bien été crée',
       from: senderPhoneNumber,
       to: receiverPhoneNumber,
     });

@@ -5,10 +5,11 @@ import { UserRepositoryTyperom } from './user.repository.typeorm';
 
 import { TwilioClient } from '../clients/twilio/twilio.client';
 import { TwilioModules } from '../clients/twilio/twilio.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TwilioModules, TypeOrmModule.forFeature([User])],
-  providers: [UserRepositoryTyperom,TwilioClient],
+  imports: [TwilioModules, ConfigModule, TypeOrmModule.forFeature([User])],
+  providers: [UserRepositoryTyperom, TwilioClient],
   exports: [UserRepositoryTyperom],
 })
 export class RepositoriesModule {}
