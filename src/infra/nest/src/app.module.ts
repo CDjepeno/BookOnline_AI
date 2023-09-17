@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserControllerModule } from './presentations/user/users.controller.module';
+import { UserControllerModule } from './controllers/user/users.controller.module';
 import { UsecaseProxyModule } from './infras/usecase-proxy/usecase-proxy.module';
-import { UsersController } from './presentations/user/users.controller';
+import { UsersController } from './controllers/user/users.controller';
 import { User } from './infras/entities/user.entity';
 import { TwilioModule } from 'nestjs-twilio';
 
@@ -12,6 +12,16 @@ import { TwilioModule } from 'nestjs-twilio';
     UsecaseProxyModule.register(),
     UserControllerModule,
     ConfigModule.forRoot(),
+
+    TwilioModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        accountSid: configService.get<string>('TWILIO_ACCOUNT_SID'),
+        authToken: configService.get('TWILIO_AUTH_TOKEN'),
+        serviceSid: configService.get('TWILIO_SENDER_PHONE_NUMBER'),
+      }),
+      inject: [ConfigService],
+    }),
 
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -27,16 +37,6 @@ import { TwilioModule } from 'nestjs-twilio';
       }),
       inject: [ConfigService],
     }),
-
-    TwilioModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (cfg: ConfigService) => ({
-        accountSid: cfg.get('TWILIO_ACCOUNT_SID'),
-        authToken: cfg.get('TWILIO_AUTH_TOKEN'),
-      }),
-      inject: [ConfigService],
-    }),
-
   ],
   controllers: [UsersController],
   providers: [],

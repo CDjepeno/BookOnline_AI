@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { UserRepositoryTyperom } from './user.repository.typeorm';
-import { TwilioModule } from 'nestjs-twilio';
-import { ConfigService } from '@nestjs/config';
-import TwilioClient from '../clients/twilio/twilio.client';
+
+import { TwilioClient } from '../clients/twilio/twilio.client';
+import { TwilioModules } from '../clients/twilio/twilio.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), TwilioClient, ConfigService],
-  providers: [UserRepositoryTyperom],
+  imports: [TwilioModules, TypeOrmModule.forFeature([User])],
+  providers: [UserRepositoryTyperom,TwilioClient],
   exports: [UserRepositoryTyperom],
 })
 export class RepositoriesModule {}
