@@ -8,7 +8,7 @@ import { TwilioModules } from '../clients/twilio/twilio.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TwilioModules, ConfigModule, TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User]), TwilioModules, ConfigModule],
   providers: [UserRepositoryTyperom, TwilioClient],
   exports: [UserRepositoryTyperom],
 })

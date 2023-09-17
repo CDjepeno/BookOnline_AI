@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
@@ -16,15 +16,13 @@ export class UserRepositoryTyperom implements UsersRepository {
     private repository: Repository<User>,
   ) {}
 
-
-
   async createUser(createUserDto: CreateUserDto): Promise<UserModel> {
     const user = new User();
     user.email = createUserDto.email;
     user.name = createUserDto.name;
     user.password = createUserDto.password;
     user.phone = createUserDto.phone;
-    this.twilioClient.sendMessage(user.phone)
+    this.twilioClient.sendMessage(user.phone);
     return this.repository.save(user);
   }
 }
