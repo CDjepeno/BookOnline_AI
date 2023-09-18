@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ClientSmsPort } from 'src/domaine/repositories/client.sms.port';
 import Twilio from 'twilio/lib/rest/Twilio';
 
 @Injectable()
-export class TwilioClient {
+export class TwilioClient implements ClientSmsPort {
   private twilioClient: Twilio;
 
   constructor(private configService: ConfigService) {
@@ -13,6 +14,7 @@ export class TwilioClient {
   }
 
   async sendMessage(receiverPhoneNumber: string) {
+    console.log("receiverPhoneNumber");
     const senderPhoneNumber = this.configService.get(
       'TWILIO_SENDER_PHONE_NUMBER',
     );
@@ -22,4 +24,6 @@ export class TwilioClient {
       to: receiverPhoneNumber,
     });
   }
+
+
 }
