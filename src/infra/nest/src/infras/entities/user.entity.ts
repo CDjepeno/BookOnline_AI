@@ -1,0 +1,46 @@
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  Length,
+  Matches,
+} from 'class-validator';
+import { MESSAGES, REGEX } from 'src/utils/utils';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn('increment')
+  id: number;
+
+  @Column('varchar', { unique: true })
+  @IsEmail()
+  @IsNotEmpty({ message: 'The email is required' })
+  email: string;
+
+  @Column()
+  @IsString()
+  name: string;
+
+  @Column()
+  @IsString()
+  phone: string
+
+  @Column()
+  @IsString()
+  @Length(6, 24)
+  @Matches(REGEX.PASSWORD_RULE, { message: MESSAGES.PASSWORD_RULE_MESSAGE })
+  password: string;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+}

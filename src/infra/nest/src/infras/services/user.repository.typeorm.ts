@@ -18,19 +18,7 @@ export class UserRepositoryTyperom implements UsersRepository {
     user.email = createUserDto.email;
     user.name = createUserDto.name;
     user.password = createUserDto.password;
+    user.phone = createUserDto.phone;
     return this.repository.save(user);
-  }
-
-  private toUser(userEntity: User): UserModel {
-    const user: UserModel = new UserModel();
-
-    user.id = userEntity.id;
-    user.email = userEntity.email;
-    user.name = userEntity.name;
-    user.password = userEntity.password;
-    user.created_at = userEntity.created_at;
-    user.updated_at = userEntity.updated_at;
-
-    return user;
   }
 }

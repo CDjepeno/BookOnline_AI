@@ -14,19 +14,24 @@ export class UsersController {
 
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
-    const { email, name, password } = createUserDto;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const result = await this.createUserUsecaseProxy.getInstance().execute({
-      email: email,
-      name: name,
-      password: hashedPassword,
-    });
-    console.log(result);
-    return {
-      status: 'Created',
-      code: 201,
-      message: 'Insert data success',
-      data: result,
-    };
+    try {
+      const { email, name, password, phone } = createUserDto;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const result = await this.createUserUsecaseProxy.getInstance().execute({
+        email: email,
+        name: name,
+        password: hashedPassword,
+        phone: phone,
+      });
+      console.log(result);
+      return {
+        status: 'Created',
+        code: 201,
+        message: 'Insert data success',
+        data: result,
+      };
+    } catch (err) {
+      throw new Error(err)
+    }
   }
 }

@@ -1,30 +1,19 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
+import { UserControllerModule } from './controllers/user/users.controller.module';
+import { UsecaseProxyModule } from './infras/usecase-proxy/usecase-proxy.module';
+import { UsersController } from './controllers/user/users.controller';
+import { TypeOModule } from './infras/clients/typeorm/type-orm.module';
 
 @Module({
   imports: [
-
+    UsecaseProxyModule.register(),
+    UserControllerModule,
     ConfigModule.forRoot(),
 
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
-        entities: [],
-        synchronize: true,
-      }),
-      inject: [ConfigService],
-    })
+    TypeOModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [UsersController],
+  providers: [],
 })
 export class AppModule {}
