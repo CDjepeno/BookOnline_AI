@@ -1,9 +1,10 @@
 import * as bcrypt from 'bcrypt';
 import { Body, Controller, Inject, Post } from '@nestjs/common';
-import { CreateUserUseCase } from '../../application/usecases/create.user.usecase';
-import { CreateUserDto } from 'src/domaine/model/user.dtos';
-import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
-import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
+import { CreateUserDto } from '../../../domaine/model/user.dtos';
+import { UseCaseProxy } from '../../../infras/usecase-proxy/usecase-proxy';
+import { UsecaseProxyModule } from '../../../infras/usecase-proxy/usecase-proxy.module';
+import { CreateUserUseCase } from '../../../application/usecases/create.user.usecase';
+import { error } from 'console';
 
 @Controller('users')
 export class UsersController {
@@ -31,7 +32,10 @@ export class UsersController {
         data: result,
       };
     } catch (err) {
-      throw new Error(err)
+      return {
+        statusCode: err.statusCode,
+        message: err.message
+      }
     }
   }
 }

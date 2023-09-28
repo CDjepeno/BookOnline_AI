@@ -1,8 +1,8 @@
-import { UserModel } from 'src/domaine/model/user.model';
+import { UserModel } from '../../domaine/model/user.model';
 import { CreateUserDto } from '../../domaine/model/user.dtos';
 import { UsersRepository } from '../../domaine/repositories/user.repository';
-import { ClientSmsPort } from 'src/domaine/repositories/client.sms.port';
-import { regexPhone } from 'src/utils/utils';
+import { ClientSmsPort } from '../../domaine/repositories/client.sms.port';
+import { BadRequest } from '../../infras/errors/onlinebook.error';
 
 export class CreateUserUseCase {
   constructor(
@@ -11,9 +11,10 @@ export class CreateUserUseCase {
   ) {}
 
   async execute(request: CreateUserDto): Promise<UserModel> {
+    const regexPhone = /^(\+336|\+337)\d{8}$/;
     try {
-      if(!regexPhone.test(request.phone)) {
-        throw new Error("Numero n'est pas valide")
+      if (!regexPhone.test(request.phone)) {
+        throw new BadRequest("Numero n'est pas valide");
       }
       this.clientSms.sendMessage(request.phone);
       return this.usersRepository.createUser(request);
