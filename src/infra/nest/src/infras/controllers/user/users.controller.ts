@@ -1,10 +1,16 @@
 import * as bcrypt from 'bcrypt';
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Post,
+} from '@nestjs/common';
 import { CreateUserDto } from '../../../domaine/model/user.dtos';
 import { UseCaseProxy } from '../../../infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from '../../../infras/usecase-proxy/usecase-proxy.module';
 import { CreateUserUseCase } from '../../../application/usecases/create.user.usecase';
-import { error } from 'console';
 
 @Controller('users')
 export class UsersController {
@@ -24,7 +30,6 @@ export class UsersController {
         password: hashedPassword,
         phone: phone,
       });
-      console.log(result);
       return {
         status: 'Created',
         code: 201,
@@ -32,10 +37,14 @@ export class UsersController {
         data: result,
       };
     } catch (err) {
-      return {
-        statusCode: err.statusCode,
-        message: err.message
-      }
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Bad Request',
+        },
+        HttpStatus.BAD_REQUEST,
+        { cause: err },
+      );
     }
   }
 }
