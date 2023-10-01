@@ -9,7 +9,7 @@ export const userDataDto: CreateUserDto = {
 };
 
 export const userDataResponse: UserModel = {
-  id: Math.floor(Math.random() * 100),
+  id: 4,
   email: 'test@test.fr',
   name: 'firstname',
   phone: '+33624552440',

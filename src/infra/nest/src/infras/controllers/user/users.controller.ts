@@ -2,15 +2,16 @@ import * as bcrypt from 'bcrypt';
 import {
   Body,
   Controller,
-  HttpException,
-  HttpStatus,
   Inject,
   Post,
+  UseFilters,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../../domaine/model/user.dtos';
 import { UseCaseProxy } from '../../../infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from '../../../infras/usecase-proxy/usecase-proxy.module';
 import { CreateUserUseCase } from '../../../application/usecases/create.user.usecase';
+import { BookErrorFilter } from '../../../infras/filters/book-error.filter';
+import { BookError } from '../../../domaine/errors/book.error';
 
 @Controller('users')
 export class UsersController {
@@ -20,6 +21,7 @@ export class UsersController {
   ) {}
 
   @Post()
+  @UseFilters(BookErrorFilter)
   async createUser(@Body() createUserDto: CreateUserDto) {
     try {
       const { email, name, password, phone } = createUserDto;
@@ -36,15 +38,8 @@ export class UsersController {
         message: 'Insert data success',
         data: result,
       };
-    } catch (err) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: 'Bad Request',
-        },
-        HttpStatus.BAD_REQUEST,
-        { cause: err },
-      );
+    } catch(err) {
+      throw new BookError(err)
     }
   }
 }
