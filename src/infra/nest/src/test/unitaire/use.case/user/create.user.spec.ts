@@ -38,7 +38,7 @@ describe('Rule: create user', () => {
       });
     } catch (err) {
       expect(err instanceof Error).toBeTruthy();
-      expect(err.message).toBe("Error: Numero n'est pas valide");
+      expect(err.message).toBe("Numero n'est pas valide");
     }
   });
 });

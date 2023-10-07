@@ -11,7 +11,6 @@ import { UseCaseProxy } from '../../../infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from '../../../infras/usecase-proxy/usecase-proxy.module';
 import { CreateUserUseCase } from '../../../application/usecases/create.user.usecase';
 import { BookErrorFilter } from '../../../infras/filters/book-error.filter';
-import { BookError } from '../../../domaine/errors/book.error';
 
 @Controller('users')
 export class UsersController {
@@ -39,7 +38,7 @@ export class UsersController {
         data: result,
       };
     } catch(err) {
-      throw new BookError(err)
+      throw err
     }
   }
 }
