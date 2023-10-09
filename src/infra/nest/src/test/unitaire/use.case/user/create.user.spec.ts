@@ -3,6 +3,7 @@ import { UsersRepository } from '../../../../domaine/repositories/user.repositor
 import { ClientSmsPort } from '../../../../domaine/repositories/client.sms.port';
 import { mock, Mock } from 'ts-jest-mocker';
 import { userDataDto, userDataResponse } from '../../data/userData';
+import { BookError } from '../../../../domaine/errors/book.error';
 
 describe('Rule: create user', () => {
   let createUserUseCase: CreateUserUseCase;
@@ -13,7 +14,7 @@ describe('Rule: create user', () => {
     mockUserProvider = mock<UsersRepository>();
     mockClientProvider = mock<ClientSmsPort>();
 
-    mockUserProvider.createUser.mockImplementation(() =>
+    mockUserProvider.createUser.mockImplementation(async () =>
       Promise.resolve(userDataResponse),
     );
 
@@ -25,21 +26,21 @@ describe('Rule: create user', () => {
 
   it('Number should be valide', async () => {
     const result = await createUserUseCase.execute(userDataDto);
+
     expect(result).toEqual(userDataResponse);
   });
 
   it('Number should not valide', async () => {
     try {
       await createUserUseCase.execute({
-        email: 'test@test.fr',
-        name: 'firstname',
-        phone: '0624552440',
+        email: '@test.fr',
+        name: 'firstname0',
+        phone: '+33624552440',
         password: 'test',
       });
     } catch (err) {
-      expect(err instanceof Error).toBeTruthy();
-      expect(err.message).toBe("Numero n'est pas valide");
+      expect(err instanceof BookError).toBeTruthy();
+      expect(err.message).toBe("Numero n'est pas valisde");
     }
   });
 });
-
