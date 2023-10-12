@@ -1,1 +1,3 @@
-export class BookError extends Error {}
+export class InvalidPhoneNumberException extends Error {
+    statusCode?: number = 400;
+}

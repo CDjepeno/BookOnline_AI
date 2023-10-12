@@ -3,7 +3,7 @@ import { UsersRepository } from '../../../../domaine/repositories/user.repositor
 import { ClientSmsPort } from '../../../../domaine/repositories/client.sms.port';
 import { mock, Mock } from 'ts-jest-mocker';
 import { userDataDto, userDataResponse } from '../../data/userData';
-import { BookError } from '../../../../domaine/errors/book.error';
+import { InvalidPhoneNumberException } from '../../../../domaine/errors/book.error';
 
 describe('Rule: create user', () => {
   let createUserUseCase: CreateUserUseCase;
@@ -35,12 +35,12 @@ describe('Rule: create user', () => {
       await createUserUseCase.execute({
         email: '@test.fr',
         name: 'firstname0',
-        phone: '+33624552440',
+        phone: '0624552440',
         password: 'test',
       });
     } catch (err) {
-      expect(err instanceof BookError).toBeTruthy();
-      expect(err.message).toBe("Numero n'est pas valisde");
+      expect(err instanceof InvalidPhoneNumberException).toBeTruthy();
+      expect(err.message).toBe("Numero n'est pas valide");
     }
   });
 });

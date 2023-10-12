@@ -6,11 +6,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { BookError } from '../../domaine/errors/book.error';
+import { InvalidPhoneNumberException } from '../../domaine/errors/book.error';
 
 @Catch()
 export class BookErrorFilter implements ExceptionFilter {
-  catch(exception: BookError, host: ArgumentsHost): void {
+  catch(exception: InvalidPhoneNumberException, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -18,7 +18,7 @@ export class BookErrorFilter implements ExceptionFilter {
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
-        : HttpStatus.BAD_REQUEST;
+        : exception.statusCode;
 
     response.status(status).json({
       statusCode: status,
