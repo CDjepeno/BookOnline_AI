@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ClientSmsPort } from 'src/domaine/repositories/client.sms.port';
+import { ClientSmsPort } from '../../../domaine/repositories/client.sms.port';
 import Twilio from 'twilio/lib/rest/Twilio';
 
 @Injectable()

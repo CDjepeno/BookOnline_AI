@@ -30,12 +30,15 @@ export class User {
 
   @Column()
   @IsString()
-  phone: string
+  phone: string;
 
   @Column()
   @IsString()
   @Length(6, 24)
-  @Matches(REGEX.PASSWORD_RULE, { message: MESSAGES.PASSWORD_RULE_MESSAGE })
+  @Matches(/^(?=.*?[A-Z])(?=.*[A-Z])(?=.*[0-9])(?=.*[#?!@$%^&*-_]).{8,}$/, {
+    message:
+      'Password should have 1 upper case, lowcase letter along with a number and spécial character.',
+  })
   password: string;
 
   @CreateDateColumn()

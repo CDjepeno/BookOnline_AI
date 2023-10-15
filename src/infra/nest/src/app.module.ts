@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { UserControllerModule } from './controllers/user/users.controller.module';
 import { UsecaseProxyModule } from './infras/usecase-proxy/usecase-proxy.module';
-import { UsersController } from './controllers/user/users.controller';
 import { TypeOModule } from './infras/clients/typeorm/type-orm.module';
+import { CreateUserUseCase } from './application/usecases/create.user.usecase';
+import { UserControllerModule } from './infras/controllers/user/users.controller.module';
+import { UsersController } from './infras/controllers/user/users.controller';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { TypeOModule } from './infras/clients/typeorm/type-orm.module';
     TypeOModule
   ],
   controllers: [UsersController],
-  providers: [],
+  providers: [CreateUserUseCase],
+  exports: [CreateUserUseCase]
 })
 export class AppModule {}

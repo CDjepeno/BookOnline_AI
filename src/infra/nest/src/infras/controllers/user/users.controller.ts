@@ -1,9 +1,16 @@
 import * as bcrypt from 'bcrypt';
-import { Body, Controller, Inject, Post } from '@nestjs/common';
-import { CreateUserUseCase } from '../../application/usecases/create.user.usecase';
-import { CreateUserDto } from 'src/domaine/model/user.dtos';
-import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
-import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
+import {
+  Body,
+  Controller,
+  Inject,
+  Post,
+  UseFilters,
+} from '@nestjs/common';
+import { CreateUserDto } from '../../../domaine/model/user.dtos';
+import { UseCaseProxy } from '../../../infras/usecase-proxy/usecase-proxy';
+import { UsecaseProxyModule } from '../../../infras/usecase-proxy/usecase-proxy.module';
+import { CreateUserUseCase } from '../../../application/usecases/create.user.usecase';
+import { BookErrorFilter } from '../../../infras/filters/book-error.filter';
 
 @Controller('users')
 export class UsersController {
@@ -13,6 +20,7 @@ export class UsersController {
   ) {}
 
   @Post()
+  @UseFilters(BookErrorFilter)
   async createUser(@Body() createUserDto: CreateUserDto) {
     try {
       const { email, name, password, phone } = createUserDto;
@@ -23,15 +31,14 @@ export class UsersController {
         password: hashedPassword,
         phone: phone,
       });
-      console.log(result);
       return {
         status: 'Created',
         code: 201,
         message: 'Insert data success',
         data: result,
       };
-    } catch (err) {
-      throw new Error(err)
+    } catch(err) {
+      throw err
     }
   }
 }
