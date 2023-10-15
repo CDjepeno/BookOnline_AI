@@ -1,3 +1,3 @@
 export class InvalidPhoneNumberException extends Error {
-    statusCode?: number = 400;
+  statusCode: number = 400;
 }
