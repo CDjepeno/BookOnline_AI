@@ -1,19 +1,15 @@
-import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
-import { RepositoriesModule } from '../../src/infras/services/repositories.module';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserRepositoryTyperom } from '../../src/infras/services/user.repository.typeorm';
 import { TwilioClient } from '../../src/infras/clients/twilio/twilio.client';
-import { Repository } from 'typeorm';
 import { User } from '../../src/infras/entities/user.entity';
-import { TwilioModules } from '../../src/infras/clients/twilio/twilio.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 
 describe('', () => {
-  let app: INestApplication;
-  let usersRepository: UserRepositoryTyperom;
+  let moduleFixture: TestingModule;
+  let service: UserRepositoryTyperom;
 
-  const mockUserRepo = {
+  const mockUserService = {
     create: jest.fn().mockImplementation((dto) => dto),
     save: jest
       .fn()
@@ -23,42 +19,50 @@ describe('', () => {
   };
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot({
-          type: 'mysql',
-          host: 'localhost',
-          port: 3306,
-          username: 'root',
-          password: 'Azerty_12',
-          database: 'testDB',
-          entities: ['./**/*.entity.ts'],
-          synchronize: false,
-        }),
-      ],
+    moduleFixture = await Test.createTestingModule({
       providers: [
         UserRepositoryTyperom,
         TwilioClient,
         ConfigService,
         {
           provide: getRepositoryToken(User),
-          useValue: mockUserRepo,
+          useValue: mockUserService,
         },
       ],
-    }).compile();
+    })
+      .overrideProvider(getRepositoryToken(User))
+      .useValue(mockUserService)
+      .compile();
 
-    app = moduleFixture.createNestApplication();
-    usersRepository = moduleFixture.get<UserRepositoryTyperom>(
-      UserRepositoryTyperom,
-    );
-    await app.init();
+    service = moduleFixture.get<UserRepositoryTyperom>(UserRepositoryTyperom);
+  });
+
+  describe('create user', () => {
+    const userDetails = {
+      email: 'test@test.fr',
+      name: 'firstname',
+      phone: '+33624552440',
+      password: 'test',
+    };
+
+    const userData = {
+      id: expect.any(Number),
+      email: 'test@test.fr',
+      name: 'firstname',
+      phone: '+33624552440',
+      password: 'test',
+    };
+
+    it('service should be defined', () => {
+      expect(service).toBeDefined();
+    });
+
+    it('should create a new user', async () => {
+      expect(await service.createUser(userDetails)).toEqual(userData);
+    });
   });
 
   afterAll(async () => {
-    await app.close();
-  });
-
-  it('should be defined', () => {
-    expect(usersRepository).toBeDefined()
+    await moduleFixture.close();
   });
 });
