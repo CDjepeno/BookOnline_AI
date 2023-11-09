@@ -11,11 +11,10 @@ import { UsersController } from './infras/controllers/user/users.controller';
     UsecaseProxyModule.register(),
     UserControllerModule,
     ConfigModule.forRoot(),
-
-    TypeOModule
+    TypeOModule,
   ],
   controllers: [UsersController],
   providers: [CreateUserUseCase],
-  exports: [CreateUserUseCase]
+  exports: [CreateUserUseCase],
 })
 export class AppModule {}

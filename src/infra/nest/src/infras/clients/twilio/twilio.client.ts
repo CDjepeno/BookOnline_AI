@@ -2,14 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientSmsPort } from '../../../domaine/repositories/client.sms.port';
 import Twilio from 'twilio/lib/rest/Twilio';
-
+import * as dotenv from "dotenv"
+dotenv.config();
 @Injectable()
 export class TwilioClient implements ClientSmsPort {
   private twilioClient: Twilio;
 
   constructor(private configService: ConfigService) {
-    const accountSid = configService.get('TWILIO_ACCOUNT_SID');
-    const authToken = configService.get('TWILIO_AUTH_TOKEN');
+    const accountSid = process.env.WILIO_ACCOUNT_SID
+    const authToken = process.env.TWILIO_AUTH_TOKEN
     this.twilioClient = new Twilio(accountSid, authToken);
   }
 
