@@ -1,2 +1,39 @@
-
+#React
 infra/client-react/node_modules
+
+
+#Nest
+infra/nest/dist
+infra/nest/node_modules
+
+# Logs
+infra/nest/logs
+infra/nest/*.log
+infra/nest/npm-debug.log*
+infra/nest/pnpm-debug.log*
+infra/nest/yarn-debug.log*
+infra/nest/yarn-error.log*
+infra/nest/lerna-debug.log*
+
+# OS
+infra/nest/.DS_Store
+
+# Tests
+infra/nest/coverage
+infra/nest/.nyc_output
+
+# IDEs and editors
+infra/nest/.idea
+infra/nest/.project
+infra/nest/.classpath
+infra/nest/.c9/
+infra/nest/*.launch
+infra/nest/.settings/
+infra/nest/*.sublime-workspace
+
+# IDE - VSCode
+infra/nest/.vscode/*
+infra/nest/!.vscode/settings.json
+infra/nest/!.vscode/tasks.json
+infra/nest/!.vscode/launch.json
+infra/nest/!.vscode/extensions.json
