@@ -23,8 +23,5 @@ export class UserRepositoryTyperom implements UsersRepository {
     user.phone = createUserDto.phone;
     this.twilioClient.sendMessage(user.phone);
     return this.repository.save(user);
-
-    // const newUser = this.repository.create(createUserDto)
-    // return this.repository.save(newUser)
   }
 }
