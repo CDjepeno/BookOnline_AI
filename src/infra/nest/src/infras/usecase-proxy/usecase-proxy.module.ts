@@ -20,8 +20,13 @@ export class UsecaseProxyModule {
         {
           inject: [UserRepositoryTyperom, TwilioClient],
           provide: UsecaseProxyModule.CREATE_USER_USE_CASE,
-          useFactory: (userRepository: UserRepositoryTyperom, twilioClient: TwilioClient) =>
-            new UseCaseProxy(new CreateUserUseCase(userRepository, twilioClient)),
+          useFactory: (
+            userRepository: UserRepositoryTyperom,
+            twilioClient: TwilioClient,
+          ) =>
+            new UseCaseProxy(
+              new CreateUserUseCase(userRepository, twilioClient),
+            ),
         },
       ],
       exports: [UsecaseProxyModule.CREATE_USER_USE_CASE],

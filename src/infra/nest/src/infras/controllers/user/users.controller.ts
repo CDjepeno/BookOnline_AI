@@ -1,17 +1,12 @@
-import * as bcrypt from 'bcrypt';
-import {
-  Body,
-  Controller,
-  Inject,
-  Post,
-  UseFilters,
-} from '@nestjs/common';
 import { CreateUserDto } from '../../../domaine/model/user.dtos';
 import { UseCaseProxy } from '../../../infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from '../../../infras/usecase-proxy/usecase-proxy.module';
 import { CreateUserUseCase } from '../../../application/usecases/create.user.usecase';
-import { BookErrorFilter } from '../../../infras/filters/book-error.filter';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from 'src/infras/entities/user.entity';
 
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(
@@ -20,25 +15,23 @@ export class UsersController {
   ) {}
 
   @Post()
-  @UseFilters(BookErrorFilter)
+  @ApiOperation({
+    summary: 'Creates a Post',
+  })
+  @ApiCreatedResponse({ description: 'User created.', type: User })
   async createUser(@Body() createUserDto: CreateUserDto) {
     try {
-      const { email, name, password, phone } = createUserDto;
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const result = await this.createUserUsecaseProxy.getInstance().execute({
-        email: email,
-        name: name,
-        password: hashedPassword,
-        phone: phone,
-      });
+      const result = await this.createUserUsecaseProxy
+        .getInstance()
+        .execute(createUserDto);
       return {
         status: 'Created',
         code: 201,
         message: 'Insert data success',
         data: result,
       };
-    } catch(err) {
-      throw err
+    } catch (err) {
+      throw err;
     }
   }
 }

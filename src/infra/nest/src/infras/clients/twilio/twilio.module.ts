@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TwilioClient } from './twilio.client';
 import { ConfigModule } from '@nestjs/config';
+import { TwilioClient } from './twilio.client';
 
 @Module({
   imports: [ConfigModule],

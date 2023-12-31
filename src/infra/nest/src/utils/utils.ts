@@ -12,4 +12,4 @@ export const MESSAGES = {
   PASSWORD_RULE_MESSAGE,
 };
 
-export const regexPhone = /^(\+336|\+337)\d{8}$/; 
+export const regexPhone = /^(\+336|\+337)\d{8}$/;
