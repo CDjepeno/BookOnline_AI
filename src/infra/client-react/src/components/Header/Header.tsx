@@ -3,8 +3,7 @@ import Button from "@mui/material/Button";
 
 function Header() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar component="nav" >
+      <AppBar position="relative" >
         <Toolbar>
           <Typography
             variant="h6"
@@ -19,7 +18,6 @@ function Header() {
           </Box>
         </Toolbar>
       </AppBar>
-    </Box>
   );
 }
 
