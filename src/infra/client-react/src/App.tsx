@@ -1,11 +1,12 @@
-import Container from "@mui/material/Container";
+import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 
 function App() {
   return (
-    <Container maxWidth="sm">
+    <>
       <Header />
-    </Container>
+      <Footer />
+    </>
   );
 }
 
