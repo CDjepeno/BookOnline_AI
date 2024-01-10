@@ -10,11 +10,30 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 export default function SignIn() {
-  const { register, watch } = useForm();
+  const { register, handleSubmit } = useForm();
 
-  console.log(watch());
+  async function onSubmit(data) {
+    try {
+      const response = await axios({
+        method: "post",
+        url: "http://localhost:3000/users",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          withCredentials: true,
+          mode: "no-cors",
+        },
+        data,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -31,40 +50,20 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 3 }}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{ mt: 3 }}
+        >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                label="First Name"
-                autoFocus
-                {...register("FirstName")}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                label="Last Name"
-                {...register("lastName")}
-              />
-            </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
                 label="Email Address"
+                autoFocus
                 {...register("email")}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                label="phone"
-                type="number"
-                {...register("phone")}
               />
             </Grid>
             <Grid item xs={12}>
@@ -76,6 +75,24 @@ export default function SignIn() {
                 {...register("Password")}
               />
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                label="Name"
+                {...register("name")}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                label="Phone"
+                type="number"
+                {...register("phone")}
+              />
+            </Grid>
+
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
