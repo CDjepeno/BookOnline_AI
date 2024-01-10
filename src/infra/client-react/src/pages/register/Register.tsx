@@ -11,11 +11,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { UserI } from "../../interfaces";
 
 export default function SignIn() {
   const { register, handleSubmit } = useForm();
 
-  async function onSubmit(data) {
+  async function onSubmit(data: Partial<UserI>) {
     try {
       const response = await axios({
         method: "post",
