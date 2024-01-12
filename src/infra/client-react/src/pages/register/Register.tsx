@@ -10,28 +10,43 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { UserI } from "../../interfaces";
 
 export default function SignIn() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setError } = useForm();
 
   async function onSubmit(data: Partial<UserI>) {
     try {
-      const response = await axios({
-        method: "post",
-        url: "http://localhost:3000/users",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-          withCredentials: true,
-          mode: "no-cors",
-        },
-        data,
-      });
-      console.log(response.data);
+      const response: AxiosResponse = await axios.post(
+        "http://localhost:3000/users",
+        data
+      );
+      console.log("Response:", response.data);
     } catch (error) {
-      console.error("Error submitting form:", error);
+      if (axios.isAxiosError(error)) {
+        // Axios-specific error
+        const axiosError: AxiosError = error;
+        if (axiosError.response) {
+          // The request was made and the server responded with a status code
+          console.error("Server responded with:", axiosError.response.status);
+          console.error("Response data:", axiosError.response.data);
+        } else if (axiosError.request) {
+          // The request was made but no response was received
+          console.error("No response received");
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error("Error setting up the request:", axiosError.message);
+        }
+      } else {
+        // Non-Axios error
+        console.error("Non-Axios error:", error);
+      }
+       // Exemple : Définissez une erreur pour le champ 'username'
+       setError('phone', {
+        type: 'string',
+        message: 'Numero invalide',
+      });
     }
   }
 
@@ -73,7 +88,7 @@ export default function SignIn() {
                 fullWidth
                 label="Password"
                 type="password"
-                {...register("Password")}
+                {...register("password")}
               />
             </Grid>
             <Grid item xs={12}>
@@ -89,7 +104,6 @@ export default function SignIn() {
                 required
                 fullWidth
                 label="Phone"
-                type="number"
                 {...register("phone")}
               />
             </Grid>
