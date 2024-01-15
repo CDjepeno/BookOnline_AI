@@ -69,24 +69,18 @@ export default function SignIn() {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // Axios-specific error
         const axiosError: AxiosError = error;
         if (axiosError.response) {
-          // The request was made and the server responded with a status code
           console.error("Server responded with:", axiosError.response.status);
           console.error("Response data:", axiosError.response.data);
         } else if (axiosError.request) {
-          // The request was made but no response was received
           console.error("No response received");
         } else {
-          // Something happened in setting up the request that triggered an Error
           console.error("Error setting up the request:", axiosError.message);
         }
       } else {
-        // Non-Axios error
         console.error("Non-Axios error:", error);
       }
-      // Exemple : Définissez une erreur pour le champ 'username'
       setError("phone", {
         type: "string",
         message: "Numero invalide",
@@ -98,8 +92,6 @@ export default function SignIn() {
   const confirmPassword = watch("confirmPassword", "");
 
   const isPasswordMatch = password === confirmPassword;
-
-  // console.log(getValues("password"));
 
   const handleConfirmPasswordChange = () => {
     if (!isPasswordMatch) {
