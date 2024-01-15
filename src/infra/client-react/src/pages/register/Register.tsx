@@ -9,12 +9,47 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { UserI } from "../../interfaces";
 
 export default function SignIn() {
-  const { register, handleSubmit, setError } = useForm();
+  const defaultValues = {
+    email: "",
+    password: "",
+    name: "",
+    phone: "",
+  };
+
+  const signupSchema = yup.object({
+    email: yup
+      .string()
+      .email("Veuillez renseigner une adresse email valide")
+      .matches(
+        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+        "Veuillez renseigner une adresse email valide"
+      )
+      .required("Veuillez renseigner une adresse email valide"),
+    password: yup
+      .string()
+      .required("Veuillez renseigner un mot de passe")
+      .min(6, "Votre mot de passe doit contenir au moins 6 caractères"),
+    name: yup
+      .string()
+      .required("Le nom doit être renseigné")
+      .min(2, "Le nom doit être explicite")
+      .max(10, "Le titre doit être succinct"),
+    phone: yup.string().required("Veuillez renseigner un numero valide"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm({ defaultValues, resolver: yupResolver(signupSchema) });
 
   async function onSubmit(data: Partial<UserI>) {
     try {
@@ -22,7 +57,9 @@ export default function SignIn() {
         "http://localhost:3000/users",
         data
       );
-      console.log("Response:", response.data);
+      if (response.data) {
+        console.log("Response:", response.data);
+      }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // Axios-specific error
@@ -42,10 +79,10 @@ export default function SignIn() {
         // Non-Axios error
         console.error("Non-Axios error:", error);
       }
-       // Exemple : Définissez une erreur pour le champ 'username'
-       setError('phone', {
-        type: 'string',
-        message: 'Numero invalide',
+      // Exemple : Définissez une erreur pour le champ 'username'
+      setError("phone", {
+        type: "string",
+        message: "Numero invalide",
       });
     }
   }
@@ -81,6 +118,9 @@ export default function SignIn() {
                 autoFocus
                 {...register("email")}
               />
+              {errors.email && (
+                <small style={{ color: "red" }}>{errors.email.message}</small>
+              )}
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -90,6 +130,11 @@ export default function SignIn() {
                 type="password"
                 {...register("password")}
               />
+              {errors.password && (
+                <small style={{ color: "red" }}>
+                  {errors.password.message}
+                </small>
+              )}
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -98,6 +143,9 @@ export default function SignIn() {
                 label="Name"
                 {...register("name")}
               />
+              {errors.name && (
+                <small style={{ color: "red" }}>{errors.name.message}</small>
+              )}
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -106,6 +154,9 @@ export default function SignIn() {
                 label="Phone"
                 {...register("phone")}
               />
+              {errors.phone && (
+                <small style={{ color: "red" }}>{errors.phone.message}</small>
+              )}
             </Grid>
 
             <Grid item xs={12}>
