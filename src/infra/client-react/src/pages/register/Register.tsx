@@ -1,8 +1,6 @@
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -10,7 +8,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { UserI } from "../../interfaces";
@@ -19,6 +17,7 @@ export default function SignIn() {
   const defaultValues = {
     email: "",
     password: "",
+    confirmPassword: "",
     name: "",
     phone: "",
   };
@@ -36,6 +35,10 @@ export default function SignIn() {
       .string()
       .required("Veuillez renseigner un mot de passe")
       .min(6, "Votre mot de passe doit contenir au moins 6 caractères"),
+    confirmPassword: yup
+      .string()
+      .required("Veuillez confirmer le mot de passe")
+      .min(6, "Votre mot de passe doit contenir au moins 6 caractères"),
     name: yup
       .string()
       .required("Le nom doit être renseigné")
@@ -48,7 +51,10 @@ export default function SignIn() {
     register,
     handleSubmit,
     setError,
-    formState: { errors },
+    watch,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm({ defaultValues, resolver: yupResolver(signupSchema) });
 
   async function onSubmit(data: Partial<UserI>) {
@@ -59,6 +65,7 @@ export default function SignIn() {
       );
       if (response.data) {
         console.log("Response:", response.data);
+        reset(defaultValues);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -86,6 +93,22 @@ export default function SignIn() {
       });
     }
   }
+
+  const password = watch("password", "");
+  const confirmPassword = watch("confirmPassword", "");
+
+  const isPasswordMatch = password === confirmPassword;
+
+  // console.log(getValues("password"));
+
+  const handleConfirmPasswordChange = () => {
+    if (!isPasswordMatch) {
+      setError("confirmPassword", {
+        type: "manual",
+        message: "Les mots de passe ne correspondent pas.",
+      });
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -118,23 +141,52 @@ export default function SignIn() {
                 autoFocus
                 {...register("email")}
               />
+
               {errors.email && (
                 <small style={{ color: "red" }}>{errors.email.message}</small>
               )}
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                label="Password"
-                type="password"
-                {...register("password")}
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    required
+                    fullWidth
+                    label="Password"
+                    type="password"
+                    {...field}
+                    onBlur={handleConfirmPasswordChange}
+                  />
+                )}
               />
               {errors.password && (
                 <small style={{ color: "red" }}>
                   {errors.password.message}
                 </small>
               )}
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="confirmPassword"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    required
+                    fullWidth
+                    label="Confirm Password"
+                    type="password"
+                    {...field}
+                    error={!isPasswordMatch}
+                    helperText={
+                      !isPasswordMatch
+                        ? "Les mots de passe ne correspondent pas."
+                        : ""
+                    }
+                  />
+                )}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -158,19 +210,13 @@ export default function SignIn() {
                 <small style={{ color: "red" }}>{errors.phone.message}</small>
               )}
             </Grid>
-
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid>
           </Grid>
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={isSubmitting}
           >
             Sign Up
           </Button>
