@@ -7,33 +7,28 @@ import {
 } from 'class-validator';
 // import { MESSAGES, REGEX } from 'src/utils/utils';
 import {
-  BeforeInsert,
+  // BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+// import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User {
+  //Id
   @PrimaryGeneratedColumn('increment')
   id: number;
 
+  //Email
   @Column('varchar', { unique: true })
   @IsEmail()
   @IsNotEmpty({ message: 'The email is required' })
   email: string;
 
-  @Column()
-  @IsString()
-  name: string;
-
-  @Column()
-  @IsString()
-  phone: string;
-
+  //Password
   @Column()
   @IsString()
   @Length(6, 24)
@@ -43,15 +38,25 @@ export class User {
   })
   password: string;
 
+  //Name
+  @Column()
+  @IsString()
+  name: string;
+
+  //Phone
+  @Column()
+  @IsString()
+  phone: string;
+
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
 
-  @BeforeInsert()
-  async setPassword(password: string) {
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(password || this.password, salt);
-  }
+  // @BeforeInsert()
+  // async setPassword(password: string) {
+  //   const salt = await bcrypt.genSalt();
+  //   this.password = await bcrypt.hash(password || this.password, salt);
+  // }
 }

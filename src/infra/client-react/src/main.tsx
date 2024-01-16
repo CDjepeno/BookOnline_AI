@@ -1,11 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import CssBaseline from '@mui/material/CssBaseline';
-import App from "./App.tsx";
+import { router } from "./router.tsx";
+import { RouterProvider } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <CssBaseline />
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
