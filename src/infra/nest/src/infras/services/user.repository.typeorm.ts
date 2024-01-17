@@ -6,14 +6,12 @@ import { UsersRepository } from '../../domaine/repositories/user.repository';
 import { CreateUserDto } from '../../domaine/model/user.dtos';
 import { UserModel } from '../../domaine/model/user.model';
 import * as bcrypt from 'bcrypt';
-import NodemailerClient from '../clients/nodemailer/nodemailer.client';
 
 @Injectable()
 export class UserRepositoryTyperom implements UsersRepository {
   constructor(
     @InjectRepository(User)
     private repository: Repository<User>,
-    private nodeMailerClient: NodemailerClient,
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<UserModel> {
