@@ -6,30 +6,22 @@ import * as nodemailer from 'nodemailer';
 
 export default class NodemailerClient implements ClientMailPort {
   constructor(
-    private readonly transporter: nodemailer.Transporter = nodemailer.createTransport(
-      {
-        service: 'gmail',
-        auth: {
-          user: process.env.MAIL_USERNAME,
-          pass: process.env.MAIL_USERPASSWORD,
-        },
+    private readonly transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'onlinebookapi@gmail.com',
+        pass: 'gccp eyxi tgph uagr',
       },
-    ),
+    }),
   ) {}
 
   async sendMail(message: Imessage): Promise<void> {
     try {
       await this.transporter.sendMail({
-        to: {
-          name: message.to.name,
-          address: message.to.email,
-        },
-        from: {
-          name: message.from.name,
-          address: message.from.email,
-        },
+        from: 'onlinebookapi@gmail.com',
+        to: message.to,
         subject: message.subject,
-        body: message.body,
+        text: message.text,
       });
     } catch (error) {
       console.error('Error sending email:', error);

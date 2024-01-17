@@ -1,15 +1,9 @@
-export interface IAdress {
-  name: string;
-  email: string;
-}
-
 export interface Imessage {
-  to: IAdress;
-  from: IAdress;
+  to: string;
   subject?: string;
-  body: string;
+  text?: string;
 }
 
 export interface ClientMailPort {
-  sendMail(message: Imessage): void;
+  sendMail(message: Imessage): Promise<void>;
 }

@@ -18,16 +18,9 @@ export class CreateUserUseCase {
       }
 
       await this.nodemailerClient.sendMail({
-        to: {
-          name: request.name,
-          email: request.email,
-        },
-        from: {
-          name: 'OnlineBook',
-          email: process.env.MAIL_FROM,
-        },
+        to: request.email,
         subject: `Confirmation de votre inscription`,
-        body: `Bonjour ${request.name}, \nVotre compte a`,
+        text: `Bonjour ${request.name}, \nVotre compte a bien été crée`,
       });
 
       return await this.usersRepository.createUser(request);
