@@ -22,11 +22,11 @@ export default class NodemailerClient implements ClientMailPort {
       await this.transporter.sendMail({
         to: {
           name: message.to.name,
-          email: message.to.email,
+          address: message.to.email,
         },
         from: {
           name: message.from.name,
-          email: message.from.email,
+          address: message.from.email,
         },
         subject: message.subject,
         body: message.body,
