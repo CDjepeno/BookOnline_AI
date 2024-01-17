@@ -23,7 +23,7 @@ export class CreateUserUseCase {
           email: request.email,
         },
         from: {
-          name: 'Livraison Express',
+          name: 'OnlineBook',
           email: process.env.MAIL_FROM,
         },
         subject: `Confirmation de votre inscription`,
