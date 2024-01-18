@@ -3,6 +3,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { UserI } from "../../interfaces";
+import { useSnackbar } from "notistack";
 
 export default function RegisterHook() {
   const defaultValues = {
@@ -48,6 +49,8 @@ export default function RegisterHook() {
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues, resolver: yupResolver(signupSchema) });
 
+  const { enqueueSnackbar } = useSnackbar();
+
   async function onSubmit(data: Partial<UserI>) {
     try {
       const response: AxiosResponse = await axios.post(
@@ -56,9 +59,39 @@ export default function RegisterHook() {
       );
       if (response.data) {
         console.log("Response:", response.data);
+        enqueueSnackbar("Votre compte a bien ete cree!", {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+         
+          style: {
+            color: "white",
+            minWidth: '100%' 
+          },
+
+          
+        });
         reset(defaultValues);
       }
     } catch (error) {
+      enqueueSnackbar("Une erreur est survenue!", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "center",
+        },
+        style: {
+          color: "white",
+          textAlign: "center",
+          margin: "auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        },
+      });
+
       if (axios.isAxiosError(error)) {
         const axiosError: AxiosError = error;
         if (axiosError.response) {
