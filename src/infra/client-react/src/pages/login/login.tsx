@@ -1,51 +1,19 @@
-import React from "react";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import LoginHook from "./login.hook";
 
 export default function Login() {
-  const validationSchema = yup.object({
-    email: yup
-      .string()
-      .required("Il faut préciser votre email")
-      .email("l'email n'est pas valide"),
-    password: yup
-      .string()
-      .required("Il faut préciser votre mot de passe")
-      .min(6, "Mot de passe trop court"),
-  });
-
-  const defaultValues = {
-    email: "",
-    password: "",
-  };
-
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-    setError,
-    clearErrors,
-  } = useForm({ defaultValues, resolver: yupResolver(validationSchema) });
-
-  const onSubmit = async () => {
-    try {
-      clearErrors();
-    } catch (error) {
-      setError("root", { type: "generic", message: (error as Error).message });
-    }
-  };
+  const { onSubmit, register, handleSubmit, errors, isSubmitting } =
+    LoginHook();
 
   return (
     <Grid container component="main" sx={{ height: "100vh" }} maxWidth="xs">
@@ -119,8 +87,8 @@ export default function Login() {
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-              />
-              {errors.root && <p>{errors.root.message}</p>}
+            />
+            {errors.root && <p>{errors.root.message}</p>}
             <Button
               type="submit"
               fullWidth

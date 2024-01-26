@@ -1,11 +1,14 @@
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { UserI } from "../../interfaces";
 import { useSnackbar } from "notistack";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { RegisterInput } from "../../types";
 
 export default function RegisterHook() {
+  const navigate = useNavigate();
+
   const defaultValues = {
     email: "",
     password: "",
@@ -51,7 +54,7 @@ export default function RegisterHook() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  async function onSubmit(data: Partial<UserI>) {
+  async function onSubmit(data: RegisterInput) {
     try {
       const response: AxiosResponse = await axios.post(
         "http://localhost:3000/users",
@@ -59,20 +62,22 @@ export default function RegisterHook() {
       );
       if (response.data) {
         console.log("Response:", response.data);
-        enqueueSnackbar("Votre compte a bien ete cree!", {
-          variant: "success",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-         
-          style: {
-            color: "white",
-            minWidth: '100%' 
-          },
+        navigate("/login");
+        enqueueSnackbar(
+          "Votre compte a bien été creé!!!, un mail de confirmation vous a été envoyé",
+          {
+            variant: "success",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "center",
+            },
 
-          
-        });
+            style: {
+              color: "white",
+              minWidth: "100%",
+            },
+          }
+        );
         reset(defaultValues);
       }
     } catch (error) {
