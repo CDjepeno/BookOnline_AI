@@ -3,16 +3,17 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../entities/user.entity';
-import { UsersRepository } from '../../domaine/repositories/user.repository';
+import * as bcrypt from 'bcrypt';
+import { AuthInput } from 'src/domaine/model/auth.input';
+import { AuthResponse } from 'src/domaine/model/auth.response';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from '../../domaine/model/user.dtos';
 import { UserModel } from '../../domaine/model/user.model';
-import * as bcrypt from 'bcrypt';
-import { AuthDto } from '../common/dto/auth.dto.class';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import { UsersRepository } from '../../domaine/repositories/user.repository';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UserRepositoryTyperom implements UsersRepository {
@@ -32,7 +33,7 @@ export class UserRepositoryTyperom implements UsersRepository {
     return this.repository.save(user);
   }
 
-  async signIn(siginIn: AuthDto): Promise<string> {
+  async signIn(siginIn: AuthInput): Promise<AuthResponse> {
     const { email, password } = siginIn;
     const user = await this.repository.findOne({
       where: { email },
@@ -55,6 +56,6 @@ export class UserRepositoryTyperom implements UsersRepository {
       secret: this.configService.get('JWT_SECRET'),
       expiresIn: '60s',
     });
-    return token;
+    return { name: user.name, email: user.email, token };
   }
 }
