@@ -3,18 +3,16 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
-import { AuthInput } from 'src/domaine/model/auth.input';
-import { AuthResponse } from 'src/domaine/model/auth.response';
-import { UserCurrentResponse } from 'src/domaine/model/user.current.response';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../entities/user.entity';
+import { UsersRepository } from '../../domaine/repositories/user.repository';
 import { CreateUserDto } from '../../domaine/model/user.dtos';
 import { UserModel } from '../../domaine/model/user.model';
-import { UsersRepository } from '../../domaine/repositories/user.repository';
-import { User } from '../entities/user.entity';
+import * as bcrypt from 'bcrypt';
+import { AuthDto } from '../common/dto/auth.dto.class';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserRepositoryTyperom implements UsersRepository {
@@ -34,47 +32,29 @@ export class UserRepositoryTyperom implements UsersRepository {
     return this.repository.save(user);
   }
 
-  async signIn(siginIn: AuthInput): Promise<AuthResponse> {
+  async signIn(siginIn: AuthDto): Promise<string> {
     const { email, password } = siginIn;
     const user = await this.repository.findOne({
       where: { email },
     });
-    if (!user) throw new NotFoundException("L'utilisateur n'existe pas.");
+    if (!user) {
+      throw new NotFoundException("L'utilisateur n'existe pas.");
+    }
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match)
+    if (!match) {
       throw new UnauthorizedException('Le mot de passe est invalide.');
+    }
 
     const payload = {
+      sub: user.id,
       email: user.email,
     };
 
     const token = await this.jwtService.signAsync(payload, {
       secret: this.configService.get('JWT_SECRET'),
-      expiresIn: '2H',
+      expiresIn: '60s',
     });
-    return { name: user.name, email: user.email, token };
-  }
-
-  async getProfile(email: string): Promise<UserCurrentResponse> {
-    try {
-      const userEntity = await this.repository.findOne({
-        where: { email },
-      });
-
-      if (!userEntity) {
-        throw new NotFoundException();
-      }
-
-      return userEntity;
-    } catch (error) {
-      console.error(
-        "Erreur lors de la recherche de l'utilisateur :",
-        error.message,
-      );
-      throw new Error(
-        "Une erreur s'est produite lors de la recherche de l'utilisateur.",
-      );
-    }
+    return token;
   }
 }
