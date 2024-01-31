@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../entities/user.entity';
-import { UserRepositoryTyperom } from './user.repository.typeorm';
+import NodemailerClient from '../clients/nodemailer/nodemailer.client';
+import { NodemailerModules } from '../clients/nodemailer/nodemailer.module';
 import { TwilioClient } from '../clients/twilio/twilio.client';
 import { TwilioModules } from '../clients/twilio/twilio.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { NodemailerModules } from '../clients/nodemailer/nodemailer.module';
-import NodemailerClient from '../clients/nodemailer/nodemailer.client';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
+import { User } from '../entities/user.entity';
+import { UserRepositoryTyperom } from './user.repository.typeorm';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import NodemailerClient from '../clients/nodemailer/nodemailer.client';
     TwilioClient,
     NodemailerClient,
     ConfigService,
+    JwtAuthGuard,
   ],
   exports: [UserRepositoryTyperom],
 })

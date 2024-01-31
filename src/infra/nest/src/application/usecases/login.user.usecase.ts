@@ -1,10 +1,10 @@
-import { AuthDto } from 'src/domaine/model/auth.dto';
+import { AuthInput } from 'src/domaine/model/auth.input';
 import { UsersRepository } from 'src/domaine/repositories/user.repository';
 
 export class LoginUserUseCase {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async execute(request: AuthDto) {
+  async execute(request: AuthInput) {
     try {
       return await this.usersRepository.signIn(request);
     } catch (error) {
