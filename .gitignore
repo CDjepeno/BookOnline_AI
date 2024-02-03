@@ -1,6 +1,32 @@
 #React
 infra/client-react/node_modules
 
+# Logs
+infra/client-react/logs
+infra/client-react/*.log
+infra/client-react/npm-debug.log*
+infra/client-react/yarn-debug.log*
+infra/client-react/yarn-error.log*
+infra/client-react/pnpm-debug.log*
+infra/client-react/lerna-debug.log*
+
+infra/client-react/node_modules
+infra/client-react/dist
+infra/client-react/dist-ssr
+infra/client-react/*.local
+
+# Editor directories and files
+infra/client-react/.vscode/*
+infra/client-react/!.vscode/extensions.json
+infra/client-react/.idea
+infra/client-react/.DS_Store
+infra/client-react/*.suo
+infra/client-react/*.ntvs*
+infra/client-react/*.njsproj
+infra/client-react/*.sln
+infra/client-react/*.sw?
+
+
 
 #Nest
 infra/nest/dist
