@@ -1,13 +1,18 @@
 import {
   Body,
   Controller,
+  Get,
   Inject,
   Post,
+  Req,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
-import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
-import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
+import { GetCurrentUserUseCase } from 'src/application/usecases/get.current.user.usecase';
 import { LoginUserUseCase } from 'src/application/usecases/login.user.usecase';
+import { JwtAuthGuard } from 'src/infras/common/guards/jwt-auth.guard';
+import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
+import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { AuthDto } from '../../common/dto/auth.dto.class';
 
 @Controller('auth')
@@ -15,6 +20,8 @@ export class AuthController {
   constructor(
     @Inject(UsecaseProxyModule.LOGIN_USER_USE_CASE)
     private readonly loginUsecaseProxy: UseCaseProxy<LoginUserUseCase>,
+    @Inject(UsecaseProxyModule.GET_CURRENT_USER_USE_CASE)
+    private readonly getCurrentUserUseCase: UseCaseProxy<GetCurrentUserUseCase>,
   ) {}
 
   @Post('login')
@@ -26,5 +33,13 @@ export class AuthController {
       );
     }
     return user;
+  }
+
+  @Get('current')
+  @UseGuards(JwtAuthGuard)
+  async getCurrentUser(@Req() request) {
+    return await this.getCurrentUserUseCase
+      .getInstance()
+      .execute(request.user.email);
   }
 }
