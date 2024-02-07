@@ -19,7 +19,9 @@ function Header() {
           <NavLink to="/register">
             <Button sx={{ color: "#fff" }}>inscription</Button>
           </NavLink>
-          <Button sx={{ color: "#fff" }}>connexion</Button>
+          <NavLink to="/login">
+            <Button sx={{ color: "#fff" }}>connexion</Button>
+          </NavLink>
         </Box>
       </Toolbar>
     </AppBar>

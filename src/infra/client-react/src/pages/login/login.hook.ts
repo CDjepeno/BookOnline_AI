@@ -1,12 +1,16 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios, { AxiosResponse } from "axios";
 import { enqueueSnackbar } from "notistack";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
+import { AuthContext } from "../../context";
 import { AuthInput } from "../../types";
+import { AuthContextValue } from "../../types/auth.context.value";
 
 export default function LoginHook() {
+  const { signin } = useContext(AuthContext) as AuthContextValue;
+
   const navigate = useNavigate();
   const validationSchema = yup.object({
     email: yup
@@ -34,16 +38,8 @@ export default function LoginHook() {
   async function onSubmit(data: AuthInput) {
     try {
       clearErrors();
-      const response: AxiosResponse = await axios.post(
-        "http://localhost:3000/auth/login",
-        data
-      );
-      console.log(response);
-      if (response.data) {
-        console.log("Response:", response.data);
-        localStorage.setItem("BookToken", response.data.token);
-        navigate("/");
-      }
+      await signin(data);
+      navigate("/");
     } catch (error) {
       enqueueSnackbar("Une erreur est survenue!", {
         variant: "error",
@@ -69,5 +65,6 @@ export default function LoginHook() {
     onSubmit,
     errors,
     isSubmitting,
+    
   };
 }
