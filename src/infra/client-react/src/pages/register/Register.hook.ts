@@ -1,9 +1,9 @@
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { UserI } from "../../interfaces";
 import { useSnackbar } from "notistack";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { UserI } from "../../interfaces";
 
 export default function RegisterHook() {
   const defaultValues = {
@@ -65,13 +65,10 @@ export default function RegisterHook() {
             vertical: "bottom",
             horizontal: "center",
           },
-         
           style: {
             color: "white",
-            minWidth: '100%' 
+            minWidth: "100%",
           },
-
-          
         });
         reset(defaultValues);
       }
