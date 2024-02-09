@@ -1,5 +1,5 @@
-import { CreateUserDto } from '../../../domaine/model/user.dtos';
-import { UserModel } from '../../../domaine/model/user.model';
+import { CreateUserDto } from '../../../domaine/model/user/user.dtos';
+import { UserModel } from '../../../domaine/model/user/user.model';
 
 export const userDataDto: CreateUserDto = {
   email: 'test@test.fr',

@@ -11,8 +11,8 @@ import { AuthInput } from 'src/domaine/model/auth.input';
 import { AuthResponse } from 'src/domaine/model/auth.response';
 import { CurrentUserResponse } from 'src/domaine/model/current.user.response';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../../domaine/model/user.dtos';
-import { UserModel } from '../../domaine/model/user.model';
+import { CreateUserDto } from '../../domaine/model/user/user.dtos';
+import { UserModel } from '../../domaine/model/user/user.model';
 import { UsersRepository } from '../../domaine/repositories/user.repository';
 import { User } from '../entities/user.entity';
 

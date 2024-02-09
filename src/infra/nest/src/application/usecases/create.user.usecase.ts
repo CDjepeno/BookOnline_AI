@@ -1,8 +1,8 @@
-import { UserModel } from '../../domaine/model/user.model';
-import { CreateUserDto } from '../../domaine/model/user.dtos';
-import { UsersRepository } from '../../domaine/repositories/user.repository';
 import { InvalidPhoneNumberException } from 'src/domaine/errors/book.error';
 import NodemailerClient from 'src/infras/clients/nodemailer/nodemailer.client';
+import { CreateUserDto } from '../../domaine/model/user/user.dtos';
+import { UserModel } from '../../domaine/model/user/user.model';
+import { UsersRepository } from '../../domaine/repositories/user.repository';
 
 export class CreateUserUseCase {
   constructor(
