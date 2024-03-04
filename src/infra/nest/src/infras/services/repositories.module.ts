@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import NodemailerClient from '../clients/nodemailer/nodemailer.client';
 import { NodemailerModules } from '../clients/nodemailer/nodemailer.module';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { User } from '../entities/user.entity';
+import { Book } from '../models/book.entity';
+import { User } from '../models/user.entity';
+import { BookRepositoryTyperom } from './book.repository.typeorm';
 import { UserRepositoryTyperom } from './user.repository.typeorm';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Book]),
     ConfigModule,
     NodemailerModules,
     ConfigModule,
@@ -21,10 +23,11 @@ import { UserRepositoryTyperom } from './user.repository.typeorm';
   ],
   providers: [
     UserRepositoryTyperom,
+    BookRepositoryTyperom,
     NodemailerClient,
     ConfigService,
     JwtAuthGuard,
   ],
-  exports: [UserRepositoryTyperom],
+  exports: [UserRepositoryTyperom, BookRepositoryTyperom],
 })
 export class RepositoriesModule {}

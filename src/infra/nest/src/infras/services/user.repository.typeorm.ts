@@ -7,14 +7,14 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { AuthInput } from 'src/domaine/model/auth.input';
-import { AuthResponse } from 'src/domaine/model/auth.response';
-import { CurrentUserResponse } from 'src/domaine/model/current.user.response';
+import { AddUserRequest } from 'src/application/usecases/user/adduser/add.user.request';
+import { AddUserResponse } from 'src/application/usecases/user/adduser/add.user.response';
+import { CurrentUserResponse } from 'src/application/usecases/user/getuser/current.user.response';
+import { GetUserRequest } from 'src/application/usecases/user/getuser/get.user.request';
+import { GetUserResponse } from 'src/application/usecases/user/getuser/get.user.response';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../../domaine/model/user/user.dtos';
-import { UserModel } from '../../domaine/model/user/user.model';
 import { UsersRepository } from '../../domaine/repositories/user.repository';
-import { User } from '../entities/user.entity';
+import { User } from '../models/user.entity';
 
 @Injectable()
 export class UserRepositoryTyperom implements UsersRepository {
@@ -25,16 +25,16 @@ export class UserRepositoryTyperom implements UsersRepository {
     private configService: ConfigService,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserModel> {
+  async addUser(addUserRequest: AddUserRequest): Promise<AddUserResponse> {
     const user = new User();
-    user.email = createUserDto.email;
-    user.password = await bcrypt.hash(createUserDto.password, 10);
-    user.name = createUserDto.name;
-    user.phone = createUserDto.phone;
+    user.email = addUserRequest.email;
+    user.password = await bcrypt.hash(addUserRequest.password, 10);
+    user.name = addUserRequest.name;
+    user.phone = addUserRequest.phone;
     return this.repository.save(user);
   }
 
-  async signIn(siginIn: AuthInput): Promise<AuthResponse> {
+  async signIn(siginIn: GetUserRequest): Promise<GetUserResponse> {
     const { email, password } = siginIn;
     const user = await this.repository.findOne({
       where: { email },

@@ -1,6 +1,6 @@
-import { CreateBookDto } from '../model/book/book.dtos';
-import { BookModel } from '../model/book/book.model';
+import { AddBookResponse } from 'src/application/usecases/book/AddBook/add.book.response';
+import { Book } from '../entities/Book';
 
 export interface BookRepository {
-  createBook(book: CreateBookDto): Promise<BookModel>;
+  addBook(book: Book): Promise<AddBookResponse>;
 }
