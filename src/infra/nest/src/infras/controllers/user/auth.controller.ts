@@ -9,12 +9,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { GetCurrentUserUseCase } from 'src/application/usecases/user/getuser/get.current.user.usecase';
 import { LoginUserUseCase } from 'src/application/usecases/user/getuser/login.user.usecase';
 import { JwtAuthGuard } from 'src/infras/common/guards/jwt-auth.guard';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { AuthDto } from '../../common/dto/auth.dto.class';
+import { GetCurrentUserUseCase } from 'src/application/usecases/user/auth/get.current.user.usecase';
 
 @Controller('auth')
 export class AuthController {

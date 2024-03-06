@@ -37,7 +37,7 @@ export class BookRepositoryTyperom implements BookRepository {
       return this.repository.save(book);
     } catch (error) {
       console.log("Erreur lors de l'ajout du livre :", error);
-      throw new Error("Impossible d'ajouter le livre.");
+      throw new error("Impossible d'ajouter le livre.");
     }
   }
 }

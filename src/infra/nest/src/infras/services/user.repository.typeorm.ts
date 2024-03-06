@@ -9,12 +9,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { AddUserRequest } from 'src/application/usecases/user/adduser/add.user.request';
 import { AddUserResponse } from 'src/application/usecases/user/adduser/add.user.response';
-import { CurrentUserResponse } from 'src/application/usecases/user/getuser/current.user.response';
 import { GetUserRequest } from 'src/application/usecases/user/getuser/get.user.request';
 import { GetUserResponse } from 'src/application/usecases/user/getuser/get.user.response';
 import { Repository } from 'typeorm';
 import { UsersRepository } from '../../domaine/repositories/user.repository';
 import { User } from '../models/user.entity';
+import { CurrentUserResponse } from 'src/application/usecases/user/auth/current.user.response';
 
 @Injectable()
 export class UserRepositoryTyperom implements UsersRepository {
