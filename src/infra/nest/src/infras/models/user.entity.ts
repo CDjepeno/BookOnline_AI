@@ -1,3 +1,4 @@
+import * as bcrypt from 'bcrypt';
 import {
   IsEmail,
   IsNotEmpty,
@@ -5,18 +6,14 @@ import {
   Length,
   Matches,
 } from 'class-validator';
-// import { MESSAGES, REGEX } from 'src/utils/utils';
 import {
-  // BeforeInsert,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Book } from './book.entity';
-// import * as bcrypt from 'bcrypt';
 
 @Entity()
 export class User {
@@ -34,9 +31,9 @@ export class User {
   @Column()
   @IsString()
   @Length(6, 24)
-  @Matches(/^(?=.*?[A-Z])(?=.*[A-Z])(?=.*[0-9])(?=.*[#?!@$%^&*-_]).{8,}$/, {
+  @Matches(/^(?=.*?[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[#?!@$%^&*-_]).{8,}$/, {
     message:
-      'Password should have 1 upper case, lowcase letter along with a number and spécial character.',
+      'Password should have 1 upper case, 1 lowercase letter, 1 number, and 1 special character.',
   })
   password: string;
 
@@ -50,12 +47,19 @@ export class User {
   @IsString()
   phone: string;
 
-  @OneToMany(() => Book, (book) => book.user, { nullable: false })
-  books: Book[];
+  // @OneToMany(() => Book, (book) => book.user)
+  // books: Book[];
 
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @BeforeInsert()
+  async setPassword() {
+    const saltRounds = 10; // Nombre de rounds pour générer le sel
+    const salt = await bcrypt.genSalt(saltRounds);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 }

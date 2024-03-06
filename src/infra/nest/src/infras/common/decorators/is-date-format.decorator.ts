@@ -2,11 +2,13 @@ import { ValidationOptions, registerDecorator } from 'class-validator';
 import moment from 'moment';
 
 function isValidDateFormat(value: Date): boolean {
-  // Utilisation de 'moment' pour vérifier le format et la validité de la date
+  if (!(value instanceof Date)) {
+    return false; // Garantit que la valeur est bien une instance de Date
+  }
+
   const dateFormat = 'YYYY-MM-DD';
   const momentDate = moment(value, dateFormat, true);
 
-  // Vérification du format et si la date est postérieure à la date actuelle
   return momentDate.isValid() && momentDate.isAfter(moment());
 }
 
@@ -18,8 +20,7 @@ export function IsDateFormat(validationOptions?: ValidationOptions) {
       propertyName: propertyName,
       options: validationOptions,
       validator: {
-        validate(value: any) {
-          // Appel de la fonction de validation personnalisée
+        validate(value: Date) {
           return isValidDateFormat(value);
         },
       },

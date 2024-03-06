@@ -28,10 +28,10 @@ export class UserRepositoryTyperom implements UsersRepository {
   async addUser(addUserRequest: AddUserRequest): Promise<AddUserResponse> {
     const user = new User();
     user.email = addUserRequest.email;
-    user.password = await bcrypt.hash(addUserRequest.password, 10);
+    user.password = addUserRequest.password;
     user.name = addUserRequest.name;
     user.phone = addUserRequest.phone;
-    return this.repository.save(user);
+    return await this.repository.save(user);
   }
 
   async signIn(siginIn: GetUserRequest): Promise<GetUserResponse> {
@@ -43,8 +43,21 @@ export class UserRepositoryTyperom implements UsersRepository {
       throw new NotFoundException("L'utilisateur n'existe pas.");
     }
 
-    const match = await bcrypt.compare(password, user.password);
+    console.log('Mot de passe fourni :', password);
+    console.log('Mot de passe stocké :', user.password);
+
+    const match = await bcrypt.compare(
+      password.trim().toLowerCase(),
+      user.password,
+    );
+
     if (!match) {
+      console.log("Authentification échouée pour l'utilisateur :", user.email);
+      console.log('Comparaison manuelle :', password === user.password);
+      console.log(
+        'Comparaison sans normalisation :',
+        await bcrypt.compare(password.trim(), user.password),
+      );
       throw new UnauthorizedException('Le mot de passe est invalide.');
     }
 
@@ -57,6 +70,9 @@ export class UserRepositoryTyperom implements UsersRepository {
       secret: this.configService.get('JWT_SECRET'),
       expiresIn: '60s',
     });
+
+    console.log("Authentification réussie pour l'utilisateur :", user.email);
+
     return { name: user.name, email: user.email, token };
   }
 

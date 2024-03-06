@@ -6,7 +6,7 @@ export class AddBookResponse {
   releaseAt: Date;
   imageUrl: string;
   approved: number;
-  userId: number;
+  userId?: number;
   created_at?: Date;
   update_at?: Date;
 }

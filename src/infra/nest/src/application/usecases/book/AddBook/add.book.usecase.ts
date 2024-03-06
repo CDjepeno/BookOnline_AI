@@ -8,6 +8,7 @@ export class AddBookUseCase {
 
   async execute(request: AddBookRequest): Promise<AddBookResponse> {
     try {
+      const approved = request.approved || 0;
       const book = new Book(
         request.id,
         request.name,
@@ -15,13 +16,14 @@ export class AddBookUseCase {
         request.author,
         request.releaseAt,
         request.imageUrl,
-        request.approved,
+        approved,
         request.userId,
       );
       console.log(book);
       return await this.bookRepository.addBook(book);
     } catch (error) {
-      throw error;
+      console.error("Erreur lors de l'ajout du livre :", error);
+      throw new Error("Impossible d'ajouter le livre.");
     }
   }
 }
