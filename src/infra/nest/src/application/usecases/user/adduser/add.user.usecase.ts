@@ -1,4 +1,4 @@
-import { User } from 'src/domaine/entities/User';
+import { User } from 'src/domaine/entities/User.entity';
 import { InvalidPhoneNumberException } from 'src/domaine/errors/book.error';
 import NodemailerClient from 'src/infras/clients/nodemailer/nodemailer.client';
 import { UsersRepository } from '../../../../domaine/repositories/user.repository';

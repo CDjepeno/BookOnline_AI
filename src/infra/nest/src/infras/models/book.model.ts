@@ -3,10 +3,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { IsDateFormat } from '../common/decorators/is-date-format.decorator';
+import { User } from './user.model';
 
 @Entity()
 export class Book {
@@ -41,8 +43,8 @@ export class Book {
   @IsInt()
   userId: number;
 
-  // @ManyToOne(() => User, (user) => user.books)
-  // user: User;
+  @ManyToOne(() => User, (user) => user.books)
+  user: User;
 
   @CreateDateColumn()
   created_at: Date;

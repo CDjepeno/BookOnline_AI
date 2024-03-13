@@ -21,11 +21,9 @@ export class BookController {
   })
   async addBook(@Body() createBookDto: CreateBookDto) {
     try {
-      console.log(createBookDto);
       const result = await this.addBookUsecaseProxy
         .getInstance()
         .execute(createBookDto);
-      console.log(result);
       return {
         status: 'Created',
         code: 201,

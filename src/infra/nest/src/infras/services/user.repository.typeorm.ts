@@ -9,12 +9,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { AddUserRequest } from 'src/application/usecases/user/adduser/add.user.request';
 import { AddUserResponse } from 'src/application/usecases/user/adduser/add.user.response';
-import { GetUserRequest } from 'src/application/usecases/user/getuser/get.user.request';
-import { GetUserResponse } from 'src/application/usecases/user/getuser/get.user.response';
+import { CurrentUserResponse } from 'src/application/usecases/user/auth/current.user.response';
+import { LoginUserRequest } from 'src/application/usecases/user/getuser/login.user.request';
+import { LoginUserResponse } from 'src/application/usecases/user/getuser/login.user.response';
 import { Repository } from 'typeorm';
 import { UsersRepository } from '../../domaine/repositories/user.repository';
-import { User } from '../models/user.entity';
-import { CurrentUserResponse } from 'src/application/usecases/user/auth/current.user.response';
+import { User } from '../models/user.model';
 
 @Injectable()
 export class UserRepositoryTyperom implements UsersRepository {
@@ -34,7 +34,7 @@ export class UserRepositoryTyperom implements UsersRepository {
     return await this.repository.save(user);
   }
 
-  async signIn(siginIn: GetUserRequest): Promise<GetUserResponse> {
+  async signIn(siginIn: LoginUserRequest): Promise<LoginUserResponse> {
     const { email, password } = siginIn;
     const user = await this.repository.findOne({
       where: { email },
@@ -43,21 +43,12 @@ export class UserRepositoryTyperom implements UsersRepository {
       throw new NotFoundException("L'utilisateur n'existe pas.");
     }
 
-    console.log('Mot de passe fourni :', password);
-    console.log('Mot de passe stocké :', user.password);
-
     const match = await bcrypt.compare(
       password.trim().toLowerCase(),
       user.password,
     );
 
     if (!match) {
-      console.log("Authentification échouée pour l'utilisateur :", user.email);
-      console.log('Comparaison manuelle :', password === user.password);
-      console.log(
-        'Comparaison sans normalisation :',
-        await bcrypt.compare(password.trim(), user.password),
-      );
       throw new UnauthorizedException('Le mot de passe est invalide.');
     }
 
@@ -70,8 +61,6 @@ export class UserRepositoryTyperom implements UsersRepository {
       secret: this.configService.get('JWT_SECRET'),
       expiresIn: '60s',
     });
-
-    console.log("Authentification réussie pour l'utilisateur :", user.email);
 
     return { name: user.name, email: user.email, token };
   }
@@ -88,10 +77,6 @@ export class UserRepositoryTyperom implements UsersRepository {
 
       return userEntity;
     } catch (error) {
-      console.error(
-        "Erreur lors de la recherche de l'utilisateur :",
-        error.message,
-      );
       throw new Error(
         "Une erreur s'est produite lors de la recherche de l'utilisateur.",
       );

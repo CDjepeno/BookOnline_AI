@@ -1,7 +1,7 @@
-import { Book } from 'src/domaine/entities/Book';
 import { BookRepository } from 'src/domaine/repositories/book.repository';
 import { AddBookRequest } from './add.book.request';
 import { AddBookResponse } from './add.book.response';
+import { Book } from 'src/domaine/entities/Book.entity';
 
 export class AddBookUseCase {
   constructor(private bookRepository: BookRepository) {}
@@ -19,11 +19,9 @@ export class AddBookUseCase {
         approved,
         request.userId,
       );
-      console.log(book);
       return await this.bookRepository.addBook(book);
     } catch (error) {
-      console.error("Erreur lors de l'ajout du livre :", error);
-      throw new Error("Impossible d'ajouter le livre.");
+      throw new Error(error);
     }
   }
 }

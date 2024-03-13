@@ -4,8 +4,8 @@ import { AddBookRequest } from 'src/application/usecases/book/AddBook/add.book.r
 import { AddBookResponse } from 'src/application/usecases/book/AddBook/add.book.response';
 import { BookRepository } from 'src/domaine/repositories/book.repository';
 import { Repository } from 'typeorm';
-import { Book } from '../models/book.entity';
-import { User } from '../models/user.entity';
+import { Book } from '../models/book.model';
+import { User } from '../models/user.model';
 
 export class BookRepositoryTyperom implements BookRepository {
   constructor(

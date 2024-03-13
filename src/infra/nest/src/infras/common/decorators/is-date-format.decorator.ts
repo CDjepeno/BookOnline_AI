@@ -3,7 +3,7 @@ import moment from 'moment';
 
 function isValidDateFormat(value: Date): boolean {
   if (!(value instanceof Date)) {
-    return false; // Garantit que la valeur est bien une instance de Date
+    return false;
   }
 
   const dateFormat = 'YYYY-MM-DD';

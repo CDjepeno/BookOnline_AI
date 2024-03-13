@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { TwilioClient } from 'src/infras/clients/twilio/twilio.client';
 import { TwilioModules } from 'src/infras/clients/twilio/twilio.module';
-import { User } from 'src/infras/models/user.entity';
+import { User } from 'src/infras/models/user.model';
 import { UserRepositoryTyperom } from 'src/infras/services/user.repository.typeorm';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 

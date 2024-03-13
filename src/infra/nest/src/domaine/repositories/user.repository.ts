@@ -1,11 +1,11 @@
 import { AddUserResponse } from 'src/application/usecases/user/adduser/add.user.response';
 import { CurrentUserResponse } from 'src/application/usecases/user/auth/current.user.response';
-import { GetUserRequest } from 'src/application/usecases/user/getuser/get.user.request';
-import { GetUserResponse } from 'src/application/usecases/user/getuser/get.user.response';
-import { User } from 'src/domaine/entities/User';
+import { LoginUserRequest } from 'src/application/usecases/user/getuser/login.user.request';
+import { LoginUserResponse } from 'src/application/usecases/user/getuser/login.user.response';
+import { User } from '../entities/User.entity';
 
 export interface UsersRepository {
   addUser(user: User): Promise<AddUserResponse>;
-  signIn(user: GetUserRequest): Promise<GetUserResponse>;
+  signIn(user: LoginUserRequest): Promise<LoginUserResponse>;
   getCurrentUser(email: string): Promise<CurrentUserResponse>;
 }

@@ -11,23 +11,22 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Book } from './book.model';
 
 @Entity()
 export class User {
-  //Id
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  //Email
   @Column('varchar', { unique: true })
   @IsEmail()
   @IsNotEmpty({ message: 'The email is required' })
   email: string;
 
-  //Password
   @Column()
   @IsString()
   @Length(6, 24)
@@ -37,18 +36,16 @@ export class User {
   })
   password: string;
 
-  //Name
   @Column()
   @IsString()
   name: string;
 
-  //Phone
   @Column()
   @IsString()
   phone: string;
 
-  // @OneToMany(() => Book, (book) => book.user)
-  // books: Book[];
+  @OneToMany(() => Book, (book) => book.user)
+  books: Book[];
 
   @CreateDateColumn()
   created_at: Date;
@@ -58,7 +55,7 @@ export class User {
 
   @BeforeInsert()
   async setPassword() {
-    const saltRounds = 10; // Nombre de rounds pour générer le sel
+    const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     this.password = await bcrypt.hash(this.password, salt);
   }
