@@ -1,13 +1,13 @@
+import { INestApplication } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { join } from 'path';
-import { ConfigModule } from '@nestjs/config';
-import { INestApplication } from '@nestjs/common';
 import { TwilioClient } from 'src/infras/clients/twilio/twilio.client';
-import { UserRepositoryTyperom } from 'src/infras/services/user.repository.typeorm';
-import { User } from 'src/infras/entities/user.entity';
 import { TwilioModules } from 'src/infras/clients/twilio/twilio.module';
+import { User } from 'src/infras/models/user.model';
+import { UserRepositoryTyperom } from 'src/infras/services/user.repository.typeorm';
+import { GenericContainer, StartedTestContainer } from 'testcontainers';
 
 describe('User Repository', () => {
   let app: INestApplication;

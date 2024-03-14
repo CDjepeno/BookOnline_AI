@@ -1,5 +1,5 @@
-import { CurrentUserResponse } from 'src/domaine/model/current.user.response';
 import { UsersRepository } from 'src/domaine/repositories/user.repository';
+import { CurrentUserResponse } from './current.user.response';
 
 export class GetCurrentUserUseCase {
   constructor(private readonly usersRepository: UsersRepository) {}

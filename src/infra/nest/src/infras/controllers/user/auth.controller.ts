@@ -8,12 +8,13 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { GetCurrentUserUseCase } from 'src/application/usecases/get.current.user.usecase';
-import { LoginUserUseCase } from 'src/application/usecases/login.user.usecase';
+
+import { GetCurrentUserUseCase } from 'src/application/usecases/user/auth/get.current.user.usecase';
+import { LoginUserUseCase } from 'src/application/usecases/user/getuser/login.user.usecase';
 import { JwtAuthGuard } from 'src/infras/common/guards/jwt-auth.guard';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
-import { AuthDto } from '../../common/dto/auth.dto.class';
+import { AuthDto } from './auth.dto';
 
 @Controller('auth')
 export class AuthController {

@@ -7,14 +7,14 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { AuthInput } from 'src/domaine/model/auth.input';
-import { AuthResponse } from 'src/domaine/model/auth.response';
-import { CurrentUserResponse } from 'src/domaine/model/current.user.response';
+import { AddUserRequest } from 'src/application/usecases/user/adduser/add.user.request';
+import { AddUserResponse } from 'src/application/usecases/user/adduser/add.user.response';
+import { CurrentUserResponse } from 'src/application/usecases/user/auth/current.user.response';
+import { LoginUserRequest } from 'src/application/usecases/user/getuser/login.user.request';
+import { LoginUserResponse } from 'src/application/usecases/user/getuser/login.user.response';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from '../../domaine/model/user.dtos';
-import { UserModel } from '../../domaine/model/user.model';
 import { UsersRepository } from '../../domaine/repositories/user.repository';
-import { User } from '../entities/user.entity';
+import { User } from '../models/user.model';
 
 @Injectable()
 export class UserRepositoryTyperom implements UsersRepository {
@@ -25,16 +25,16 @@ export class UserRepositoryTyperom implements UsersRepository {
     private configService: ConfigService,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserModel> {
+  async addUser(addUserRequest: AddUserRequest): Promise<AddUserResponse> {
     const user = new User();
-    user.email = createUserDto.email;
-    user.password = await bcrypt.hash(createUserDto.password, 10);
-    user.name = createUserDto.name;
-    user.phone = createUserDto.phone;
-    return this.repository.save(user);
+    user.email = addUserRequest.email;
+    user.password = addUserRequest.password;
+    user.name = addUserRequest.name;
+    user.phone = addUserRequest.phone;
+    return await this.repository.save(user);
   }
 
-  async signIn(siginIn: AuthInput): Promise<AuthResponse> {
+  async signIn(siginIn: LoginUserRequest): Promise<LoginUserResponse> {
     const { email, password } = siginIn;
     const user = await this.repository.findOne({
       where: { email },
@@ -43,7 +43,11 @@ export class UserRepositoryTyperom implements UsersRepository {
       throw new NotFoundException("L'utilisateur n'existe pas.");
     }
 
-    const match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(
+      password.trim().toLowerCase(),
+      user.password,
+    );
+
     if (!match) {
       throw new UnauthorizedException('Le mot de passe est invalide.');
     }
@@ -57,6 +61,7 @@ export class UserRepositoryTyperom implements UsersRepository {
       secret: this.configService.get('JWT_SECRET'),
       expiresIn: '60s',
     });
+
     return { name: user.name, email: user.email, token };
   }
 
@@ -72,10 +77,6 @@ export class UserRepositoryTyperom implements UsersRepository {
 
       return userEntity;
     } catch (error) {
-      console.error(
-        "Erreur lors de la recherche de l'utilisateur :",
-        error.message,
-      );
       throw new Error(
         "Une erreur s'est produite lors de la recherche de l'utilisateur.",
       );

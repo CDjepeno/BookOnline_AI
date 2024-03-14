@@ -1,9 +1,9 @@
+import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserRepositoryTyperom } from '../../src/infras/services/user.repository.typeorm';
 import { TwilioClient } from '../../src/infras/clients/twilio/twilio.client';
-import { User } from '../../src/infras/entities/user.entity';
-import { ConfigService } from '@nestjs/config';
+import { User } from '../../src/infras/models/user.model';
+import { UserRepositoryTyperom } from '../../src/infras/services/user.repository.typeorm';
 
 describe('', () => {
   let moduleFixture: TestingModule;

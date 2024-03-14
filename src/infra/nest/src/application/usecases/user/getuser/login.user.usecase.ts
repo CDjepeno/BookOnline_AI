@@ -1,11 +1,11 @@
-import { AuthInput } from 'src/domaine/model/auth.input';
-import { AuthResponse } from 'src/domaine/model/auth.response';
 import { UsersRepository } from 'src/domaine/repositories/user.repository';
+import { LoginUserRequest } from './login.user.request';
+import { LoginUserResponse } from './login.user.response';
 
 export class LoginUserUseCase {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async execute(request: AuthInput): Promise<AuthResponse> {
+  async execute(request: LoginUserRequest): Promise<LoginUserResponse> {
     try {
       return await this.usersRepository.signIn(request);
     } catch (error) {

@@ -1,4 +1,4 @@
-#React
+############## Reactjs ################
 src/infra/client-react/node_modules
 
 # Logs
@@ -28,7 +28,7 @@ src/infra/client-react/*.sw?
 
 
 
-#Nest
+############### Nestjs #################
 src/infra/nest/dist
 src/infra/nest/node_modules
 

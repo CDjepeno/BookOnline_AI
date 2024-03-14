@@ -1,9 +1,9 @@
-import { CreateUserUseCase } from '../../../../application/usecases/create.user.usecase';
-import { UsersRepository } from '../../../../domaine/repositories/user.repository';
-import { ClientSmsPort } from '../../../../domaine/repositories/client.sms.port';
 import { mock, Mock } from 'ts-jest-mocker';
-import { userDataDto, userDataResponse } from '../../data/userData';
+import { CreateUserUseCase } from '../../../../application/usecases/user/adduser/add.user.usecase';
 import { InvalidPhoneNumberException } from '../../../../domaine/errors/book.error';
+import { ClientSmsPort } from '../../../../domaine/repositories/client.sms.port';
+import { UsersRepository } from '../../../../domaine/repositories/user.repository';
+import { userDataDto, userDataResponse } from '../../data/userData';
 
 describe('Rule: create user', () => {
   let createUserUseCase: CreateUserUseCase;

@@ -1,16 +1,17 @@
-import { UserModel } from '../../domaine/model/user.model';
-import { CreateUserDto } from '../../domaine/model/user.dtos';
-import { UsersRepository } from '../../domaine/repositories/user.repository';
+import { User } from 'src/domaine/entities/User.entity';
 import { InvalidPhoneNumberException } from 'src/domaine/errors/book.error';
 import NodemailerClient from 'src/infras/clients/nodemailer/nodemailer.client';
+import { UsersRepository } from '../../../../domaine/repositories/user.repository';
+import { AddUserRequest } from './add.user.request';
+import { AddUserResponse } from './add.user.response';
 
-export class CreateUserUseCase {
+export class AddUserUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private nodemailerClient: NodemailerClient,
   ) {}
 
-  async execute(request: CreateUserDto): Promise<UserModel> {
+  async execute(request: AddUserRequest): Promise<AddUserResponse> {
     try {
       const regexPhone = /^((\+)33)|(0)[6-7](\d{2}){4}$/;
       if (!regexPhone.test(request.phone)) {
@@ -23,7 +24,15 @@ export class CreateUserUseCase {
         text: `Bonjour ${request.name}, \nVotre compte a bien été crée`,
       });
 
-      return await this.usersRepository.createUser(request);
+      const user = new User(
+        request.id,
+        request.name,
+        request.email,
+        request.password,
+        request.phone,
+      );
+
+      return await this.usersRepository.addUser(user);
     } catch (error) {
       throw error;
     }

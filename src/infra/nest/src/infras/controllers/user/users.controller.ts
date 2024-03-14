@@ -1,17 +1,17 @@
-import { CreateUserDto } from '../../../domaine/model/user.dtos';
-import { UseCaseProxy } from '../../../infras/usecase-proxy/usecase-proxy';
-import { UsecaseProxyModule } from '../../../infras/usecase-proxy/usecase-proxy.module';
-import { CreateUserUseCase } from '../../../application/usecases/create.user.usecase';
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { User } from 'src/infras/entities/user.entity';
+import { AddUserUseCase } from 'src/application/usecases/user/adduser/add.user.usecase';
+import { User } from 'src/infras/models/user.model';
+import { UseCaseProxy } from '../../../infras/usecase-proxy/usecase-proxy';
+import { UsecaseProxyModule } from '../../../infras/usecase-proxy/usecase-proxy.module';
+import { CreateUserDto } from './user.dto';
 
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(
     @Inject(UsecaseProxyModule.CREATE_USER_USE_CASE)
-    private readonly createUserUsecaseProxy: UseCaseProxy<CreateUserUseCase>,
+    private readonly createUserUsecaseProxy: UseCaseProxy<AddUserUseCase>,
   ) {}
 
   @Post()

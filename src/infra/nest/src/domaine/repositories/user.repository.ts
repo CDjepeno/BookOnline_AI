@@ -1,11 +1,11 @@
-import { AuthInput } from '../model/auth.input';
-import { AuthResponse } from '../model/auth.response';
-import { CurrentUserResponse } from '../model/current.user.response';
-import { CreateUserDto } from '../model/user.dtos';
-import { UserModel } from '../model/user.model';
+import { AddUserResponse } from 'src/application/usecases/user/adduser/add.user.response';
+import { CurrentUserResponse } from 'src/application/usecases/user/auth/current.user.response';
+import { LoginUserRequest } from 'src/application/usecases/user/getuser/login.user.request';
+import { LoginUserResponse } from 'src/application/usecases/user/getuser/login.user.response';
+import { User } from '../entities/User.entity';
 
 export interface UsersRepository {
-  createUser(user: CreateUserDto): Promise<UserModel>;
-  signIn(user: AuthInput): Promise<AuthResponse>;
+  addUser(user: User): Promise<AddUserResponse>;
+  signIn(user: LoginUserRequest): Promise<LoginUserResponse>;
   getCurrentUser(email: string): Promise<CurrentUserResponse>;
 }
