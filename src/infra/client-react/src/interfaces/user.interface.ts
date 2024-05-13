@@ -1,7 +1,5 @@
-import { ObjectId } from "../types";
-
 export interface UserI {
-  _id: ObjectId;
+  _id: string;
   email: string;
   password: string;
   name: string;
