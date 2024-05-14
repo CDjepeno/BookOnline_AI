@@ -1,9 +1,7 @@
 import axios from "axios";
 import { CurrentUserResponse } from "../types/current.user.response";
 
-export const getCurrentUser = async (): Promise<
-  CurrentUserResponse | unknown
-> => {
+export async function getCurrentUser(): Promise<CurrentUserResponse | null> {
   const storedValue = localStorage.getItem("BookToken");
   const parsedObject = JSON.parse(storedValue as string);
   try {
@@ -17,7 +15,10 @@ export const getCurrentUser = async (): Promise<
     );
     return response.data;
   } catch (error) {
-    console.error("An error occurred while fetching current user:", error);
+    console.error(
+      "Une erreur s'est produite lors de la récupération de l'utilisateur actuel :",
+      error
+    );
     throw error;
   }
-};
+}

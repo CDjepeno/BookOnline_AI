@@ -7,13 +7,9 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
-// import { useContext } from "react";
-// import { AuthContext } from "../../context";
-// import { AuthContextValue } from "../../types/auth.context.value";
 import AddBookHook from "./Add-book.hook";
 
 export default function AddBook() {
-  // const { user } = useContext(AuthContext) as AuthContextValue;
   const { register, submit, handleSubmit, errors, control } = AddBookHook();
 
   return (
@@ -98,7 +94,7 @@ export default function AddBook() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Ajouter
+            Ajouter un livre
           </Button>
         </Box>
       </Box>
