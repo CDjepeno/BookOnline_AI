@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { ReactNode, useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getCurrentUser } from "../../api/current.user";
 import { AuthContext } from "../../context";
 import { AuthInput } from "../../types";
 import { CurrentUserResponse } from "../../types/current.user.response";
@@ -10,9 +11,18 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<CurrentUserResponse | null>(null);
   const navigate = useNavigate();
-  const initialUser: CurrentUserResponse | unknown = useLoaderData();
-  const [user, setUser] = useState<CurrentUserResponse | unknown>(initialUser);
+
+  const getUser = async () => {
+    try {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+    } catch (error) {
+      console.error("Error getting current user:", error);
+    }
+  };
+
   const signin = async (credentials: AuthInput) => {
     try {
       const response: AxiosResponse = await axios.post(
@@ -21,7 +31,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       );
       const token = response.data.token;
       localStorage.setItem("BookToken", JSON.stringify(token));
-      setUser(response.data);
+
+      await getUser();
     } catch (error) {
       console.error("Sign in failed:", error);
     }
@@ -29,7 +40,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signout = async () => {
     localStorage.removeItem("BookToken");
-    setUser(null)
+    setUser(null);
     navigate("/");
   };
 
