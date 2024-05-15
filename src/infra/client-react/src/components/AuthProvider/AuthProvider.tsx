@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { enqueueSnackbar } from "notistack";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../../api/current.user";
@@ -17,6 +18,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const getUser = async () => {
     try {
       const currentUser = await getCurrentUser();
+
       setUser(currentUser);
     } catch (error) {
       console.error("Error getting current user:", error);
@@ -29,15 +31,54 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         "http://localhost:3000/auth/login",
         credentials
       );
-      const token = response.data.token;
-      localStorage.setItem("BookToken", JSON.stringify(token));
+      if (response.data) {
+        const token = response.data.token;
+        localStorage.setItem("BookToken", JSON.stringify(token));
 
-      await getUser();
+        await getUser();
+        navigate("/");
+      }
     } catch (error) {
-      console.error("Sign in failed:", error);
+      if (error && (error as AxiosError).message === "Network Error") {
+        enqueueSnackbar("Une erreur est survenue", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          style: {
+            color: "white",
+            textAlign: "center",
+            margin: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        });
+      }
+
+      if (
+        (error as AxiosError).response &&
+        (error as AxiosError).response!.status === 401
+      ) {
+        enqueueSnackbar("Mauvais email/mot de passe!", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          style: {
+            color: "white",
+            textAlign: "center",
+            margin: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        });
+      }
     }
   };
-
   const signout = async () => {
     localStorage.removeItem("BookToken");
     setUser(null);
