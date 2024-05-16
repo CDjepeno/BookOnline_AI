@@ -59,7 +59,7 @@ export class UserRepositoryTyperom implements UsersRepository {
 
     const token = await this.jwtService.signAsync(payload, {
       secret: this.configService.get('JWT_SECRET'),
-      expiresIn: '60s',
+      expiresIn: '15m',
     });
 
     return { name: user.name, email: user.email, token };
