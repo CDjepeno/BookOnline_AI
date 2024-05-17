@@ -25,13 +25,21 @@ export class UserRepositoryTyperom implements UsersRepository {
     private configService: ConfigService,
   ) {}
 
-  async addUser(addUserRequest: AddUserRequest): Promise<AddUserResponse> {
-    const user = new User();
-    user.email = addUserRequest.email;
-    user.password = addUserRequest.password;
-    user.name = addUserRequest.name;
-    user.phone = addUserRequest.phone;
-    return await this.repository.save(user);
+  async signUp(addUserRequest: AddUserRequest): Promise<AddUserResponse> {
+    try {
+      const user = new User();
+      user.email = addUserRequest.email;
+      user.password = addUserRequest.password;
+      user.name = addUserRequest.name;
+      user.phone = addUserRequest.phone;
+
+      return await this.repository.save(user);
+    } catch (error) {
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new UnauthorizedException('Cet email est deja utilise.');
+      }
+      throw new Error(error);
+    }
   }
 
   async signIn(siginIn: LoginUserRequest): Promise<LoginUserResponse> {

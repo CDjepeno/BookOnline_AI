@@ -5,7 +5,7 @@ import { LoginUserResponse } from 'src/application/usecases/user/getuser/login.u
 import { User } from '../entities/User.entity';
 
 export interface UsersRepository {
-  addUser(user: User): Promise<AddUserResponse>;
+  signUp(user: User): Promise<AddUserResponse>;
   signIn(user: LoginUserRequest): Promise<LoginUserResponse>;
   getCurrentUser(email: string): Promise<CurrentUserResponse>;
 }

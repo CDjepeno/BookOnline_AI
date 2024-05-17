@@ -35,6 +35,7 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 function Header() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
+  const isSigUpPage = location.pathname === "/register";
   const { user, signout } = useContext(AuthContext) as AuthContextValue;
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -207,8 +208,11 @@ function Header() {
               </Menu>
             </Box>
           ) : (
-            !isLoginPage && (
+            !isLoginPage && !isSigUpPage &&(
               <Box>
+                <NavLink to="/register">
+                  <Button sx={{ color: "#fff" }}>Inscription</Button>
+                </NavLink>
                 <NavLink to="/login">
                   <Button sx={{ color: "#fff" }}>Connexion</Button>
                 </NavLink>

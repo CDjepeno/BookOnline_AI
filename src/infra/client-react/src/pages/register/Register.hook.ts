@@ -73,21 +73,24 @@ export default function RegisterHook() {
         reset(defaultValues);
       }
     } catch (error) {
-      enqueueSnackbar("Une erreur est survenue!", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "bottom",
-          horizontal: "center",
-        },
-        style: {
-          color: "white",
-          textAlign: "center",
-          margin: "auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        },
-      });
+      const axiosError: AxiosError = error as AxiosError;
+      if (axiosError.code === "ERR_BAD_REQUEST") {
+        enqueueSnackbar("Cet email est deja utilise.", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "center",
+          },
+          style: {
+            color: "white",
+            textAlign: "center",
+            margin: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          },
+        });
+      }
 
       if (axios.isAxiosError(error)) {
         const axiosError: AxiosError = error;
@@ -102,10 +105,6 @@ export default function RegisterHook() {
       } else {
         console.error("Non-Axios error:", error);
       }
-      setError("phone", {
-        type: "string",
-        message: "Numero invalide",
-      });
     }
   }
 
