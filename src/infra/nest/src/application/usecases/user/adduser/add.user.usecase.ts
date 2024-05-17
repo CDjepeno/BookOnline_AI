@@ -32,7 +32,7 @@ export class AddUserUseCase {
         request.phone,
       );
 
-      return await this.usersRepository.addUser(user);
+      return await this.usersRepository.signUp(user);
     } catch (error) {
       throw error;
     }
