@@ -37,10 +37,6 @@ export class Book {
 
   @Column()
   @IsInt()
-  approved: number;
-
-  @Column()
-  @IsInt()
   userId: number;
 
   @ManyToOne(() => User, (user) => user.books)
