@@ -1,7 +1,9 @@
 import { DynamicModule, Module } from '@nestjs/common';
 
-import { AddBookUseCase } from 'src/application/usecases/book/AddBook/add.book.usecase';
+import { AddBookUseCase } from 'src/application/usecases/book/AddBook/addBook.usecase';
+import { GetAllBookUsecase } from 'src/application/usecases/book/GetAllBook/getAllBook.usecase';
 import { AddUserUseCase } from 'src/application/usecases/user/adduser/add.user.usecase';
+import { GetCurrentUserUseCase } from 'src/application/usecases/user/auth/get.current.user.usecase';
 import { LoginUserUseCase } from 'src/application/usecases/user/getuser/login.user.usecase';
 import NodemailerClient from '../clients/nodemailer/nodemailer.client';
 import { NodemailerModules } from '../clients/nodemailer/nodemailer.module';
@@ -9,7 +11,6 @@ import { BookRepositoryTyperom } from '../services/book.repository.typeorm';
 import { RepositoriesModule } from '../services/repositories.module';
 import { UserRepositoryTyperom } from '../services/user.repository.typeorm';
 import { UseCaseProxy } from './usecase-proxy';
-import { GetCurrentUserUseCase } from 'src/application/usecases/user/auth/get.current.user.usecase';
 
 @Module({
   imports: [RepositoriesModule, NodemailerModules],
@@ -19,7 +20,8 @@ export class UsecaseProxyModule {
   static LOGIN_USER_USE_CASE = 'loginUserUseCaseProxy';
   static GET_CURRENT_USER_USE_CASE = 'getCurrentUserUseCaseProxy';
 
-  static ADD_BOOK_USECASES_PROXY = 'addTodoUsecasesProxy';
+  static ADD_BOOK_USECASES_PROXY = 'addBookUsecasesProxy';
+  static GET_ALL_BOOK_USECASES_PROXY = 'getAllBookUsecasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -54,6 +56,12 @@ export class UsecaseProxyModule {
           useFactory: (bookRepository: BookRepositoryTyperom) =>
             new UseCaseProxy(new AddBookUseCase(bookRepository)),
         },
+        {
+          inject: [BookRepositoryTyperom],
+          provide: UsecaseProxyModule.GET_ALL_BOOK_USECASES_PROXY,
+          useFactory: (bookRepository: BookRepositoryTyperom) =>
+            new UseCaseProxy(new GetAllBookUsecase(bookRepository)),
+        },
       ],
 
       exports: [
@@ -62,6 +70,7 @@ export class UsecaseProxyModule {
         UsecaseProxyModule.GET_CURRENT_USER_USE_CASE,
 
         UsecaseProxyModule.ADD_BOOK_USECASES_PROXY,
+        UsecaseProxyModule.GET_ALL_BOOK_USECASES_PROXY,
       ],
     };
   }

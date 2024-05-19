@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { AddBookUseCase } from './application/usecases/book/AddBook/add.book.usecase';
+import { AddBookUseCase } from './application/usecases/book/AddBook/addBook.usecase';
 import { AddUserUseCase } from './application/usecases/user/adduser/add.user.usecase';
 import { TypeOModule } from './infras/clients/typeorm/type-orm.module';
 import { ControllerModule } from './infras/controllers/controller.module';

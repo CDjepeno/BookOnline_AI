@@ -1,7 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddBookRequest } from 'src/application/usecases/book/AddBook/add.book.request';
-import { AddBookResponse } from 'src/application/usecases/book/AddBook/add.book.response';
+import { AddBookRequest } from 'src/application/usecases/book/AddBook/addBook.request';
+import { AddBookResponse } from 'src/application/usecases/book/AddBook/addBook.response';
+import { GetAllBookResponse } from 'src/application/usecases/book/GetAllBook/getAllBook.response';
 import { BookRepository } from 'src/domaine/repositories/book.repository';
 import { Repository } from 'typeorm';
 import { Book } from '../models/book.model';
@@ -31,13 +32,21 @@ export class BookRepositoryTyperom implements BookRepository {
       book.author = addBookRequest.author;
       book.releaseAt = addBookRequest.releaseAt;
       book.imageUrl = addBookRequest.imageUrl;
-      book.approved = 0;
       book.userId = addBookRequest.userId;
 
       return this.repository.save(book);
     } catch (error) {
       console.log("Erreur lors de l'ajout du livre :", error);
       throw new error("Impossible d'ajouter le livre.");
+    }
+  }
+
+  async getAllBook(): Promise<GetAllBookResponse[]> {
+    try {
+      const books = await this.repository.find();
+      return books;
+    } catch (error) {
+      throw error;
     }
   }
 }
