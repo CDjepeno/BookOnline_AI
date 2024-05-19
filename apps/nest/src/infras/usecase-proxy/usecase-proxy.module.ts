@@ -16,12 +16,12 @@ import { UseCaseProxy } from './usecase-proxy';
   imports: [RepositoriesModule, NodemailerModules],
 })
 export class UsecaseProxyModule {
-  static CREATE_USER_USE_CASE = 'createUserUsecaseProxy';
-  static LOGIN_USER_USE_CASE = 'loginUserUseCaseProxy';
-  static GET_CURRENT_USER_USE_CASE = 'getCurrentUserUseCaseProxy';
+  static CREATE_USER_USECASE_PROXY = 'createUserUsecaseProxy';
+  static LOGIN_USER_USECASE_PROXY = 'loginUserUseCaseProxy';
+  static GET_CURRENT_USER_USECASE_PROXY = 'getCurrentUserUseCaseProxy';
 
-  static ADD_BOOK_USECASES_PROXY = 'addBookUsecasesProxy';
-  static GET_ALL_BOOK_USECASES_PROXY = 'getAllBookUsecasesProxy';
+  static ADD_BOOK_USECASE_PROXY = 'addBookUsecaseProxy';
+  static GET_ALL_BOOK_USECASE_PROXY = 'getAllBookUsecaseProxy';
 
   static register(): DynamicModule {
     return {
@@ -29,7 +29,7 @@ export class UsecaseProxyModule {
       providers: [
         {
           inject: [UserRepositoryTyperom, NodemailerClient],
-          provide: UsecaseProxyModule.CREATE_USER_USE_CASE,
+          provide: UsecaseProxyModule.CREATE_USER_USECASE_PROXY,
           useFactory: (
             userRepository: UserRepositoryTyperom,
             nodemailerClient: NodemailerClient,
@@ -40,37 +40,37 @@ export class UsecaseProxyModule {
         },
         {
           inject: [UserRepositoryTyperom],
-          provide: UsecaseProxyModule.LOGIN_USER_USE_CASE,
+          provide: UsecaseProxyModule.LOGIN_USER_USECASE_PROXY,
           useFactory: (userRepository: UserRepositoryTyperom) =>
             new UseCaseProxy(new LoginUserUseCase(userRepository)),
         },
         {
           inject: [UserRepositoryTyperom],
-          provide: UsecaseProxyModule.GET_CURRENT_USER_USE_CASE,
+          provide: UsecaseProxyModule.GET_CURRENT_USER_USECASE_PROXY,
           useFactory: (userRepository: UserRepositoryTyperom) =>
             new UseCaseProxy(new GetCurrentUserUseCase(userRepository)),
         },
         {
           inject: [BookRepositoryTyperom],
-          provide: UsecaseProxyModule.ADD_BOOK_USECASES_PROXY,
+          provide: UsecaseProxyModule.ADD_BOOK_USECASE_PROXY,
           useFactory: (bookRepository: BookRepositoryTyperom) =>
             new UseCaseProxy(new AddBookUseCase(bookRepository)),
         },
         {
           inject: [BookRepositoryTyperom],
-          provide: UsecaseProxyModule.GET_ALL_BOOK_USECASES_PROXY,
+          provide: UsecaseProxyModule.GET_ALL_BOOK_USECASE_PROXY,
           useFactory: (bookRepository: BookRepositoryTyperom) =>
             new UseCaseProxy(new GetAllBookUsecase(bookRepository)),
         },
       ],
 
       exports: [
-        UsecaseProxyModule.CREATE_USER_USE_CASE,
-        UsecaseProxyModule.LOGIN_USER_USE_CASE,
-        UsecaseProxyModule.GET_CURRENT_USER_USE_CASE,
+        UsecaseProxyModule.CREATE_USER_USECASE_PROXY,
+        UsecaseProxyModule.LOGIN_USER_USECASE_PROXY,
+        UsecaseProxyModule.GET_CURRENT_USER_USECASE_PROXY,
 
-        UsecaseProxyModule.ADD_BOOK_USECASES_PROXY,
-        UsecaseProxyModule.GET_ALL_BOOK_USECASES_PROXY,
+        UsecaseProxyModule.ADD_BOOK_USECASE_PROXY,
+        UsecaseProxyModule.GET_ALL_BOOK_USECASE_PROXY,
       ],
     };
   }

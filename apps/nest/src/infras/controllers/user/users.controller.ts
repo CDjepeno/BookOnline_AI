@@ -10,7 +10,7 @@ import { CreateUserDto } from './user.dto';
 @Controller('users')
 export class UsersController {
   constructor(
-    @Inject(UsecaseProxyModule.CREATE_USER_USE_CASE)
+    @Inject(UsecaseProxyModule.CREATE_USER_USECASE_PROXY)
     private readonly createUserUsecaseProxy: UseCaseProxy<AddUserUseCase>,
   ) {}
 

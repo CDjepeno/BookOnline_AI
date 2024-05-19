@@ -19,9 +19,9 @@ import { AuthDto } from './auth.dto';
 @Controller('auth')
 export class AuthController {
   constructor(
-    @Inject(UsecaseProxyModule.LOGIN_USER_USE_CASE)
+    @Inject(UsecaseProxyModule.LOGIN_USER_USECASE_PROXY)
     private readonly loginUsecaseProxy: UseCaseProxy<LoginUserUseCase>,
-    @Inject(UsecaseProxyModule.GET_CURRENT_USER_USE_CASE)
+    @Inject(UsecaseProxyModule.GET_CURRENT_USER_USECASE_PROXY)
     private readonly getCurrentUserUseCase: UseCaseProxy<GetCurrentUserUseCase>,
   ) {}
 
