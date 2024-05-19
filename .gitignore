@@ -63,3 +63,17 @@ src/infra/nest/!.vscode/settings.json
 src/infra/nest/!.vscode/tasks.json
 src/infra/nest/!.vscode/launch.json
 src/infra/nest/!.vscode/extensions.json
+
+
+############### Lambda #################
+
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+
+*.txt
