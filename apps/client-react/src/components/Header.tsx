@@ -14,8 +14,8 @@ import Typography from "@mui/material/Typography";
 import * as React from "react";
 import { useContext, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { AuthContext } from "../../context";
-import { AuthContextValue } from "../../types/auth.context.value";
+import { AuthContext } from "../context";
+import { AuthContextValue } from "../types/auth.context.value";
 
 type LinkMap = {
   [key: string]: string;

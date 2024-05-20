@@ -4,13 +4,13 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 
 import AddBookHook from "./Add-book.hook";
+import FormInput from "../../components/FormInput";
 
 export default function AddBook() {
-  const { register, submit, handleSubmit, errors, control } = AddBookHook();
+  const { submit, handleSubmit, errors, control } = AddBookHook();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -35,55 +35,44 @@ export default function AddBook() {
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField
-                {...register("name")}
+              <FormInput
+                name="name"
                 label="Name"
-                fullWidth
-                required
-                autoFocus
-                error={!!errors.name}
-                helperText={errors.name?.message}
-              />
+                control={control}
+                errors={errors}
+                />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                {...register("description")}
+              <FormInput
+                name="description"
                 label="description"
-                fullWidth
-                required
-                error={!!errors.description}
-                helperText={errors.description?.message}
+                control={control}
+                errors={errors}
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                {...register("author")}
+              <FormInput
+                name="author"
                 label="Auteur"
-                fullWidth
-                required
-                error={!!errors.author}
-                helperText={errors.author?.message}
+                control={control}
+                errors={errors}
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                {...register("releaseAt")}
+              <FormInput
+                name="releaseAt"
                 label="Date de parution"
                 type="number"
-                fullWidth
-                required
-                error={!!errors.releaseAt}
-                helperText={errors.releaseAt?.message}
+                control={control}
+                errors={errors}
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                {...register("imageUrl")}
+              <FormInput
+                name="imageUrl"
                 label="Image Couverture"
-                fullWidth
-                required
-                error={!!errors.imageUrl}
-                helperText={errors.imageUrl?.message}
+                control={control}
+                errors={errors}
               />
             </Grid>
           </Grid>

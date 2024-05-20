@@ -2,10 +2,10 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { enqueueSnackbar } from "notistack";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../../api/current.user";
-import { AuthContext } from "../../context";
-import { AuthInput } from "../../types";
-import { CurrentUserResponse } from "../../types/current.user.response";
+import { getCurrentUser } from "../api/current.user";
+import { AuthContext } from "../context";
+import { AuthInput } from "../types";
+import { CurrentUserResponse } from "../types/current.user.response";
 
 interface AuthProviderProps {
   children: ReactNode;
