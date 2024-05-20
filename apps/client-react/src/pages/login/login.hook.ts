@@ -30,6 +30,7 @@ export default function LoginHook() {
     register,
     formState: { errors, isSubmitting },
     clearErrors,
+    control
   } = useForm({ defaultValues, resolver: yupResolver(validationSchema) });
 
   async function onSubmit(data: AuthInput) {
@@ -47,5 +48,6 @@ export default function LoginHook() {
     onSubmit,
     errors,
     isSubmitting,
+    control
   };
 }
