@@ -7,10 +7,11 @@ interface FormInputProps extends Omit<TextFieldProps, 'name' | 'label' | 'contro
   control: Control<any>;
   errors: FieldErrors;
   type?: string;
+  onblur?:any
 }
 
 
-function FormInput({ name, label, control, errors, type = 'text', ...props }:FormInputProps) {
+function FormInput({ name, label, control, errors, type = 'text', onblur, ...props }:FormInputProps) {
   return (
     <Controller
       name={name}
@@ -25,6 +26,7 @@ function FormInput({ name, label, control, errors, type = 'text', ...props }:For
           type={type}
           error={!!errors[name]}
           helperText={errors[name] ? (errors[name]?.message as string) : null}
+          onBlur={onblur}
         />
       )}
     />

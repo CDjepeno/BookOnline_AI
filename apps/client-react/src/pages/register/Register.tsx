@@ -9,11 +9,11 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { Controller } from "react-hook-form";
 import RegisterHook from "./Register.hook";
+import FormInput from "../../components/FormInput";
 
 export default function SignIn() {
   const {
     onSubmit,
-    register,
     handleSubmit,
     control,
     errors,
@@ -46,51 +46,38 @@ export default function SignIn() {
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+              <FormInput
+                name="email"
                 label="Email Address"
-                autoFocus
-                {...register("email")}
+                errors={errors}
+                control={control}
               />
 
               {errors.email && (
                 <small style={{ color: "red" }}>{errors.email.message}</small>
               )}
-              {/* <small>{errors.email?.message}</small> */}
             </Grid>
             <Grid item xs={12}>
-              <Controller
+              <FormInput
                 name="password"
+                label="password"
+                type="password"
                 control={control}
-                render={({ field }) => (
-                  <TextField
-                    required
-                    fullWidth
-                    label="Password"
-                    type="password"
-                    {...field}
-                    onBlur={handleConfirmPasswordChange}
-                  />
-                )}
+                onblur={() => handleConfirmPasswordChange}
+                errors={errors}
               />
-              {errors.password && (
-                <small style={{ color: "red" }}>
-                  {errors.password.message}
-                </small>
-              )}
             </Grid>
             <Grid item xs={12}>
-              <Controller
+            <Controller
                 name="confirmPassword"
                 control={control}
                 render={({ field }) => (
                   <TextField
+                    {...field}
                     required
                     fullWidth
                     label="Confirm Password"
                     type="password"
-                    {...field}
                     error={!isPasswordMatch}
                     helperText={
                       !isPasswordMatch
@@ -102,22 +89,22 @@ export default function SignIn() {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+              <FormInput
+                name="name"
                 label="Name"
-                {...register("name")}
+                control={control}
+                errors={errors}
               />
               {errors.name && (
                 <small style={{ color: "red" }}>{errors.name.message}</small>
               )}
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
+              <FormInput
+                name="phone"
                 label="Phone"
-                {...register("phone")}
+                control={control}
+                errors={errors}
               />
               {errors.phone && (
                 <small style={{ color: "red" }}>{errors.phone.message}</small>

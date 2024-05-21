@@ -59,6 +59,7 @@ apps/nest/*.sublime-workspace
 
 # IDE - VSCode
 apps/nest/.vscode/*
+apps/nest/.env
 apps/nest/!.vscode/settings.json
 apps/nest/!.vscode/tasks.json
 apps/nest/!.vscode/launch.json
@@ -82,7 +83,6 @@ apps/Lambda/*.txt
 !jest.config.js
 *.d.ts
 node_modules
-*.env
 
 # CDK asset staging directory
 .cdk.staging
@@ -94,3 +94,4 @@ cdk.out
 dist/main.js.map
 dist/tsconfig.build.tsbuildinfo
 src/main.ts
+.env

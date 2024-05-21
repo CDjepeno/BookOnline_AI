@@ -40,8 +40,6 @@ function AddBookHook() {
   });
 
   const submit = async (data: Partial<BookI>) => {
-    console.log('Submit formmmmm');
-    
     try {
       const storedValue = localStorage.getItem("BookToken");
       const parsedObject = JSON.parse(storedValue as string);
