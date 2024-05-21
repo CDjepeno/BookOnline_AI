@@ -1,18 +1,10 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Container,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
+import Loading from "../../components/Loading/Loading";
+import BookCard from "../book/components/BookCard";
+import HomePageHook from "./HomePage.hook";
 
 export function HomePage() {
-  
-  
-  const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
+  const { books, isLoading } = HomePageHook();
 
   return (
     <main>
@@ -27,46 +19,29 @@ export function HomePage() {
           >
             OnlineBook
           </Typography>
-          <Typography variant="h5" align="center" color="text.secondary" >
-          Bienvenue sur OnlineBook, le numéro 1 de la bibliothèque en ligne de livres libres de droits.
-            </Typography>
+          <Typography variant="h5" align="center" color="text.secondary">
+            Bienvenue sur OnlineBook, le numéro 1 de la bibliothèque en ligne de
+            livres libres de droits.
+          </Typography>
         </Container>
       </Box>
       <Container sx={{ py: 8 }} maxWidth="md">
-        <Grid container spacing={4}>
-
-          {cards.map((card) => (
-            <Grid item key={card} xs={12} sm={6} md={4}>
-              <Card
-                sx={{
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <CardMedia
-                  component="div"
-                  sx={{
-                    // 16:9
-                    pt: "56.25%",
-                  }}
-                  image="https://source.unsplash.com/random?wallpapers"
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    Heading
-                  </Typography>
-                  <Typography>
-                    This is a media card. You can use this section to describe
-                    the content.
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-
-          
-        </Grid>
+        {isLoading && !books.length ? (
+          <Loading />
+        ) : (
+          <Grid container spacing={4}>
+            {books.map((book) => (
+              <BookCard
+                key={book.id}
+                image={book.imageUrl}
+                name={book.name}
+                author={book.author}
+                description={book.description}
+                releaseAt={book.releaseAt}
+              />
+            ))}
+          </Grid>
+        )}
       </Container>
     </main>
   );
