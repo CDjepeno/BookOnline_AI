@@ -10,9 +10,11 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import LoginHook from "./login.hook";
+import { Control } from 'react-hook-form';
+import FormInput from "../../components/FormInput";
 
 export default function Login() {
-  const { onSubmit, register, handleSubmit, errors, isSubmitting } =
+  const { onSubmit, register, handleSubmit, errors, isSubmitting, control } =
     LoginHook();
 
   return (
@@ -55,34 +57,18 @@ export default function Login() {
             onSubmit={handleSubmit(onSubmit)}
             sx={{ mt: 3 }}
           >
-            <TextField
-              error={!!errors.email}
-              margin="normal"
-              required
-              fullWidth
-              id="email"
+            <FormInput
+              name="email"
               label="Email Address"
-              autoComplete="email"
-              autoFocus
-              {...register("email")}
-              helperText={
-                errors.email && (errors.email.message as React.ReactNode)
-              }
+              control={control}
+              errors={errors}
             />
 
-            <TextField
-              error={!!errors.password}
-              margin="normal"
-              required
-              fullWidth
+            <FormInput
+              name="password"
               label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              {...register("password")}
-              helperText={
-                errors.password && (errors.password.message as React.ReactNode)
-              }
+              control={control}
+              errors={errors}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
