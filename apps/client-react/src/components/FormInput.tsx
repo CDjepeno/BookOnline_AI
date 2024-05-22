@@ -1,17 +1,31 @@
-import TextField, { TextFieldProps } from '@mui/material/TextField';
-import { Control, Controller, FieldErrors } from 'react-hook-form';
+import TextField, { TextFieldProps } from "@mui/material/TextField";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  FieldValues,
+  Path,
+} from "react-hook-form";
 
-interface FormInputProps extends Omit<TextFieldProps, 'name' | 'label' | 'control' | 'errors'> {
-  name: string;
+interface FormInputProps<T extends FieldValues>
+  extends Omit<TextFieldProps, "name" | "label" | "control" | "errors"> {
+  name: Path<T>;
   label: string;
-  control: Control<any>;
-  errors: FieldErrors;
+  control: Control<T>;
+  errors: FieldErrors<T>;
   type?: string;
-  onblur?:any
+  onblur?: () => void;
 }
 
-
-function FormInput({ name, label, control, errors, type = 'text', onblur, ...props }:FormInputProps) {
+function FormInput<T extends FieldValues>({
+  name,
+  label,
+  control,
+  errors,
+  type = "text",
+  onblur,
+  ...props
+}: FormInputProps<T>) {
   return (
     <Controller
       name={name}

@@ -7,15 +7,12 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import LoginHook from "./login.hook";
-import { Control } from 'react-hook-form';
 import FormInput from "../../components/FormInput";
+import LoginHook from "./login.hook";
 
 export default function Login() {
-  const { onSubmit, register, handleSubmit, errors, isSubmitting, control } =
-    LoginHook();
+  const { onSubmit, handleSubmit, errors, isSubmitting, control } = LoginHook();
 
   return (
     <Grid container component="main" sx={{ height: "100vh" }} maxWidth="xs">
@@ -67,6 +64,7 @@ export default function Login() {
             <FormInput
               name="password"
               label="Password"
+              type="password"
               control={control}
               errors={errors}
             />
