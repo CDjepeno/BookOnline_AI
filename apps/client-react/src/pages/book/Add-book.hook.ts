@@ -9,10 +9,18 @@ import { AuthContext } from "../../context";
 import { BookI } from "../../interfaces";
 import { AuthContextValue } from "../../types/auth.context.value";
 
+export type AddBookFormType = {
+  name: string;
+  description: string;
+  author: string;
+  releaseAt: string;
+  imageUrl: string;
+};
+
 function AddBookHook() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext) as AuthContextValue;
-  const defaultValues = {
+  const defaultValues: AddBookFormType = {
     name: "",
     description: "",
     author: "",
