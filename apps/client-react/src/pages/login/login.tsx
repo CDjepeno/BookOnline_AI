@@ -59,6 +59,7 @@ export default function Login() {
               label="Email Address"
               control={control}
               errors={errors}
+              sx={{ mb: 2 }}
             />
 
             <FormInput
@@ -67,6 +68,7 @@ export default function Login() {
               type="password"
               control={control}
               errors={errors}
+              sx={{ mb: 2 }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
