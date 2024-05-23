@@ -6,6 +6,11 @@ import { AuthContext } from "../../context";
 import { AuthInput } from "../../types";
 import { AuthContextValue } from "../../types/auth.context.value";
 
+export type LoginFormType = {
+  email: string;
+  password: string;
+};
+
 export default function LoginHook() {
   const { signin } = useContext(AuthContext) as AuthContextValue;
 
@@ -20,7 +25,7 @@ export default function LoginHook() {
       .min(6, "Mot de passe trop court"),
   });
 
-  const defaultValues = {
+  const defaultValues: LoginFormType = {
     email: "",
     password: "",
   };
@@ -30,7 +35,7 @@ export default function LoginHook() {
     register,
     formState: { errors, isSubmitting },
     clearErrors,
-    control
+    control,
   } = useForm({ defaultValues, resolver: yupResolver(validationSchema) });
 
   async function onSubmit(data: AuthInput) {
@@ -48,6 +53,6 @@ export default function LoginHook() {
     onSubmit,
     errors,
     isSubmitting,
-    control
+    control,
   };
 }

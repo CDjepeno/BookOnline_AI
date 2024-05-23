@@ -2,11 +2,22 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useSnackbar } from "notistack";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { UserI } from "../../interfaces";
 
+export type RegisterFormType = {
+  email: string;
+  password: string;
+  confirmPassword: string;
+  name: string;
+  phone: string;
+};
+
 export default function RegisterHook() {
-  const defaultValues = {
+  const navigate = useNavigate();
+
+  const defaultValues: RegisterFormType = {
     email: "",
     password: "",
     confirmPassword: "",
@@ -14,7 +25,6 @@ export default function RegisterHook() {
     phone: "",
   };
 
-  
   const signupSchema = yup.object({
     email: yup
       .string()
@@ -24,7 +34,7 @@ export default function RegisterHook() {
         "Veuillez renseigner une adresse email valide"
       )
       .required("Veuillez renseigner une adresse email valide"),
-      password: yup
+    password: yup
       .string()
       .required("Veuillez renseigner un mot de passe")
       .min(6, "Votre mot de passe doit contenir au moins 6 caractères"),
@@ -37,25 +47,25 @@ export default function RegisterHook() {
       .required("Le nom doit être renseigné")
       .min(2, "Le nom doit être explicite")
       .max(10, "Le titre doit être succinct"),
-      phone: yup.string().required("Veuillez renseigner un numero valide"),
-    });
-    
-    const {
-      register,
-      handleSubmit,
-      setError,
-      watch,
-      control,
-      reset,
-      formState: { errors, isSubmitting },
-    } = useForm({ defaultValues, resolver: yupResolver(signupSchema) });
-    
-    const validatePasswordMatch = (value: string) => {
-      const password = watch('password');
-      return password === value || "Les mots de passe ne correspondent pas.";
-    };
-    const { enqueueSnackbar } = useSnackbar();
-    
+    phone: yup.string().required("Veuillez renseigner un numero valide"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    watch,
+    control,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({ defaultValues, resolver: yupResolver(signupSchema) });
+
+  const validatePasswordMatch = (value: string) => {
+    const password = watch("password");
+    return password === value || "Les mots de passe ne correspondent pas.";
+  };
+  const { enqueueSnackbar } = useSnackbar();
+
   async function onSubmit(data: Partial<UserI>) {
     try {
       const response: AxiosResponse = await axios.post(
@@ -75,6 +85,7 @@ export default function RegisterHook() {
             minWidth: "100%",
           },
         });
+        navigate("/login");
         reset(defaultValues);
       }
     } catch (error) {
@@ -138,6 +149,6 @@ export default function RegisterHook() {
     isSubmitting,
     handleConfirmPasswordChange,
     isPasswordMatch,
-    validatePasswordMatch
+    validatePasswordMatch,
   };
 }
