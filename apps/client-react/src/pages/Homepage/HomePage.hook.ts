@@ -1,42 +1,27 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { QueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import { BookI } from "../../interfaces";
+import { getBooks } from "../../services/book-services";
+import { BookQueriesKeys } from "../../request/keys/clientQueriesKey";
 
 export default function HomePageHook() {
-  const [books, setBooks] = useState<BookI[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [books, setBooks] = useState<BookI[] | undefined>(undefined);
+  const queryClient = useMemo(() => new QueryClient(), []);
 
   useEffect(() => {
-    async function fetchBooks() {
-      try {
-        const response = await axios.get<BookI[]>(
-          "http://localhost:3000/getbooks"
-        );
-        if (response.status !== 200) {
-          throw new Error(`Erreur ${response.status}`);
-        }
-
-        if (!Array.isArray(response.data)) {
-          throw new Error("Erreur : format de données invalide");
-        }
-        setBooks(response.data);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          setError(
-            error.response?.data.message || "Erreur de reponse du serveur"
-          );
-        } else if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("Une erreur est survenue");
-        }
-      } finally {
-        setIsLoading(false);
-      }
+    async function loadBooks() {
+      const booksData = await queryClient.fetchQuery({
+        queryKey: [BookQueriesKeys.GetBooks],
+        queryFn: getBooks,
+      });
+      console.log(booksData);
+      
+      setBooks(booksData);
+      setIsLoading(false)
+      return booksData;
     }
-
-    fetchBooks();
-  }, []);
-  return { books, setBooks, isLoading, error };
+    loadBooks();
+  }, [queryClient]);
+  return { isLoading, books };
 }

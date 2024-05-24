@@ -5,3 +5,5 @@ export enum MethodHttpEnum {
   DELETE = 'delete',
   PATCH = 'patch',
 }
+
+export const BOOKS_ROUTE = '/books';

@@ -1,5 +1,5 @@
-import { RawAxiosRequestHeaders } from 'axios';
-import { apiInstance } from './apiInstance';
+import { RawAxiosRequestHeaders } from "axios";
+import { apiInstance } from "./apiInstance";
 export const restRequestApiInstance = (
   baseURL: string,
   headers?: RawAxiosRequestHeaders
@@ -7,7 +7,7 @@ export const restRequestApiInstance = (
   apiInstance({
     baseURL: baseURL,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...headers,
     },
   });
