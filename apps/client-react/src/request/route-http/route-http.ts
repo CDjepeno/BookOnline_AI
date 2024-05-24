@@ -6,4 +6,6 @@ export enum MethodHttpEnum {
   PATCH = 'patch',
 }
 
-export const BOOKS_ROUTE = '/books';
+export const BOOKS_ROUTE = '/getbooks';
+
+export const BASE_URL = 'http://localhost:3000/'

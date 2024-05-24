@@ -3,11 +3,13 @@ import { MethodHttpEnum } from "../../request/route-http/route-http";
 import { restRequestApiInstance } from "./restRequestApiInstance";
 
 export const UseRequest = async <TData, T>(
+
+  //const useRequest: <TData, T>(baseURL: string, path: string, method: MethodEnum, params?: T | undefined, headers?: any) => Promise<TData>
   baseURL: string,
   path: string,
   method: MethodHttpEnum,
+  headers?: RawAxiosRequestHeaders,
   params?: T,
-  headers?: RawAxiosRequestHeaders
 ): Promise<TData> => {
   const config: AxiosRequestConfig = {
     headers,

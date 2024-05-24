@@ -1,3 +1,3 @@
 export enum BookQueriesKeys {
-  GetBooks = 'GetBooks',
+  GetBooks = 'getbooks',
 }

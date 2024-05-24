@@ -11,15 +11,13 @@ export default function HomePageHook() {
 
   useEffect(() => {
     async function loadBooks() {
-      const booksData = await queryClient.fetchQuery({
+      const data = await queryClient.fetchQuery({
         queryKey: [BookQueriesKeys.GetBooks],
         queryFn: getBooks,
       });
-      console.log(booksData);
       
-      setBooks(booksData);
+      setBooks(data.books);
       setIsLoading(false)
-      return booksData;
     }
     loadBooks();
   }, [queryClient]);

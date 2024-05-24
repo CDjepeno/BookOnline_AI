@@ -6,8 +6,6 @@ import HomePageHook from "./HomePage.hook";
 export function HomePage() {
   const { isLoading, books } = HomePageHook();
 
-  console.log(books);
-
   return (
     <main>
       <Box sx={{ bgcolor: "background.paper", pt: 8, pb: 6 }}>
