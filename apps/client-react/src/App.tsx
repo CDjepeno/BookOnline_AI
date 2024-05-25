@@ -1,7 +1,7 @@
 import { SnackbarProvider } from "notistack";
 import { Outlet } from "react-router-dom";
-import Footer from "./components/Footer";
 import { AuthProvider } from "./components/AuthProvider";
+import Footer from "./components/Footer";
 import Header from "./components/Header";
 
 function App() {

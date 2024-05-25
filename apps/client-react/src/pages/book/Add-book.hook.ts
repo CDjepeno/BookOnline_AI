@@ -2,7 +2,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { enqueueSnackbar } from "notistack";
 import { useContext } from "react";
-import { useForm } from "react-hook-form";
+import { DefaultValues, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { AuthContext } from "../../context";
@@ -13,18 +13,19 @@ export type AddBookFormType = {
   name: string;
   description: string;
   author: string;
-  releaseAt: string;
+  releaseAt: Date;
   imageUrl: string;
 };
 
 function AddBookHook() {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext) as AuthContextValue;
-  const defaultValues: AddBookFormType = {
+
+  const defaultValues: DefaultValues<AddBookFormType> = {
     name: "",
     description: "",
     author: "",
-    releaseAt: "",
+    releaseAt: new Date(),
     imageUrl: "",
   };
 
@@ -32,7 +33,7 @@ function AddBookHook() {
     name: yup.string().required("Le nom doit être renseigné"),
     description: yup.string().required("Leadescription doit être renseignée"),
     author: yup.string().required("L'author doit être renseigné"),
-    releaseAt: yup.string().required("La releaseAt doit être renseignée"),
+    releaseAt: yup.date().required("La date de sortie doit être renseignée"),
     imageUrl: yup.string().required("L'imageUrl doit être renseignée"),
   });
 
@@ -42,12 +43,14 @@ function AddBookHook() {
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<AddBookFormType>({
     defaultValues,
     resolver: yupResolver(bookSchema),
   });
 
-  const submit = async (data: Partial<BookI>) => {
+  const submit: SubmitHandler<AddBookFormType> = async (
+    data: Partial<BookI>
+  ) => {
     try {
       const storedValue = localStorage.getItem("BookToken");
       const parsedObject = JSON.parse(storedValue as string);
@@ -77,8 +80,6 @@ function AddBookHook() {
           navigate("/");
           reset(defaultValues);
         }
-
-        reset(defaultValues);
       }
     } catch (error) {
       enqueueSnackbar("Une erreur est survenue!", {
