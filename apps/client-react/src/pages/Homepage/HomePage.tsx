@@ -4,7 +4,7 @@ import BookCard from "../book/components/BookCard";
 import HomePageHook from "./HomePage.hook";
 
 export function HomePage() {
-  const { isLoading, books } = HomePageHook();
+  const { isPending, books } = HomePageHook();
 
   return (
     <main>
@@ -26,7 +26,7 @@ export function HomePage() {
         </Container>
       </Box>
       <Container sx={{ py: 8 }} maxWidth="md">
-        {isLoading ? (
+        {isPending ? (
           <Loading />
         ) : (
           <Grid container spacing={4}>

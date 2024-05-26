@@ -27,10 +27,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signin = async (credentials: AuthInput) => {
     try {
+      console.log(credentials);
       const response: AxiosResponse = await axios.post(
         "http://localhost:3000/auth/login",
         credentials
       );
+      console.log(response);
+
       if (response.data) {
         const token = response.data.token;
         localStorage.setItem("BookToken", JSON.stringify(token));
@@ -55,6 +58,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             justifyContent: "center",
           },
         });
+        throw error;
       }
 
       if (
@@ -79,6 +83,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
     }
   };
+
   const signout = async () => {
     localStorage.removeItem("BookToken");
     setUser(null);

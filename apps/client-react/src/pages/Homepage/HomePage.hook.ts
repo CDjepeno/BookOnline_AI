@@ -1,25 +1,17 @@
-import { QueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
-import { BookI } from "../../interfaces";
-import { getBooks } from "../../services/book-services";
+import { useQuery } from "@tanstack/react-query";
 import { BookQueriesKeys } from "../../request/keys/clientQueriesKey";
+import { getBooks } from "../../services/book-services";
 
 export default function HomePageHook() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [books, setBooks] = useState<BookI[] | undefined>(undefined);
-  const queryClient = useMemo(() => new QueryClient(), []);
+  const {
+    isPending,
+    data: books,
+    error,
+  } = useQuery({
+    queryKey: [BookQueriesKeys.GetBooks],
+    queryFn: getBooks,
+  });
 
-  useEffect(() => {
-    async function loadBooks() {
-      const data = await queryClient.fetchQuery({
-        queryKey: [BookQueriesKeys.GetBooks],
-        queryFn: getBooks,
-      });
-      
-      setBooks(data.books);
-      setIsLoading(false)
-    }
-    loadBooks();
-  }, [queryClient]);
-  return { isLoading, books };
+
+  return { isPending, books, error };
 }
