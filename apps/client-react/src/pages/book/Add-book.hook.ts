@@ -1,13 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { enqueueSnackbar } from "notistack";
+import { QueryClient, useMutation } from "@tanstack/react-query";
 import { useContext } from "react";
-import { DefaultValues, SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { DefaultValues, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { AuthContext } from "../../context";
-import { BookI } from "../../interfaces";
-import { AuthContextValue } from "../../types/auth.context.value";
+import { BookQueriesKeysEnum, RouterEnum } from "../../enum/enum";
+import { UseQueryWorkflowCallback } from "../../request/commons/useQueryWorkflowCallback";
+import { createBook } from "../../services/book-services";
+import { AddBookInput } from "../../types/book/book.types";
+import { AuthContextValue } from "../../types/user/auth.context.value";
 
 export type AddBookFormType = {
   name: string;
@@ -18,8 +19,8 @@ export type AddBookFormType = {
 };
 
 function AddBookHook() {
-  const navigate = useNavigate();
   const { user } = useContext(AuthContext) as AuthContextValue;
+  const queryClient = new QueryClient();
 
   const defaultValues: DefaultValues<AddBookFormType> = {
     name: "",
@@ -48,70 +49,24 @@ function AddBookHook() {
     resolver: yupResolver(bookSchema),
   });
 
-  const submit: SubmitHandler<AddBookFormType> = async (
-    data: Partial<BookI>
-  ) => {
-    try {
-      const storedValue = localStorage.getItem("BookToken");
-      const parsedObject = JSON.parse(storedValue as string);
-      const response: AxiosResponse = await axios.post(
-        "http://localhost:3000/books",
-        { ...data, userId: user && user.id },
-        {
-          headers: {
-            Authorization: `Bearer ${parsedObject}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (response.data) {
-        if (response.data) {
-          enqueueSnackbar("Votre compte a bien ete cree!", {
-            variant: "success",
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            style: {
-              color: "white",
-              minWidth: "100%",
-            },
-          });
-          navigate("/");
-          reset(defaultValues);
-        }
-      }
-    } catch (error) {
-      enqueueSnackbar("Une erreur est survenue!", {
-        variant: "error",
-        anchorOrigin: {
-          vertical: "bottom",
-          horizontal: "center",
-        },
-        style: {
-          color: "white",
-          textAlign: "center",
-          margin: "auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        },
-      });
+  const { onSuccessCommon, onErrorCommon } = UseQueryWorkflowCallback();
 
-      if (axios.isAxiosError(error)) {
-        const axiosError: AxiosError = error;
-        if (axiosError.response) {
-          console.error("Server responded with:", axiosError.response.status);
-          console.error("Response data:", axiosError.response.data);
-        } else if (axiosError.request) {
-          console.error("No response received");
-        } else {
-          console.error("Error setting up the request:", axiosError.message);
-        }
-      } else {
-        console.error("Non-Axios error:", error);
-      }
-    }
+  const userId = user && user.id;
+  const { mutateAsync: addBook } = useMutation({
+    mutationFn: async (input: AddBookInput) => createBook(input, userId, reset),
+    onSuccess: () => {
+      onSuccessCommon("Votre livre a bien été crée", RouterEnum.HOME);
+      queryClient.invalidateQueries({
+        queryKey: [BookQueriesKeysEnum.GetBooks],
+      });
+    },
+    onError: () => {
+      onErrorCommon("Une erreur est survenu");
+    },
+  });
+
+  const submit = async (formInput: AddBookInput) => {
+    await addBook(formInput);
   };
 
   return { register, submit, handleSubmit, isSubmitting, errors, control };

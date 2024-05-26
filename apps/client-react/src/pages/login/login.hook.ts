@@ -1,10 +1,15 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { AuthContext } from "../../context";
-import { AuthInput } from "../../types";
-import { AuthContextValue } from "../../types/auth.context.value";
+import { UseQueryWorkflowCallback } from "../../request/commons/useQueryWorkflowCallback";
+import { AuthContextValue } from "../../types/user/auth.context.value";
+import { AuthFormInput } from "../../types/user/input.types";
+import { RouterEnum } from "../../enum/enum";
 
 export type LoginFormType = {
   email: string;
@@ -38,14 +43,28 @@ export default function LoginHook() {
     control,
   } = useForm({ defaultValues, resolver: yupResolver(validationSchema) });
 
-  async function onSubmit(data: AuthInput) {
-    try {
-      clearErrors();
-      await signin(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const { onErrorCommon } = UseQueryWorkflowCallback();
+  const navigate = useNavigate();
+
+  const { mutateAsync: submit } = useMutation({
+    mutationFn: async (input: AuthFormInput) => signin(input),
+    onError: (error) => {
+      if (
+        (error as AxiosError).response &&
+        (error as AxiosError).response!.status === 401
+      ) {
+        onErrorCommon("Mauvais email/mot de passe!");
+        clearErrors();
+      }
+    },
+    onSuccess: async () => {
+      navigate(RouterEnum.HOME);
+    },
+  });
+
+  const onSubmit = (input: AuthFormInput) => {
+    return submit(input);
+  };
 
   return {
     handleSubmit,
