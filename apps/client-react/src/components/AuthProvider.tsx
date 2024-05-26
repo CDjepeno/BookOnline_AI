@@ -1,21 +1,19 @@
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../api/current.user";
 import { AuthContext } from "../context";
+import { MethodHttpEnum } from "../enum/enum";
 import { UseRequestApi } from "../request/commons/useApiRequest";
-import { LOGIN_ROUTE, MethodHttpEnum } from "../request/route-http/route-http";
-import { AuthInput } from "../types";
-import { CurrentUserResponse } from "../types/current.user.response";
+import { LOGIN_ROUTE } from "../request/route-http/route-http";
+import { getCurrentUser } from "../services/user-services";
+import { AuthFormInput } from "../types/user/input.types";
+import {
+  CurrentUserResponse,
+  SigninResponse,
+} from "../types/user/response.types";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
-
-export type SigninResponse = {
-  name: string;
-  email: string;
-  token: string;
-};
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<CurrentUserResponse | null>(null);
@@ -24,14 +22,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const getUser = async () => {
     try {
       const currentUser = await getCurrentUser();
-
       setUser(currentUser);
     } catch (error) {
       console.error("Error getting current user:", error);
     }
   };
 
-  const signin = async (credentials: AuthInput) => {
+  const signin = async (credentials: AuthFormInput) => {
     const response = await UseRequestApi<SigninResponse, unknown>({
       method: MethodHttpEnum.POST,
       path: LOGIN_ROUTE,

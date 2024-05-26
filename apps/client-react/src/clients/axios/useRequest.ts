@@ -1,6 +1,6 @@
 import { AxiosRequestConfig, RawAxiosRequestHeaders } from "axios";
-import { MethodHttpEnum } from "../../request/route-http/route-http";
 import { restRequestApiInstance } from "./restRequestApiInstance";
+import { MethodHttpEnum } from "../../enum/enum";
 
 export const UseRequest = async <TData, T>(
   baseURL: string,

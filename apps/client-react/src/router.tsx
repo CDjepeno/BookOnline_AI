@@ -5,7 +5,7 @@ import { HomePage } from "./pages/Homepage/HomePage";
 import Login from "./pages/login/login";
 import Register from "./pages/register/Register";
 import PrivateRoute from "./Private-route";
-import { Route } from "./request/route-http/route-http";
+import { RouterEnum } from "./enum/enum";
 
 type CustomRouteObject = RouteObject & {
   element: JSX.Element;
@@ -16,10 +16,10 @@ const routes: CustomRouteObject[] = [
     path: "/",
     element: <App />,
     children: [
-      { path: Route.HOME, element: <HomePage /> },
-      { path: Route.REGISTER, element: <Register /> },
-      { path: Route.LOGIN, element: <Login /> },
-      { path: Route.ADD_BOOK, element: <PrivateRoute element={<AddBook />} /> },
+      { path: RouterEnum.HOME, element: <HomePage /> },
+      { path: RouterEnum.REGISTER, element: <Register /> },
+      { path: RouterEnum.LOGIN, element: <Login /> },
+      { path: RouterEnum.ADD_BOOK, element: <PrivateRoute element={<AddBook />} /> },
     ],
   },
 ];

@@ -15,7 +15,7 @@ import * as React from "react";
 import { useContext, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { AuthContext } from "../context";
-import { AuthContextValue } from "../types/auth.context.value";
+import { AuthContextValue } from "../types/user/auth.context.value";
 
 type LinkMap = {
   [key: string]: string;
@@ -29,7 +29,7 @@ const formatLink = (page: string) => {
   return linkMap[page];
 };
 
-const pages = ["Catégories", "Contact", "Ajouter un livre"];
+const pages = ["Contact", "Ajouter un livre"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Header() {
@@ -209,7 +209,8 @@ function Header() {
               </Menu>
             </Box>
           ) : (
-            !isLoginPage && !isSigUpPage &&(
+            !isLoginPage &&
+            !isSigUpPage && (
               <Box>
                 <NavLink to="/register">
                   <Button sx={{ color: "#fff" }}>Inscription</Button>

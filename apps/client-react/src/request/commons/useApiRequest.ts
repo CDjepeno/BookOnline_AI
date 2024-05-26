@@ -1,6 +1,6 @@
-import { AxiosResponse, RawAxiosRequestHeaders } from "axios";
+import { RawAxiosRequestHeaders } from "axios";
 import { UseRequest } from "../../clients/axios/useRequest";
-import { BASE_URL, CURRENT_USER_ROUTE, MethodHttpEnum, Route } from "../route-http/route-http";
+import { BASE_URL, MethodHttpEnum } from "../route-http/route-http";
 
 interface useApiRequestProps<T> {
   includeAuthorizationHeader: boolean;

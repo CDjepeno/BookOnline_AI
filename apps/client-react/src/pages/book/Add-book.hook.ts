@@ -4,12 +4,11 @@ import { useContext } from "react";
 import { DefaultValues, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { AuthContext } from "../../context";
-import { AddBookInput } from "../../interfaces";
+import { BookQueriesKeysEnum, RouterEnum } from "../../enum/enum";
 import { UseQueryWorkflowCallback } from "../../request/commons/useQueryWorkflowCallback";
-import { BookQueriesKeys } from "../../request/keys/clientQueriesKey";
-import { Route } from "../../request/route-http/route-http";
 import { createBook } from "../../services/book-services";
-import { AuthContextValue } from "../../types/auth.context.value";
+import { AddBookInput } from "../../types/book/book.types";
+import { AuthContextValue } from "../../types/user/auth.context.value";
 
 export type AddBookFormType = {
   name: string;
@@ -18,7 +17,6 @@ export type AddBookFormType = {
   releaseAt: Date;
   imageUrl: string;
 };
-
 
 function AddBookHook() {
   const { user } = useContext(AuthContext) as AuthContextValue;
@@ -53,12 +51,14 @@ function AddBookHook() {
 
   const { onSuccessCommon, onErrorCommon } = UseQueryWorkflowCallback();
 
-  const userId = user && user.id
+  const userId = user && user.id;
   const { mutateAsync: addBook } = useMutation({
-    mutationFn: async (input:AddBookInput) =>  createBook(input, userId, reset),
+    mutationFn: async (input: AddBookInput) => createBook(input, userId, reset),
     onSuccess: () => {
-      onSuccessCommon("Votre livre a bien été crée", Route.HOME);
-      queryClient.invalidateQueries({queryKey: [BookQueriesKeys.GetBooks]});
+      onSuccessCommon("Votre livre a bien été crée", RouterEnum.HOME);
+      queryClient.invalidateQueries({
+        queryKey: [BookQueriesKeysEnum.GetBooks],
+      });
     },
     onError: () => {
       onErrorCommon("Une erreur est survenu");

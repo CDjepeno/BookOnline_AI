@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { BookQueriesKeys } from "../../request/keys/clientQueriesKey";
 import { getBooks } from "../../services/book-services";
+import { BookQueriesKeysEnum } from "../../enum/enum";
 
 export default function HomePageHook() {
   const {
@@ -8,7 +8,7 @@ export default function HomePageHook() {
     data: books,
     error,
   } = useQuery({
-    queryKey: [BookQueriesKeys.GetBooks],
+    queryKey: [BookQueriesKeysEnum.GetBooks],
     queryFn: getBooks,
   });
 

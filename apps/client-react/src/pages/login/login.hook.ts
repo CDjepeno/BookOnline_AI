@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { AuthContext } from "../../context";
 import { UseQueryWorkflowCallback } from "../../request/commons/useQueryWorkflowCallback";
-import { Route } from "../../request/route-http/route-http";
-import { AuthInput } from "../../types";
-import { AuthContextValue } from "../../types/auth.context.value";
+import { AuthContextValue } from "../../types/user/auth.context.value";
+import { AuthFormInput } from "../../types/user/input.types";
+import { RouterEnum } from "../../enum/enum";
 
 export type LoginFormType = {
   email: string;
@@ -46,8 +46,8 @@ export default function LoginHook() {
   const { onErrorCommon } = UseQueryWorkflowCallback();
   const navigate = useNavigate();
 
-  const { mutateAsync: onSubmit } = useMutation({
-    mutationFn: async (input: AuthInput) => signin(input),
+  const { mutateAsync: submit } = useMutation({
+    mutationFn: async (input: AuthFormInput) => signin(input),
     onError: (error) => {
       if (
         (error as AxiosError).response &&
@@ -58,9 +58,13 @@ export default function LoginHook() {
       }
     },
     onSuccess: async () => {
-      navigate(Route.HOME);
+      navigate(RouterEnum.HOME);
     },
   });
+
+  const onSubmit = (input: AuthFormInput) => {
+    return submit(input);
+  };
 
   return {
     handleSubmit,

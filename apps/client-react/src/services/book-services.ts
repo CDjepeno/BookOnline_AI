@@ -1,11 +1,11 @@
 import { AxiosResponse } from "axios";
-import { AddBookInput, AddBookResponse } from "../interfaces/book.interface";
 import {
   BOOKS_ROUTE,
   BOOK_ROUTE,
-  MethodHttpEnum,
 } from "../request/route-http/route-http";
 import { UseRequestApi } from "../request/commons/useApiRequest";
+import { AddBookInput, AddBookResponse } from "../types/book/book.types";
+import { MethodHttpEnum } from "../enum/enum";
 
 export const getBooks = async () => {
   const res = await UseRequestApi<AddBookResponse[], null>({
