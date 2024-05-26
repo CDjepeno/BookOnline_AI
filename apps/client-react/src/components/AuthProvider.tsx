@@ -1,15 +1,21 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { enqueueSnackbar } from "notistack";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../api/current.user";
 import { AuthContext } from "../context";
+import { UseRequestApi } from "../request/commons/useApiRequest";
+import { LOGIN_ROUTE, MethodHttpEnum } from "../request/route-http/route-http";
 import { AuthInput } from "../types";
 import { CurrentUserResponse } from "../types/current.user.response";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
+
+export type SigninResponse = {
+  name: string;
+  email: string;
+  token: string;
+};
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<CurrentUserResponse | null>(null);
@@ -26,61 +32,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signin = async (credentials: AuthInput) => {
-    try {
-      console.log(credentials);
-      const response: AxiosResponse = await axios.post(
-        "http://localhost:3000/auth/login",
-        credentials
-      );
-      console.log(response);
+    const response = await UseRequestApi<SigninResponse, unknown>({
+      method: MethodHttpEnum.POST,
+      path: LOGIN_ROUTE,
+      params: credentials,
+      includeAuthorizationHeader: false,
+    });
 
-      if (response.data) {
-        const token = response.data.token;
-        localStorage.setItem("BookToken", JSON.stringify(token));
-
-        await getUser();
-        navigate("/");
-      }
-    } catch (error) {
-      if (error && (error as AxiosError).message === "Network Error") {
-        enqueueSnackbar("Une erreur est survenue", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          style: {
-            color: "white",
-            textAlign: "center",
-            margin: "auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        });
-        throw error;
-      }
-
-      if (
-        (error as AxiosError).response &&
-        (error as AxiosError).response!.status === 401
-      ) {
-        enqueueSnackbar("Mauvais email/mot de passe!", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          style: {
-            color: "white",
-            textAlign: "center",
-            margin: "auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        });
-      }
+    if (response) {
+      const token = response.token;
+      localStorage.setItem("BookToken", JSON.stringify(token));
+      await getUser();
     }
   };
 

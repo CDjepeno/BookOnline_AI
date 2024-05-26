@@ -1,6 +1,6 @@
-import { RawAxiosRequestHeaders } from "axios";
+import { AxiosResponse, RawAxiosRequestHeaders } from "axios";
 import { UseRequest } from "../../clients/axios/useRequest";
-import { BASE_URL, MethodHttpEnum } from "../route-http/route-http";
+import { BASE_URL, CURRENT_USER_ROUTE, MethodHttpEnum, Route } from "../route-http/route-http";
 
 interface useApiRequestProps<T> {
   includeAuthorizationHeader: boolean;
@@ -26,12 +26,12 @@ export async function UseRequestApi<TData, T>({
     }),
     ...headers,
   };
-  const res = await UseRequest<TData, T>(
+  const response = await UseRequest<TData, T>(
     BASE_URL,
     path,
     method,
     headersApiNest,
     params
   );
-  return res;
+  return response;
 }

@@ -1,4 +1,4 @@
-// Method HHTP
+// Method HTTP
 export enum MethodHttpEnum {
   GET = 'get',
   PUT = 'put',
@@ -18,5 +18,7 @@ export enum Route {
 // Routes http
 export const BOOKS_ROUTE = '/getbooks';
 export const BOOK_ROUTE = '/books';
+export const LOGIN_ROUTE = '/auth/login';
+export const CURRENT_USER_ROUTE = '/auth/current';
 
 export const BASE_URL = 'http://localhost:3000/'
