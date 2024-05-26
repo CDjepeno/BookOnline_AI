@@ -5,9 +5,14 @@ import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-
-import AddBookHook from "./Add-book.hook";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import moment, { Moment } from "moment";
+import "moment/locale/fr";
+import { Controller } from "react-hook-form";
 import FormInput from "../../components/FormInput";
+import AddBookHook from "./Add-book.hook";
+moment.locale("fr");
 
 export default function AddBook() {
   const { submit, handleSubmit, errors, control } = AddBookHook();
@@ -40,7 +45,7 @@ export default function AddBook() {
                 label="Name"
                 control={control}
                 errors={errors}
-                />
+              />
             </Grid>
             <Grid item xs={12}>
               <FormInput
@@ -59,12 +64,24 @@ export default function AddBook() {
               />
             </Grid>
             <Grid item xs={12}>
-              <FormInput
+              <Controller
                 name="releaseAt"
-                label="Date de parution"
-                type="number"
                 control={control}
-                errors={errors}
+                render={({ field: { value, onChange } }) => (
+                  <LocalizationProvider
+                    dateAdapter={AdapterMoment}
+                    adapterLocale='fr'
+                  >
+                    <DatePicker
+                      label="Data de parution"
+                      value={value ? moment(value) : null}
+                      onChange={(date: Moment | null) =>
+                        onChange(date ? date.toDate() : null)
+                      }
+                      slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </LocalizationProvider>
+                )}
               />
             </Grid>
             <Grid item xs={12}>

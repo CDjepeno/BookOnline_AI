@@ -3,6 +3,6 @@ export interface BookI {
   name: string;
   description: string;
   author: string;
-  releaseAt: string;
+  releaseAt: Date;
   imageUrl: string;
 }
