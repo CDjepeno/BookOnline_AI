@@ -16,7 +16,6 @@
     "@mui/icons-material": "^5.15.18",
     "@mui/material": "^5.15.18",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
-    "@mui/x-date-pickers": "^7.5.1",
     "@types/axios": "^0.14.0",
     "axios": "^1.6.5",
     "date-fns": "^3.6.0",
