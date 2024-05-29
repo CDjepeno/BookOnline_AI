@@ -1,11 +1,15 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { enqueueSnackbar } from "notistack";
 import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../api/current.user";
 import { AuthContext } from "../context";
-import { AuthInput } from "../types";
-import { CurrentUserResponse } from "../types/current.user.response";
+import { MethodHttpEnum } from "../enum/enum";
+import { UseRequestApi } from "../request/commons/useApiRequest";
+import { LOGIN_ROUTE } from "../request/route-http/route-http";
+import { getCurrentUser } from "../services/user-services";
+import { AuthFormInput } from "../types/user/input.types";
+import {
+  CurrentUserResponse,
+  SigninResponse,
+} from "../types/user/response.types";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -18,67 +22,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const getUser = async () => {
     try {
       const currentUser = await getCurrentUser();
-
       setUser(currentUser);
     } catch (error) {
       console.error("Error getting current user:", error);
     }
   };
 
-  const signin = async (credentials: AuthInput) => {
-    try {
-      const response: AxiosResponse = await axios.post(
-        "http://localhost:3000/auth/login",
-        credentials
-      );
-      if (response.data) {
-        const token = response.data.token;
-        localStorage.setItem("BookToken", JSON.stringify(token));
+  const signin = async (credentials: AuthFormInput) => {
+    const response = await UseRequestApi<SigninResponse, unknown>({
+      method: MethodHttpEnum.POST,
+      path: LOGIN_ROUTE,
+      params: credentials,
+      includeAuthorizationHeader: false,
+    });
 
-        await getUser();
-        navigate("/");
-      }
-    } catch (error) {
-      if (error && (error as AxiosError).message === "Network Error") {
-        enqueueSnackbar("Une erreur est survenue", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          style: {
-            color: "white",
-            textAlign: "center",
-            margin: "auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        });
-      }
-
-      if (
-        (error as AxiosError).response &&
-        (error as AxiosError).response!.status === 401
-      ) {
-        enqueueSnackbar("Mauvais email/mot de passe!", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          style: {
-            color: "white",
-            textAlign: "center",
-            margin: "auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        });
-      }
+    if (response) {
+      const token = response.token;
+      localStorage.setItem("BookToken", JSON.stringify(token));
+      await getUser();
     }
   };
+
   const signout = async () => {
     localStorage.removeItem("BookToken");
     setUser(null);

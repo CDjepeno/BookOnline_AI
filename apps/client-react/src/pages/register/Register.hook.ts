@@ -1,23 +1,17 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { useSnackbar } from "notistack";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { UserI } from "../../interfaces";
-
-export type RegisterFormType = {
-  email: string;
-  password: string;
-  confirmPassword: string;
-  name: string;
-  phone: string;
-};
+import { RouterEnum } from "../../enum/enum";
+import { UseQueryWorkflowCallback } from "../../request/commons/useQueryWorkflowCallback";
+import { registerUser } from "../../services/user-services";
+import { RegisterFormInput } from "../../types/user/form.types";
 
 export default function RegisterHook() {
   const navigate = useNavigate();
 
-  const defaultValues: RegisterFormType = {
+  const defaultValues: RegisterFormInput = {
     email: "",
     password: "",
     confirmPassword: "",
@@ -64,65 +58,17 @@ export default function RegisterHook() {
     const password = watch("password");
     return password === value || "Les mots de passe ne correspondent pas.";
   };
-  const { enqueueSnackbar } = useSnackbar();
+  const { onSuccessCommon } = UseQueryWorkflowCallback();
 
-  async function onSubmit(data: Partial<UserI>) {
-    try {
-      const response: AxiosResponse = await axios.post(
-        "http://localhost:3000/users",
-        data
+  const { mutateAsync: submit } = useMutation({
+    mutationFn: (input: RegisterFormInput) => registerUser(input, reset),
+    onSuccess: () => {
+      onSuccessCommon(
+        "Votre compte a bien ete cree!, un mail vous a été envoyer"
       );
-      if (response.data) {
-        console.log("Response:", response.data);
-        enqueueSnackbar("Votre compte a bien ete cree!", {
-          variant: "success",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          style: {
-            color: "white",
-            minWidth: "100%",
-          },
-        });
-        navigate("/login");
-        reset(defaultValues);
-      }
-    } catch (error) {
-      const axiosError: AxiosError = error as AxiosError;
-      if (axiosError.code === "ERR_BAD_REQUEST") {
-        enqueueSnackbar("Cet email est deja utilise.", {
-          variant: "error",
-          anchorOrigin: {
-            vertical: "bottom",
-            horizontal: "center",
-          },
-          style: {
-            color: "white",
-            textAlign: "center",
-            margin: "auto",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-        });
-      }
-
-      if (axios.isAxiosError(error)) {
-        const axiosError: AxiosError = error;
-        if (axiosError.response) {
-          console.error("Server responded with:", axiosError.response.status);
-          console.error("Response data:", axiosError.response.data);
-        } else if (axiosError.request) {
-          console.error("No response received");
-        } else {
-          console.error("Error setting up the request:", axiosError.message);
-        }
-      } else {
-        console.error("Non-Axios error:", error);
-      }
-    }
-  }
+      navigate(RouterEnum.LOGIN);
+    },
+  });
 
   const password = watch("password", "");
   const confirmPassword = watch("confirmPassword", "");
@@ -136,6 +82,10 @@ export default function RegisterHook() {
         message: "Les mots de passe ne correspondent pas.",
       });
     }
+  };
+
+  const onSubmit = (input: RegisterFormInput) => {
+    return submit(input);
   };
 
   return {

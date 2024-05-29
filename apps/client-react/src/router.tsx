@@ -1,11 +1,11 @@
 import { createBrowserRouter, RouteObject } from "react-router-dom";
 import App from "./App";
 import AddBook from "./pages/book/Add-book";
-import Category from "./pages/book/Category";
 import { HomePage } from "./pages/Homepage/HomePage";
 import Login from "./pages/login/login";
 import Register from "./pages/register/Register";
 import PrivateRoute from "./Private-route";
+import { RouterEnum } from "./enum/enum";
 
 type CustomRouteObject = RouteObject & {
   element: JSX.Element;
@@ -16,11 +16,10 @@ const routes: CustomRouteObject[] = [
     path: "/",
     element: <App />,
     children: [
-      { path: "/", element: <HomePage /> },
-      { path: "/register", element: <Register /> },
-      { path: "/login", element: <Login /> },
-      { path: "/Add-book", element: <PrivateRoute element={<AddBook />} /> },
-      { path: "/Category", element: <Category /> },
+      { path: RouterEnum.HOME, element: <HomePage /> },
+      { path: RouterEnum.REGISTER, element: <Register /> },
+      { path: RouterEnum.LOGIN, element: <Login /> },
+      { path: RouterEnum.ADD_BOOK, element: <PrivateRoute element={<AddBook />} /> },
     ],
   },
 ];

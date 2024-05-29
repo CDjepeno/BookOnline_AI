@@ -1,2 +1,2 @@
-export * from './register.input';
-export * from './auth.input';
+export * from './user/register.input';
+export * from './user/auth.input';
