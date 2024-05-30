@@ -1,19 +1,17 @@
 import { DevTool } from "@hookform/devtools";
-import { Container } from "@mui/material";
+import { Container, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import moment, { Moment } from "moment";
-import "moment/locale/fr";
+import { fr } from "date-fns/locale";
+import ReactDatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { Controller } from "react-hook-form";
 import FormInput from "../../components/FormInput";
 import AddBookHook from "./Add-book.hook";
-moment.locale("fr");
-
+registerLocale("fr", fr);
 export default function AddBook() {
   const { submit, handleSubmit, errors, control } = AddBookHook();
 
@@ -63,24 +61,27 @@ export default function AddBook() {
                 errors={errors}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ position: "relative", zIndex: 1300 }}>
               <Controller
                 name="releaseAt"
                 control={control}
-                render={({ field: { value, onChange } }) => (
-                  <LocalizationProvider
-                    dateAdapter={AdapterMoment}
-                    adapterLocale='fr'
-                  >
-                    <DatePicker
-                      label="Data de parution"
-                      value={value ? moment(value) : null}
-                      onChange={(date: Moment | null) =>
-                        onChange(date ? date.toDate() : null)
-                      }
-                      slotProps={{ textField: { fullWidth: true } }}
-                    />
-                  </LocalizationProvider>
+                render={({ field: { onChange, value, ref } }) => (
+                  <ReactDatePicker
+                    selected={value}
+                    onChange={onChange}
+                    ref={ref}
+                    locale="fr"
+                    customInput={
+                      <TextField
+                        sx={{ width: "395px" }}
+                        label="Date de parutiom"
+                        error={!!errors.releaseAt}
+                        helperText={
+                          errors.releaseAt ? errors.releaseAt.message : ""
+                        }
+                      />
+                    }
+                  />
                 )}
               />
             </Grid>
