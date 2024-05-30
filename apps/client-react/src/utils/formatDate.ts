@@ -1,4 +1,8 @@
-export const formatDate = (isoString: string): string => {
-  const [year, month, day] = isoString.split("T")[0].split("-");
-  return `${day}-${month}-${year}`;
-};
+export function formatDate(date: Date): string {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  return date.toLocaleDateString('fr-FR', options);
+}
