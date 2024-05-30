@@ -29,7 +29,7 @@ const formatLink = (page: string) => {
   return linkMap[page];
 };
 
-const pages = ["Contact", "Ajouter un livre"];
+const pages = ["Ajouter un livre"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function Header() {
