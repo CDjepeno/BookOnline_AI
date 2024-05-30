@@ -6,7 +6,7 @@ interface BookCardProps {
   author: string;
   description: string;
   image: string;
-  releaseAt: string;
+  releaseAt: Date;
 }
 
 export default function BookCard({
@@ -16,6 +16,14 @@ export default function BookCard({
   image,
   releaseAt,
 }: BookCardProps) {
+  const releaseDate =
+    typeof releaseAt === "string" ? new Date(releaseAt) : releaseAt;
+
+  const truncateDescription = (description: string, limit: number) => {
+    return description.length > limit
+      ? description.substring(0, limit) + "..."
+      : description;
+  };
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card
@@ -30,15 +38,15 @@ export default function BookCard({
           sx={{
             pt: "56.25%",
           }}
-          image={image}
+          image={image || "default_image_url_here"}
         />
         <CardContent sx={{ flexGrow: 1 }}>
           <Typography gutterBottom variant="h5" component="h2">
             {name}
           </Typography>
           <Typography>{author}</Typography>
-          <Typography>{description}</Typography>
-          <Typography>Date de parution : {formatDate(releaseAt)}</Typography>
+          <Typography>{truncateDescription(description, 100)}</Typography>
+          <Typography>Date de parution : {formatDate(releaseDate)}</Typography>
         </CardContent>
       </Card>
     </Grid>
