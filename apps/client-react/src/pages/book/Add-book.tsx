@@ -1,4 +1,5 @@
 import { DevTool } from "@hookform/devtools";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { Container, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -11,6 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Controller } from "react-hook-form";
 import FormInput from "../../components/FormInput";
 import AddBookHook from "./Add-book.hook";
+
 registerLocale("fr", fr);
 export default function AddBook() {
   const { submit, handleSubmit, errors, control } = AddBookHook();
@@ -85,13 +87,45 @@ export default function AddBook() {
                 )}
               />
             </Grid>
+
             <Grid item xs={12}>
-              <FormInput
+              <Controller
                 name="imageUrl"
-                label="Image Couverture"
                 control={control}
-                errors={errors}
+                render={({ field: { onChange } }) => (
+                  <input
+                    accept="image/jpeg, image/png"
+                    style={{ display: "none" }}
+                    id="contained-button-file"
+                    type="file"
+                    onChange={(e) => {
+                      e.target.files && e.target.files[0]
+                        ? onChange(e.target.files[0])
+                        : "Veuillez charger la couverture du livre";
+                    }}
+                  />
+                )}
               />
+              <label htmlFor="contained-button-file">
+                <Button
+                  variant="contained"
+                  component="span"
+                  startIcon={<UploadFileIcon />}
+                  fullWidth
+                  sx={{
+                    backgroundColor: "#fff",
+                    color: "#000",
+                    "&:hover": { color: "#fff" },
+                  }}
+                >
+                  Charger la couverture du livre
+                </Button>
+              </label>
+              {errors.imageUrl && (
+                <Typography variant="body2" color="error">
+                  {errors.imageUrl.message}
+                </Typography>
+              )}
             </Grid>
           </Grid>
 
