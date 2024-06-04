@@ -15,7 +15,7 @@ export type AddBookFormType = {
   description: string;
   author: string;
   releaseAt: Date;
-  imageUrl: string;
+  imageUrl: File;
 };
 
 function AddBookHook() {
@@ -27,15 +27,31 @@ function AddBookHook() {
     description: "",
     author: "",
     releaseAt: new Date(),
-    imageUrl: "",
+    imageUrl: undefined,
   };
 
   const bookSchema = yup.object({
     name: yup.string().required("Le nom doit être renseigné"),
-    description: yup.string().required("Leadescription doit être renseignée"),
-    author: yup.string().required("L'author doit être renseigné"),
+    description: yup.string().required("La description doit être renseignée"),
+    author: yup.string().required("L'auteur doit être renseigné"),
     releaseAt: yup.date().required("La date de sortie doit être renseignée"),
-    imageUrl: yup.string().required("L'imageUrl doit être renseignée"),
+    imageUrl: yup
+      .mixed<File>()
+      .nullable()
+      .required("L'image doit être renseignée")
+      .test(
+        "fileSize",
+        "Le fichier est trop volumineux",
+        (value) => !value || (value && value.size <= 2000000) // 2MB
+      )
+      .test(
+        "fileType",
+        "Seuls les formats JPEG, JPG, PNG sont autorisés",
+        (value) =>
+          !value ||
+          (value &&
+            ["image/jpeg", "image/jpg", "image/png"].includes(value.type))
+      ),
   });
 
   const {
@@ -66,6 +82,7 @@ function AddBookHook() {
   });
 
   const submit = async (formInput: AddBookInput) => {
+    console.log(typeof formInput.imageUrl);
     await addBook(formInput);
   };
 

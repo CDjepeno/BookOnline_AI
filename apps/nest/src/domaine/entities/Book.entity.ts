@@ -5,7 +5,7 @@ export class Book {
     readonly description: string,
     readonly author: string,
     readonly releaseAt: Date,
-    readonly imageUrl: string,
+    readonly  coverImage: string,
     readonly userId: number,
   ) {}
 }

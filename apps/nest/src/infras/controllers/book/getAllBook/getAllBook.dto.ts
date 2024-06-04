@@ -25,5 +25,5 @@ export class GetAllBookDto {
   @IsNotEmpty()
   @ApiProperty()
   @IsUrl()
-  imageUrl: string;
+  coverImage: string;
 }

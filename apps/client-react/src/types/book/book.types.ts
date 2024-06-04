@@ -12,5 +12,5 @@ export interface AddBookInput {
   description: string;
   author: string;
   releaseAt: Date;
-  imageUrl: string;
+  imageUrl: File | null;
 }

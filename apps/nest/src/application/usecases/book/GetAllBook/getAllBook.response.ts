@@ -4,7 +4,7 @@ export class GetAllBookResponse {
   description: string;
   author: string;
   releaseAt: Date;
-  imageUrl: string;
+  coverImage: string;
   created_at?: Date;
   update_at?: Date;
 }

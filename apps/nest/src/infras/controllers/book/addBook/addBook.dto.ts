@@ -33,12 +33,7 @@ export class CreateBookDto {
   @IsNotEmpty()
   @ApiProperty()
   @IsUrl()
-  imageUrl: string;
-
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  approved = 0;
+  coverImage: string;
 
   @IsNotEmpty()
   @IsInt()

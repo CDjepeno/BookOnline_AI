@@ -1,6 +1,6 @@
 import { DevTool } from "@hookform/devtools";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
-import { Container, TextField } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { Container, TextField, styled } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,6 +14,19 @@ import FormInput from "../../components/FormInput";
 import AddBookHook from "./Add-book.hook";
 
 registerLocale("fr", fr);
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
+
 export default function AddBook() {
   const { submit, handleSubmit, errors, control } = AddBookHook();
 
@@ -93,34 +106,26 @@ export default function AddBook() {
                 name="imageUrl"
                 control={control}
                 render={({ field: { onChange } }) => (
-                  <input
-                    accept="image/jpeg, image/png"
-                    style={{ display: "none" }}
-                    id="contained-button-file"
-                    type="file"
-                    onChange={(e) => {
-                      e.target.files && e.target.files[0]
-                        ? onChange(e.target.files[0])
-                        : "Veuillez charger la couverture du livre";
-                    }}
-                  />
+                  <Button
+                    component="label"
+                    variant="contained"
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Upload file
+                    <VisuallyHiddenInput
+                      accept="image/jpeg, image/jpg, image/png"
+                      type="file"
+                      onChange={(e) => {
+                        const file = e.target.files && e.target.files[0];
+                        if (file) {
+                          console.log(file);
+                          onChange(file);
+                        }
+                      }}
+                    />
+                  </Button>
                 )}
               />
-              <label htmlFor="contained-button-file">
-                <Button
-                  variant="contained"
-                  component="span"
-                  startIcon={<UploadFileIcon />}
-                  fullWidth
-                  sx={{
-                    backgroundColor: "#fff",
-                    color: "#000",
-                    "&:hover": { color: "#fff" },
-                  }}
-                >
-                  Charger la couverture du livre
-                </Button>
-              </label>
               {errors.imageUrl && (
                 <Typography variant="body2" color="error">
                   {errors.imageUrl.message}

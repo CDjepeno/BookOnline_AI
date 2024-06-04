@@ -1,4 +1,15 @@
-import { Body, Controller, Inject, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Inject,
+  ParseFilePipeBuilder,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AddBookUseCase } from 'src/application/usecases/book/AddBook/addBook.usecase';
 import { JwtAuthGuard } from 'src/infras/common/guards/jwt-auth.guard';
@@ -16,14 +27,34 @@ export class AddBookController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({
     summary: 'Creates a Post',
   })
-  async addBook(@Body() createBookDto: CreateBookDto) {
+  async addBook(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /(jpeg|jpg|png)$/,
+        })
+        .addMaxSizeValidator({
+          maxSize: 1000000,
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    file: Express.Multer.File,
+    @Body() createBookDto: CreateBookDto,
+  ) {
     try {
+      if (!file) {
+        throw new Error('File is required');
+      }
+
       const result = await this.addBookUsecaseProxy
         .getInstance()
-        .execute(createBookDto);
+        .execute(createBookDto, file);
       return {
         status: 'Created',
         code: 201,

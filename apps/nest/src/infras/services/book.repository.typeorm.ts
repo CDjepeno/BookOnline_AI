@@ -1,4 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddBookRequest } from 'src/application/usecases/book/AddBook/addBook.request';
 import { AddBookResponse } from 'src/application/usecases/book/AddBook/addBook.response';
@@ -31,13 +34,13 @@ export class BookRepositoryTyperom implements BookRepository {
       book.description = addBookRequest.description;
       book.author = addBookRequest.author;
       book.releaseAt = addBookRequest.releaseAt;
-      book.imageUrl = addBookRequest.imageUrl;
+      book.coverImage = addBookRequest.coverImage;
       book.userId = addBookRequest.userId;
 
       return this.repository.save(book);
     } catch (error) {
       console.log("Erreur lors de l'ajout du livre :", error);
-      throw new error("Impossible d'ajouter le livre.");
+      throw new InternalServerErrorException("Impossible d'ajouter le livre.");
     }
   }
 
@@ -46,7 +49,10 @@ export class BookRepositoryTyperom implements BookRepository {
       const books = await this.repository.find();
       return books;
     } catch (error) {
-      throw error;
+      console.error('Erreur lors de la récupération des livres :', error);
+      throw new InternalServerErrorException(
+        'Impossible de récupérer les livres.',
+      );
     }
   }
 }
