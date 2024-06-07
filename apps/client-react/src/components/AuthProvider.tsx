@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context";
 import { MethodHttpEnum } from "../enum/enum";
@@ -28,6 +28,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem("BookToken");
+    if (storedToken) {
+      getUser();
+    }
+  }, []);
+
   const signin = async (credentials: AuthFormInput) => {
     const response = await UseRequestApi<SigninResponse, unknown>({
       method: MethodHttpEnum.POST,
@@ -36,7 +43,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       includeAuthorizationHeader: false,
     });
 
-    if (response) {
+    if (response && response.token) {
       const token = response.token;
       localStorage.setItem("BookToken", JSON.stringify(token));
       await getUser();

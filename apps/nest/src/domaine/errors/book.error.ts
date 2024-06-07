@@ -6,5 +6,7 @@ export class badrequestexception extends Error {
   statusCode = 400;
 }
 export class EmailExistsException extends Error {
-  statusCode = 400;
+  constructor(message: string) {
+    super(message)
+  }
 }

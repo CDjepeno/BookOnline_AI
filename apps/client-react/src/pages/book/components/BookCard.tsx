@@ -5,17 +5,18 @@ interface BookCardProps {
   name: string;
   author: string;
   description: string;
-  image: string;
   releaseAt: Date;
+  coverUrl: string;
 }
 
 export default function BookCard({
   name,
   author,
   description,
-  image,
   releaseAt,
+  coverUrl,
 }: BookCardProps) {
+
   const releaseDate =
     typeof releaseAt === "string" ? new Date(releaseAt) : releaseAt;
 
@@ -38,7 +39,7 @@ export default function BookCard({
           sx={{
             pt: "56.25%",
           }}
-          image={image || "default_image_url_here"}
+          image={coverUrl || "default_image_url_here"}
         />
         <CardContent sx={{ flexGrow: 1 }}>
           <Typography gutterBottom variant="h5" component="h2">

@@ -1,4 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { S3 } from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -20,8 +25,8 @@ export class AwsS3Client {
 
   async uploadFile(file: Express.Multer.File): Promise<string> {
     if (!file || !file.buffer) {
-      this.logger.error('File ou file buffer is manquant');
-      throw new Error('File ou file buffer est manquant');
+      this.logger.error('File ou file buffer est manquant');
+      throw new BadRequestException('File or file buffer is missing');
     }
 
     const { originalname, buffer, mimetype } = file;
@@ -40,11 +45,16 @@ export class AwsS3Client {
 
     try {
       const { Location } = await this.s3.upload(params).promise();
-      this.logger.debug(`file téléchargé avec succès sur ${Location}`);
+      this.logger.debug(`Le fichier est téléchargé avec succès sur ${Location}`);
       return Location;
     } catch (error) {
-      this.logger.error('Erreur lors du téléchargement du fichier sur S3', error);
-      throw new Error('Erreur lors du téléchargement du fichier sur S3');
+      this.logger.error(
+        'Erreur lors du téléchargement du fichier sur S3',
+        error,
+      );
+      throw new InternalServerErrorException(
+        'Erreur lors du téléchargement du fichier sur S3',
+      );
     }
   }
 }

@@ -10,6 +10,7 @@ import { BookRepository } from 'src/domaine/repositories/book.repository';
 import { Repository } from 'typeorm';
 import { Book } from '../models/book.model';
 import { User } from '../models/user.model';
+import { BookEntity } from 'src/domaine/entities/Book.entity';
 
 export class BookRepositoryTyperom implements BookRepository {
   constructor(
@@ -19,7 +20,7 @@ export class BookRepositoryTyperom implements BookRepository {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async addBook(addBookRequest: AddBookRequest): Promise<AddBookResponse> {
+  async addBook(addBookRequest: BookEntity): Promise<AddBookResponse> {
     try {
       const user = await this.userRepository.findOne({
         where: { id: addBookRequest.userId },
@@ -34,7 +35,7 @@ export class BookRepositoryTyperom implements BookRepository {
       book.description = addBookRequest.description;
       book.author = addBookRequest.author;
       book.releaseAt = addBookRequest.releaseAt;
-      book.coverImage = addBookRequest.coverImage;
+      book.coverUrl = addBookRequest.coverUrl;
       book.userId = addBookRequest.userId;
 
       return this.repository.save(book);

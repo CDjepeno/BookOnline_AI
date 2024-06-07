@@ -1,31 +1,26 @@
 import { DevTool } from "@hookform/devtools";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { Container, TextField, styled } from "@mui/material";
+import { Container, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { fr } from "date-fns/locale";
-import ReactDatePicker, { registerLocale } from "react-datepicker";
+import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Controller } from "react-hook-form";
+import { createGlobalStyle } from "styled-components";
 import FormInput from "../../components/FormInput";
 import AddBookHook from "./Add-book.hook";
 
 registerLocale("fr", fr);
 
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+const GlobalStyle = createGlobalStyle`
+  .react-datepicker-wrapper,
+  .react-datepicker__input-container {
+    width: 100%;
+  }
+`;
 
 export default function AddBook() {
   const { submit, handleSubmit, errors, control } = AddBookHook();
@@ -33,6 +28,7 @@ export default function AddBook() {
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <GlobalStyle />
 
       <Box
         sx={{
@@ -55,7 +51,7 @@ export default function AddBook() {
             <Grid item xs={12}>
               <FormInput
                 name="name"
-                label="Name"
+                label="Nom"
                 control={control}
                 errors={errors}
               />
@@ -63,7 +59,7 @@ export default function AddBook() {
             <Grid item xs={12}>
               <FormInput
                 name="description"
-                label="description"
+                label="Description"
                 control={control}
                 errors={errors}
               />
@@ -76,20 +72,22 @@ export default function AddBook() {
                 errors={errors}
               />
             </Grid>
-            <Grid item xs={12} sx={{ position: "relative", zIndex: 1300 }}>
+
+            <Grid item xs={12}>
               <Controller
                 name="releaseAt"
                 control={control}
                 render={({ field: { onChange, value, ref } }) => (
-                  <ReactDatePicker
+                  <DatePicker
                     selected={value}
                     onChange={onChange}
                     ref={ref}
                     locale="fr"
+                    dateFormat="dd/MM/yyyy"
                     customInput={
                       <TextField
-                        sx={{ width: "395px" }}
-                        label="Date de parutiom"
+                        fullWidth
+                        label="Date de parution"
                         error={!!errors.releaseAt}
                         helperText={
                           errors.releaseAt ? errors.releaseAt.message : ""
@@ -100,35 +98,36 @@ export default function AddBook() {
                 )}
               />
             </Grid>
-
             <Grid item xs={12}>
-              <Controller
-                name="imageUrl"
-                control={control}
-                render={({ field: { onChange } }) => (
-                  <Button
-                    component="label"
-                    variant="contained"
-                    startIcon={<CloudUploadIcon />}
-                  >
-                    Upload file
-                    <VisuallyHiddenInput
-                      accept="image/jpeg, image/jpg, image/png"
+              <Box
+                sx={{
+                  width: "100%",
+                  padding: "15px",
+                  border: errors.coverFile ? "1px solid red" : "1px solid #bbb",
+                  borderRadius: "5px",
+                }}
+              >
+                <Controller
+                  name="coverFile"
+                  control={control}
+                  render={({ field: { onChange, ref } }) => (
+                    <input
                       type="file"
+                      id="file-upload"
+                      accept=".jpg,.jpeg,.png"
                       onChange={(e) => {
-                        const file = e.target.files && e.target.files[0];
-                        if (file) {
-                          console.log(file);
-                          onChange(file);
-                        }
+                        console.log(e.target.files);
+                        onChange(e.target.files);
                       }}
+                      ref={ref}
+                      style={{ width: "100%" }}
                     />
-                  </Button>
-                )}
-              />
-              {errors.imageUrl && (
-                <Typography variant="body2" color="error">
-                  {errors.imageUrl.message}
+                  )}
+                />
+              </Box>
+              {errors.coverFile && (
+                <Typography color="error" m="4px 15px" variant="body2">
+                  {errors.coverFile.message}
                 </Typography>
               )}
             </Grid>
