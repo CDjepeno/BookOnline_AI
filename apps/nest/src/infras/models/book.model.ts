@@ -33,7 +33,7 @@ export class Book {
 
   @Column()
   @IsString()
-  imageUrl: string;
+  coverUrl: string;
 
   @Column()
   @IsInt()

@@ -4,6 +4,6 @@ export class AddBookRequest {
   description: string;
   author: string;
   releaseAt: Date;
-  imageUrl: string;
+  coverFile: Express.Multer.File;
   userId: number;
 }

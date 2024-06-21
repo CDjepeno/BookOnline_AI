@@ -5,6 +5,8 @@ import { GetAllBookUsecase } from 'src/application/usecases/book/GetAllBook/getA
 import { AddUserUseCase } from 'src/application/usecases/user/adduser/add.user.usecase';
 import { GetCurrentUserUseCase } from 'src/application/usecases/user/auth/get.current.user.usecase';
 import { LoginUserUseCase } from 'src/application/usecases/user/getuser/login.user.usecase';
+import { AwsS3Client } from '../clients/aws/aws-s3.client';
+import { AwsS3Module } from '../clients/aws/aws-s3.module';
 import NodemailerClient from '../clients/nodemailer/nodemailer.client';
 import { NodemailerModules } from '../clients/nodemailer/nodemailer.module';
 import { BookRepositoryTyperom } from '../services/book.repository.typeorm';
@@ -13,7 +15,7 @@ import { UserRepositoryTyperom } from '../services/user.repository.typeorm';
 import { UseCaseProxy } from './usecase-proxy';
 
 @Module({
-  imports: [RepositoriesModule, NodemailerModules],
+  imports: [RepositoriesModule, NodemailerModules, AwsS3Module],
 })
 export class UsecaseProxyModule {
   static CREATE_USER_USECASE_PROXY = 'createUserUsecaseProxy';
@@ -51,10 +53,13 @@ export class UsecaseProxyModule {
             new UseCaseProxy(new GetCurrentUserUseCase(userRepository)),
         },
         {
-          inject: [BookRepositoryTyperom],
+          inject: [BookRepositoryTyperom, AwsS3Client],
           provide: UsecaseProxyModule.ADD_BOOK_USECASE_PROXY,
-          useFactory: (bookRepository: BookRepositoryTyperom) =>
-            new UseCaseProxy(new AddBookUseCase(bookRepository)),
+          useFactory: (
+            bookRepository: BookRepositoryTyperom,
+            awsS3Client: AwsS3Client,
+          ) =>
+            new UseCaseProxy(new AddBookUseCase(bookRepository, awsS3Client)),
         },
         {
           inject: [BookRepositoryTyperom],

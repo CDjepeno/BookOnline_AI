@@ -1,34 +1,36 @@
 import { AxiosResponse } from "axios";
-import {
-  BOOKS_ROUTE,
-  BOOK_ROUTE,
-} from "../request/route-http/route-http";
-import { UseRequestApi } from "../request/commons/useApiRequest";
-import { AddBookInput, AddBookResponse } from "../types/book/book.types";
 import { MethodHttpEnum } from "../enum/enum";
+import { UseRequestApi } from "../request/commons/useApiRequest";
+import { BOOKS_ROUTE, BOOK_ROUTE } from "../request/route-http/route-http";
+import { AddBookResponse } from "../types/book/book.types";
 
-export const getBooks = async () => {
-  const res = await UseRequestApi<AddBookResponse[], null>({
+export const getBooks = async (): Promise<AddBookResponse[]> => {
+  return await UseRequestApi<AddBookResponse[], null>({
     path: BOOKS_ROUTE,
     method: MethodHttpEnum.GET,
     includeAuthorizationHeader: false,
   });
-  return res;
 };
 
 export const createBook = async (
-  input: AddBookInput,
+  formData: FormData,
   userId: number | null,
   reset: () => void
-) => {
-  const params = { ...input, userId };
+): Promise<AxiosResponse> => {
+  if (userId) {
+    formData.append("userId", userId.toString());
+  }
+
   const response: AxiosResponse = await UseRequestApi({
     method: MethodHttpEnum.POST,
     path: BOOK_ROUTE,
-    params,
+    params: formData,
     includeAuthorizationHeader: true,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
+
   reset();
   return response;
 };
-

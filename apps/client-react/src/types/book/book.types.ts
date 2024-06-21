@@ -1,10 +1,14 @@
+export interface ErrorResponse {
+  message: string;
+}
+
 export interface AddBookResponse {
-  id: string;
+  id?: string;
   name: string;
   description: string;
   author: string;
   releaseAt: Date;
-  imageUrl: string;
+  coverFile: FileList;
 }
 
 export interface AddBookInput {
@@ -12,5 +16,13 @@ export interface AddBookInput {
   description: string;
   author: string;
   releaseAt: Date;
-  imageUrl: string;
+  coverFile: FileList;
 }
+
+export type AddBookFormType = {
+  name: string;
+  description: string;
+  author: string;
+  releaseAt: Date;
+  coverFile: FileList;
+};

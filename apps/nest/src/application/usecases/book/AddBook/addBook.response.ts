@@ -4,7 +4,7 @@ export class AddBookResponse {
   description: string;
   author: string;
   releaseAt: Date;
-  imageUrl: string;
+  coverUrl: string;
   userId?: number;
   created_at?: Date;
   update_at?: Date;

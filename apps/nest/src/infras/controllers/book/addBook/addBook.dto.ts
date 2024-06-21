@@ -1,44 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDate,
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  IsUrl,
-  Min,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateBookDto {
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
   name: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
   description: string;
 
-  @IsString()
-  @IsNotEmpty()
   @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
   author: string;
 
-  @IsNotEmpty()
-  @IsDate()
   @ApiProperty()
+  @IsNotEmpty()
   releaseAt: Date;
-
-  @IsNotEmpty()
-  @ApiProperty()
-  @IsUrl()
-  imageUrl: string;
-
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  approved = 0;
 
   @IsNotEmpty()
   @IsInt()
