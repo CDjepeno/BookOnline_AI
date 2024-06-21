@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { QueryClient, useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useContext } from "react";
 import { DefaultValues, useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -7,36 +8,37 @@ import { AuthContext } from "../../context";
 import { BookQueriesKeysEnum, RouterEnum } from "../../enum/enum";
 import { UseQueryWorkflowCallback } from "../../request/commons/useQueryWorkflowCallback";
 import { createBook } from "../../services/book-services";
-import { AddBookInput } from "../../types/book/book.types";
+import {
+  AddBookFormType,
+  AddBookInput,
+  ErrorResponse,
+} from "../../types/book/book.types";
 import { AuthContextValue } from "../../types/user/auth.context.value";
 
-export type AddBookFormType = {
-  name: string;
-  description: string;
-  author: string;
-  releaseAt: Date;
-  imageUrl: string;
+const defaultValues: DefaultValues<AddBookFormType> = {
+  name: "",
+  description: "",
+  author: "",
+  releaseAt: new Date(),
+  coverFile: undefined,
 };
+
+const bookSchema = yup.object({
+  name: yup.string().required("Le nom doit être renseigné"),
+  description: yup.string().required("La description doit être renseignée"),
+  author: yup.string().required("L'auteur doit être renseigné"),
+  releaseAt: yup.date().required("La date de sortie doit être renseignée"),
+  coverFile: yup
+    .mixed<FileList>()
+    .required("L'image de couverture est requise")
+    .test("fileSize", "L'image doit faire moins de 5MB", (value) =>
+      value ? value[0].size <= 2000000 : true
+    ),
+});
 
 function AddBookHook() {
   const { user } = useContext(AuthContext) as AuthContextValue;
   const queryClient = new QueryClient();
-
-  const defaultValues: DefaultValues<AddBookFormType> = {
-    name: "",
-    description: "",
-    author: "",
-    releaseAt: new Date(),
-    imageUrl: "",
-  };
-
-  const bookSchema = yup.object({
-    name: yup.string().required("Le nom doit être renseigné"),
-    description: yup.string().required("Leadescription doit être renseignée"),
-    author: yup.string().required("L'author doit être renseigné"),
-    releaseAt: yup.date().required("La date de sortie doit être renseignée"),
-    imageUrl: yup.string().required("L'imageUrl doit être renseignée"),
-  });
 
   const {
     register,
@@ -50,26 +52,65 @@ function AddBookHook() {
   });
 
   const { onSuccessCommon, onErrorCommon } = UseQueryWorkflowCallback();
-
   const userId = user && user.id;
+
   const { mutateAsync: addBook } = useMutation({
-    mutationFn: async (input: AddBookInput) => createBook(input, userId, reset),
+    mutationFn: async (data: FormData) => createBook(data, userId, reset),
+
     onSuccess: () => {
-      onSuccessCommon("Votre livre a bien été crée", RouterEnum.HOME);
+      onSuccessCommon("Votre livre a bien été créé", RouterEnum.HOME);
       queryClient.invalidateQueries({
         queryKey: [BookQueriesKeysEnum.GetBooks],
       });
     },
-    onError: () => {
-      onErrorCommon("Une erreur est survenu");
+    onError: (error: Error | AxiosError<unknown>) => {
+      let errorMessage = "Une erreur est survenue";
+
+      if (isAxiosError(error)) {
+        if (
+          error.response &&
+          error.response.data &&
+          (error.response.data as ErrorResponse).message
+        ) {
+          errorMessage = (error.response.data as ErrorResponse).message;
+        }
+      }
+
+      onErrorCommon(errorMessage);
     },
   });
 
-  const submit = async (formInput: AddBookInput) => {
-    await addBook(formInput);
+  const submit = async (data: AddBookInput) => {
+    try {
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("description", data.description);
+      formData.append("author", data.author);
+      formData.append("releaseAt", data.releaseAt.toISOString());
+
+      if (data.coverFile && data.coverFile.length > 0) {
+        formData.append("coverFile", data.coverFile[0]);
+      } else {
+        console.error("CoverFile is required");
+        return;
+      }
+
+      await addBook(formData);
+    } catch (error) {
+      console.error("error addbook", error);
+    }
   };
 
   return { register, submit, handleSubmit, isSubmitting, errors, control };
 }
 
 export default AddBookHook;
+
+function isAxiosError(error: unknown): error is AxiosError {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "isAxiosError" in error &&
+    error.isAxiosError === true
+  );
+}

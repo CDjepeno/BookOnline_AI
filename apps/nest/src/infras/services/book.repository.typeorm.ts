@@ -1,4 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddBookRequest } from 'src/application/usecases/book/AddBook/addBook.request';
 import { AddBookResponse } from 'src/application/usecases/book/AddBook/addBook.response';
@@ -7,6 +10,7 @@ import { BookRepository } from 'src/domaine/repositories/book.repository';
 import { Repository } from 'typeorm';
 import { Book } from '../models/book.model';
 import { User } from '../models/user.model';
+import { BookEntity } from 'src/domaine/entities/Book.entity';
 
 export class BookRepositoryTyperom implements BookRepository {
   constructor(
@@ -16,7 +20,7 @@ export class BookRepositoryTyperom implements BookRepository {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async addBook(addBookRequest: AddBookRequest): Promise<AddBookResponse> {
+  async addBook(addBookRequest: BookEntity): Promise<AddBookResponse> {
     try {
       const user = await this.userRepository.findOne({
         where: { id: addBookRequest.userId },
@@ -31,13 +35,13 @@ export class BookRepositoryTyperom implements BookRepository {
       book.description = addBookRequest.description;
       book.author = addBookRequest.author;
       book.releaseAt = addBookRequest.releaseAt;
-      book.imageUrl = addBookRequest.imageUrl;
+      book.coverUrl = addBookRequest.coverUrl;
       book.userId = addBookRequest.userId;
 
       return this.repository.save(book);
     } catch (error) {
       console.log("Erreur lors de l'ajout du livre :", error);
-      throw new error("Impossible d'ajouter le livre.");
+      throw new InternalServerErrorException("Impossible d'ajouter le livre.");
     }
   }
 
@@ -46,7 +50,10 @@ export class BookRepositoryTyperom implements BookRepository {
       const books = await this.repository.find();
       return books;
     } catch (error) {
-      throw error;
+      console.error('Erreur lors de la récupération des livres :', error);
+      throw new InternalServerErrorException(
+        'Impossible de récupérer les livres.',
+      );
     }
   }
 }
