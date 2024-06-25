@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import { SnackbarProvider } from "notistack";
 import { Outlet } from "react-router-dom";
 import { AuthProvider } from "./components/AuthProvider";
@@ -8,9 +9,24 @@ function App() {
   return (
     <SnackbarProvider maxSnack={5}>
       <AuthProvider>
-        <Header />
-        <Outlet />
-        <Footer />
+        <Box
+          sx={{
+            height: "100vh",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Header />
+          <Box
+            sx={{
+              flex: 1,
+              overflow: "auto",
+            }}
+          >
+            <Outlet />
+          </Box>
+          <Footer />
+        </Box>
       </AuthProvider>
     </SnackbarProvider>
   );
