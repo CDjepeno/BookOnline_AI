@@ -6,8 +6,8 @@ import { UseCaseProxy } from '../../../infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from '../../../infras/usecase-proxy/usecase-proxy.module';
 import { CreateUserDto } from './user.dto';
 
-@ApiTags('Users')
-@Controller('users')
+@ApiTags('register')
+@Controller('register')
 export class UsersController {
   constructor(
     @Inject(UsecaseProxyModule.CREATE_USER_USECASE_PROXY)
