@@ -3,14 +3,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddBookRequest } from 'src/application/usecases/book/AddBook/addBook.request';
-import { AddBookResponse } from 'src/application/usecases/book/AddBook/addBook.response';
-import { GetAllBookResponse } from 'src/application/usecases/book/GetAllBook/getAllBook.response';
+import { AddBookResponse } from 'src/application/usecases/book/addBook/addBook.response';
+import { GetAllBookResponse } from 'src/application/usecases/book/getAllBook/getAllBook.response';
+import { GetBookResponse } from 'src/application/usecases/book/getBookById/getBook.response';
+import { BookEntity } from 'src/domaine/entities/Book.entity';
 import { BookRepository } from 'src/domaine/repositories/book.repository';
 import { Repository } from 'typeorm';
 import { Book } from '../models/book.model';
 import { User } from '../models/user.model';
-import { BookEntity } from 'src/domaine/entities/Book.entity';
 
 export class BookRepositoryTyperom implements BookRepository {
   constructor(
@@ -53,6 +53,27 @@ export class BookRepositoryTyperom implements BookRepository {
       console.error('Erreur lors de la récupération des livres :', error);
       throw new InternalServerErrorException(
         'Impossible de récupérer les livres.',
+      );
+    }
+  }
+
+  async getBook(id: number): Promise<GetBookResponse> {
+    try {
+      console.log(`Recherche de livres avec l'id : ${id}`);
+      const book = await this.repository.findOne({
+        where: { id },
+      });
+      if (!book) {
+        throw new NotFoundException(`Aucun livre trouvé avec l'id "${id}"`);
+      }
+      return book;
+    } catch (error) {
+      console.error("Erreur lors de la recherche d'un livre :", error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'Impossible de récupérer le livre.',
       );
     }
   }

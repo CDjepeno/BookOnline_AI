@@ -1,24 +1,25 @@
+import NodemailerClient from 'src/infras/clients/nodemailer/nodemailer.client';
 import { mock, Mock } from 'ts-jest-mocker';
-import { CreateUserUseCase } from '../../../../application/usecases/user/adduser/add.user.usecase';
+import { AddUserUseCase } from '../../../../application/usecases/user/adduser/add.user.usecase';
 import { InvalidPhoneNumberException } from '../../../../domaine/errors/book.error';
-import { ClientSmsPort } from '../../../../domaine/repositories/client.sms.port';
 import { UsersRepository } from '../../../../domaine/repositories/user.repository';
 import { userDataDto, userDataResponse } from '../../data/userData';
 
 describe('Rule: create user', () => {
-  let createUserUseCase: CreateUserUseCase;
+  let createUserUseCase: AddUserUseCase;
   let mockUserProvider: Mock<UsersRepository>;
-  let mockClientProvider: Mock<ClientSmsPort>;
+  let mockClientProvider: Mock<NodemailerClient>;
+  // private nodemailerClient: NodemailerClient,
 
   beforeEach(() => {
     mockUserProvider = mock<UsersRepository>();
-    mockClientProvider = mock<ClientSmsPort>();
+    mockClientProvider = mock<NodemailerClient>();
 
-    mockUserProvider.createUser.mockImplementation(async () =>
+    mockUserProvider.signUp.mockImplementation(async () =>
       Promise.resolve(userDataResponse),
     );
 
-    createUserUseCase = new CreateUserUseCase(
+    createUserUseCase = new AddUserUseCase(
       mockUserProvider,
       mockClientProvider,
     );

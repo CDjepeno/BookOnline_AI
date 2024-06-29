@@ -18,7 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/e2e`/jest-e2e.json",
-    "test:integration": "jest --config ./test/integration/jest.json"
+    "test:integration": "jest --config ./test/integration/jest.json",
+    "test:unitaire": "jest --config ./test/unitaire/jest.json"
   },
   "dependencies": {
     "@golevelup/ts-jest": "^0.4.0",
@@ -28,7 +29,7 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.3.9",
-    "@nestjs/serve-static": "^4.0.0",
+    "@nestjs/serve-static": "^4.0.2",
     "@nestjs/swagger": "^7.1.17",
     "@nestjs/typeorm": "^10.0.1",
     "aws-sdk": "^2.1632.0",

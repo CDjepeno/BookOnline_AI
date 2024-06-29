@@ -8,7 +8,7 @@ export interface AddBookResponse {
   description: string;
   author: string;
   releaseAt: Date;
-  coverFile: FileList;
+  coverUrl: string;
 }
 
 export interface AddBookInput {
