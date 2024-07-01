@@ -34,6 +34,7 @@ export function HomePage() {
               books?.map((book) => (
                 <BookCard
                   key={book.id}
+                  id={book.id}
                   coverUrl={book.coverUrl}
                   name={book.name}
                   author={book.author}

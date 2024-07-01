@@ -1,11 +1,24 @@
 import { AxiosResponse } from "axios";
 import { MethodHttpEnum } from "../enum/enum";
 import { UseRequestApi } from "../request/commons/useApiRequest";
-import { BOOKS_ROUTE, BOOK_ROUTE } from "../request/route-http/route-http";
-import { AddBookResponse } from "../types/book/book.types";
+import {
+  BOOKS_ROUTE,
+  BOOK_ROUTE,
+  getBookRoute,
+} from "../request/route-http/route-http";
+import { GetBookResponse, GetBooksResponse } from "../types/book/book.types";
 
-export const getBooks = async (): Promise<AddBookResponse[]> => {
-  return await UseRequestApi<AddBookResponse[], null>({
+export const getBook = async (id: string): Promise<GetBookResponse> => {
+  return await UseRequestApi<GetBookResponse, { id: string }>({
+    path: getBookRoute(id),
+    method: MethodHttpEnum.GET,
+    params: { id },
+    includeAuthorizationHeader: false,
+  });
+};
+
+export const getBooks = async (): Promise<GetBooksResponse[]> => {
+  return await UseRequestApi<GetBooksResponse[], null>({
     path: BOOKS_ROUTE,
     method: MethodHttpEnum.GET,
     includeAuthorizationHeader: false,

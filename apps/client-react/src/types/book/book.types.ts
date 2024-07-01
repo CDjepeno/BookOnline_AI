@@ -2,8 +2,26 @@ export interface ErrorResponse {
   message: string;
 }
 
+export interface GetBookResponse {
+  id: string;
+  name: string;
+  description: string;
+  author: string;
+  releaseAt: Date;
+  coverUrl: string;
+}
+
+export interface GetBooksResponse {
+  id: string;
+  name: string;
+  description: string;
+  author: string;
+  releaseAt: Date;
+  coverUrl: string;
+}
+
 export interface AddBookResponse {
-  id?: string;
+  id: string;
   name: string;
   description: string;
   author: string;

@@ -13,8 +13,8 @@ import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { GetBookDto } from './getBook.dto';
 
-@ApiTags('Books')
-@Controller('books')
+@ApiTags('Book')
+@Controller('book')
 export class GetBookController {
   constructor(
     @Inject(UsecaseProxyModule.GET_BOOK_USECASE_PROXY)
