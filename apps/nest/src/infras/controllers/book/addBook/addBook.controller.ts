@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AddBookUseCase } from 'src/application/usecases/book/AddBook/addBook.usecase';
+import { AddBookUseCase } from 'src/application/usecases/book/addBook/addBook.usecase';
 import { badrequestexception } from 'src/domaine/errors/book.error';
 import { JwtAuthGuard } from 'src/infras/common/guards/jwt-auth.guard';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';

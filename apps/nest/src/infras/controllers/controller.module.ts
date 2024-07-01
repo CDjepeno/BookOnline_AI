@@ -9,6 +9,7 @@ import { AddBookController } from './book/addBook/addBook.controller';
 import { GetAllBookController } from './book/getAllBook/getAllBook.controller';
 import { AuthController } from './user/auth.controller';
 import { UsersController } from './user/users.controller';
+import { GetBookController } from './book/getBook/getBook.controller';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UsersController } from './user/users.controller';
     AuthController,
     AddBookController,
     GetAllBookController,
+    GetBookController,
   ],
   providers: [JwtAuthGuard, JwtService, AwsS3Client],
 })

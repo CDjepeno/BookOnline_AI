@@ -1,7 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common';
 
-import { AddBookUseCase } from 'src/application/usecases/book/AddBook/addBook.usecase';
-import { GetAllBookUsecase } from 'src/application/usecases/book/GetAllBook/getAllBook.usecase';
+import { AddBookUseCase } from 'src/application/usecases/book/addBook/addBook.usecase';
+import { GetAllBookUsecase } from 'src/application/usecases/book/getAllBook/getAllBook.usecase';
+import { GetBookUsecase } from 'src/application/usecases/book/getBookById/getBook.usecase';
 import { AddUserUseCase } from 'src/application/usecases/user/adduser/add.user.usecase';
 import { GetCurrentUserUseCase } from 'src/application/usecases/user/auth/get.current.user.usecase';
 import { LoginUserUseCase } from 'src/application/usecases/user/getuser/login.user.usecase';
@@ -24,6 +25,7 @@ export class UsecaseProxyModule {
 
   static ADD_BOOK_USECASE_PROXY = 'addBookUsecaseProxy';
   static GET_ALL_BOOK_USECASE_PROXY = 'getAllBookUsecaseProxy';
+  static GET_BOOK_USECASE_PROXY = 'getBookUsecaseProxy';
 
   static register(): DynamicModule {
     return {
@@ -67,6 +69,12 @@ export class UsecaseProxyModule {
           useFactory: (bookRepository: BookRepositoryTyperom) =>
             new UseCaseProxy(new GetAllBookUsecase(bookRepository)),
         },
+        {
+          inject: [BookRepositoryTyperom],
+          provide: UsecaseProxyModule.GET_BOOK_USECASE_PROXY,
+          useFactory: (bookRepository: BookRepositoryTyperom) =>
+            new UseCaseProxy(new GetBookUsecase(bookRepository)),
+        },
       ],
 
       exports: [
@@ -76,6 +84,7 @@ export class UsecaseProxyModule {
 
         UsecaseProxyModule.ADD_BOOK_USECASE_PROXY,
         UsecaseProxyModule.GET_ALL_BOOK_USECASE_PROXY,
+        UsecaseProxyModule.GET_BOOK_USECASE_PROXY,
       ],
     };
   }

@@ -1,7 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { TwilioClient } from '../../src/infras/clients/twilio/twilio.client';
 import { User } from '../../src/infras/models/user.model';
 import { UserRepositoryTyperom } from '../../src/infras/services/user.repository.typeorm';
 
@@ -22,7 +21,7 @@ describe('', () => {
     moduleFixture = await Test.createTestingModule({
       providers: [
         UserRepositoryTyperom,
-        TwilioClient,
+
         ConfigService,
         {
           provide: getRepositoryToken(User),
@@ -58,7 +57,7 @@ describe('', () => {
     });
 
     it('should create a new user', async () => {
-      expect(await service.createUser(userDetails)).toEqual(userData);
+      expect(await service.signUp(userDetails)).toEqual(userData);
     });
   });
 

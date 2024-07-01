@@ -3,8 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { TwilioClient } from 'src/infras/clients/twilio/twilio.client';
-import { TwilioModules } from 'src/infras/clients/twilio/twilio.module';
 import { User } from 'src/infras/models/user.model';
 import { UserRepositoryTyperom } from 'src/infras/services/user.repository.typeorm';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
@@ -37,10 +35,10 @@ describe('User Repository', () => {
           synchronize: false,
         }),
         TypeOrmModule.forFeature([User]),
-        TwilioModules,
+
         ConfigModule,
       ],
-      providers: [UserRepositoryTyperom, TwilioClient],
+      providers: [UserRepositoryTyperom],
     }).compile();
     repository = module.get<UserRepositoryTyperom>(UserRepositoryTyperom);
     app = module.createNestApplication();
