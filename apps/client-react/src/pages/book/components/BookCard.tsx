@@ -1,22 +1,33 @@
-import { Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+} from "@mui/material";
+import { Link } from "react-router-dom";
+import { getBookRoute } from "../../../request/route-http/route-http";
 import { formatDate } from "../../../utils/formatDate";
 
 interface BookCardProps {
+  id: string;
   name: string;
   author: string;
   description: string;
-  releaseAt: Date;
+  releaseAt: Date | string;
   coverUrl: string;
 }
 
 export default function BookCard({
+  id,
   name,
   author,
   description,
   releaseAt,
   coverUrl,
 }: BookCardProps) {
-
   const releaseDate =
     typeof releaseAt === "string" ? new Date(releaseAt) : releaseAt;
 
@@ -49,6 +60,16 @@ export default function BookCard({
           <Typography>{truncateDescription(description, 100)}</Typography>
           <Typography>Date de parution : {formatDate(releaseDate)}</Typography>
         </CardContent>
+        <CardActions>
+          <Button
+            component={Link}
+            to={getBookRoute(id)}
+            color="primary"
+            size="small"
+          >
+            VOIR PLUS
+          </Button>
+        </CardActions>
       </Card>
     </Grid>
   );
