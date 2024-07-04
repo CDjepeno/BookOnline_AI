@@ -8,7 +8,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetBookUsecase } from 'src/application/usecases/book/getBookById/getBook.usecase';
+import { GetBookUsecase } from 'src/application/usecases/book/getBook/getBook.usecase';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { GetBookDto } from './getBook.dto';
@@ -23,11 +23,9 @@ export class GetBookController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Get Book By Name',
+    summary: 'Get Book by Id',
   })
-  async getBook(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<GetBookDto> {
+  async getBook(@Param('id', ParseIntPipe) id: number): Promise<GetBookDto> {
     try {
       const book = this.getBookUsecaseProxy.getInstance().execute(id);
       if (!book) {

@@ -2,7 +2,8 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { AddBookUseCase } from 'src/application/usecases/book/addBook/addBook.usecase';
 import { GetAllBookUsecase } from 'src/application/usecases/book/getAllBook/getAllBook.usecase';
-import { GetBookUsecase } from 'src/application/usecases/book/getBookById/getBook.usecase';
+import { GetBookUsecase } from 'src/application/usecases/book/getBook/getBook.usecase';
+import { GetBooksByUserUsecase } from 'src/application/usecases/book/getBooksByUser/getBooksByUser.usecase';
 import { AddUserUseCase } from 'src/application/usecases/user/adduser/add.user.usecase';
 import { GetCurrentUserUseCase } from 'src/application/usecases/user/auth/get.current.user.usecase';
 import { LoginUserUseCase } from 'src/application/usecases/user/getuser/login.user.usecase';
@@ -25,6 +26,7 @@ export class UsecaseProxyModule {
 
   static ADD_BOOK_USECASE_PROXY = 'addBookUsecaseProxy';
   static GET_ALL_BOOK_USECASE_PROXY = 'getAllBookUsecaseProxy';
+  static GET_BOOKS_BY_USER_USECASE_PROXY = 'getBookByUserUsecaseProxy';
   static GET_BOOK_USECASE_PROXY = 'getBookUsecaseProxy';
 
   static register(): DynamicModule {
@@ -71,6 +73,12 @@ export class UsecaseProxyModule {
         },
         {
           inject: [BookRepositoryTyperom],
+          provide: UsecaseProxyModule.GET_BOOKS_BY_USER_USECASE_PROXY,
+          useFactory: (bookRepository: BookRepositoryTyperom) =>
+            new UseCaseProxy(new GetBooksByUserUsecase(bookRepository)),
+        },
+        {
+          inject: [BookRepositoryTyperom],
           provide: UsecaseProxyModule.GET_BOOK_USECASE_PROXY,
           useFactory: (bookRepository: BookRepositoryTyperom) =>
             new UseCaseProxy(new GetBookUsecase(bookRepository)),
@@ -84,6 +92,7 @@ export class UsecaseProxyModule {
 
         UsecaseProxyModule.ADD_BOOK_USECASE_PROXY,
         UsecaseProxyModule.GET_ALL_BOOK_USECASE_PROXY,
+        UsecaseProxyModule.GET_BOOKS_BY_USER_USECASE_PROXY,
         UsecaseProxyModule.GET_BOOK_USECASE_PROXY,
       ],
     };
