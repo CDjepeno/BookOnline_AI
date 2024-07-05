@@ -39,7 +39,7 @@ export class AddBookController {
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({ fileType: /.(png|jpe?g)$/ })
-        .addMaxSizeValidator({ maxSize: 1048576 })
+        .addMaxSizeValidator({ maxSize: 3 * 1024 * 1024  })
         .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
     )
     coverFile: Express.Multer.File,

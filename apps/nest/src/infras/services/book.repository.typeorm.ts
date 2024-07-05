@@ -5,7 +5,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddBookResponse } from 'src/application/usecases/book/addBook/addBook.response';
 import { GetAllBookResponse } from 'src/application/usecases/book/getAllBook/getAllBook.response';
-import { GetBookResponse } from 'src/application/usecases/book/getBookById/getBook.response';
+import { GetBookResponse } from 'src/application/usecases/book/getBook/getBook.response';
+import { GetBooksByUserResponse } from 'src/application/usecases/book/getBooksByUser/getBooksByUser.response';
 import { BookEntity } from 'src/domaine/entities/Book.entity';
 import { BookRepository } from 'src/domaine/repositories/book.repository';
 import { Repository } from 'typeorm';
@@ -40,7 +41,7 @@ export class BookRepositoryTyperom implements BookRepository {
 
       return this.repository.save(book);
     } catch (error) {
-      console.log("Erreur lors de l'ajout du livre :", error);
+      console.error("Erreur lors de l'ajout du livre :", error);
       throw new InternalServerErrorException("Impossible d'ajouter le livre.");
     }
   }
@@ -53,6 +54,27 @@ export class BookRepositoryTyperom implements BookRepository {
       console.error('Erreur lors de la récupération des livres :', error);
       throw new InternalServerErrorException(
         'Impossible de récupérer les livres.',
+      );
+    }
+  }
+
+  async getBooksByUser(userId: number): Promise<GetBooksByUserResponse[]> {
+    try {
+      console.log(`Recherche de livres avec l'userId : ${userId}`);
+
+      const books = this.repository.find({
+        where: { userId },
+      });
+      if (!books) {
+        throw new NotFoundException(
+          `Aucun livre trouve pour l'utilisateur avec l'userId ${userId} `,
+        );
+      }
+      return books;
+    } catch (error) {
+      console.error(
+        "Erreur s'est produite lors de la récupération des livres",
+        error,
       );
     }
   }
