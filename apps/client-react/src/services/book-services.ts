@@ -4,6 +4,7 @@ import { UseRequestApi } from "../request/commons/useApiRequest";
 import {
   BOOKS_ROUTE,
   BOOK_ROUTE,
+  BOOK_USER_ROUTE,
   getBookRoute,
 } from "../request/route-http/route-http";
 import { GetBookResponse, GetBooksResponse } from "../types/book/book.types";
@@ -21,6 +22,17 @@ export const getBooks = async (): Promise<GetBooksResponse[]> => {
   return await UseRequestApi<GetBooksResponse[], null>({
     path: BOOKS_ROUTE,
     method: MethodHttpEnum.GET,
+    includeAuthorizationHeader: false,
+  });
+};
+
+export const getBooksByUser = async (
+  userId: string
+): Promise<GetBooksResponse[]> => {
+  return await UseRequestApi<GetBooksResponse[], { userId: string }>({
+    path: BOOK_USER_ROUTE,
+    method: MethodHttpEnum.GET,
+    params: { userId },
     includeAuthorizationHeader: false,
   });
 };
