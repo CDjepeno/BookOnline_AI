@@ -1,4 +1,6 @@
-import { TableCell, TableRow } from "@mui/material";
+import DeleteTwoToneIcon from "@mui/icons-material/DeleteTwoTone";
+import EditTwoToneIcon from "@mui/icons-material/EditTwoTone";
+import { IconButton, TableCell, TableRow } from "@mui/material";
 
 interface BookUserTableProps {
   id: string;
@@ -22,7 +24,7 @@ export function BookUserTable({
   return (
     <TableRow
       key={id}
-      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+      sx={{ "&:last-child td, &:last-child th": { border: 0, m: "10px" } }}
     >
       <TableCell component="th" scope="row">
         {name}
@@ -30,7 +32,21 @@ export function BookUserTable({
       <TableCell align="right">{author}</TableCell>
       <TableCell align="right">{description}</TableCell>
       <TableCell align="right">{releaseDate.toLocaleDateString()}</TableCell>
-      <TableCell align="right">{coverUrl}</TableCell>
+      <TableCell align="right">
+        <img
+          src={coverUrl}
+          alt="couverture du book"
+          style={{ width: "50px", height: "30px", objectFit: "cover" }}
+        />
+      </TableCell>
+      <TableCell align="right">
+        <IconButton aria-label="edit">
+          <EditTwoToneIcon />
+        </IconButton>
+        <IconButton aria-label="delete">
+          <DeleteTwoToneIcon />
+        </IconButton>
+      </TableCell>
     </TableRow>
   );
 }

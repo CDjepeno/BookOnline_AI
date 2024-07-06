@@ -1,11 +1,9 @@
-// import DetailBOokHook from "./Detail-book.hook"
-
 import { Box, CircularProgress, Container, Typography } from "@mui/material";
-import DetailBookHook from "./Detail-book.hook";
+import BookDetailHook from "./Book-detail.hook";
 import BookCardDetail from "./components/BookCardDetail";
 
-export default function BookDetail() {
-  const { isPending, book, error } = DetailBookHook();
+function BookDetail() {
+  const { isPending, book, error } = BookDetailHook();
   if (isPending) {
     return (
       <Container>
@@ -54,7 +52,7 @@ export default function BookDetail() {
   }
 
   return (
-    <Container  sx={{ py: 8 }}>
+    <Container sx={{ py: 8 }}>
       <BookCardDetail
         name={book.name}
         author={book.author}
@@ -65,3 +63,5 @@ export default function BookDetail() {
     </Container>
   );
 }
+
+export default BookDetail;
