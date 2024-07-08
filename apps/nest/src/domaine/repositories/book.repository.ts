@@ -9,4 +9,5 @@ export interface BookRepository {
   getAllBook(): Promise<GetAllBookResponse[]>;
   getBooksByUser(userId: number): Promise<GetBooksByUserResponse[]>;
   getBook(id: number): Promise<GetBookResponse>;
+  deleteBook(id: number): Promise<void>;
 }
