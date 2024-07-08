@@ -1,15 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams } from "react-router-dom";
-import { BookQueriesKeysEnum, RouterEnum } from "../../enum/enum";
+import { useParams } from "react-router-dom";
+import { BookQueriesKeysEnum } from "../../enum/enum";
 import { getBook } from "../../services/book-services";
 
-function DetailBookHook() {
-  const navigate = useNavigate();
+function BookDetailHook() {
   const { id } = useParams<{ id: string }>();
-  if (!id) {
-    navigate(RouterEnum.HOME);
-  }
-  console.log(id);
+
   const {
     isPending,
     data: book,
@@ -23,4 +19,4 @@ function DetailBookHook() {
   return { isPending, book, error };
 }
 
-export default DetailBookHook;
+export default BookDetailHook;

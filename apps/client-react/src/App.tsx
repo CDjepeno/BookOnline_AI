@@ -20,7 +20,6 @@ function App() {
           <Box
             sx={{
               flex: 1,
-              overflow: "auto",
             }}
           >
             <Outlet />

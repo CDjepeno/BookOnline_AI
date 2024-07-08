@@ -15,6 +15,7 @@ import * as React from "react";
 import { useContext, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { AuthContext } from "../context";
+import { BOOKS_ROUTE } from "../request/route-http/route-http";
 import { AuthContextValue } from "../types/user/auth.context.value";
 
 type LinkMap = {
@@ -202,7 +203,16 @@ function Header() {
                     {setting === "Logout" ? (
                       <Typography onClick={signout}>Logout</Typography>
                     ) : (
-                      <Typography textAlign="center">{setting}</Typography>
+                      <NavLink
+                        to={
+                          setting === "Dashboard"
+                            ? `${BOOKS_ROUTE}/${user.id}`
+                            : `/${setting.toLowerCase()}`
+                        }
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        <Typography textAlign="center">{setting}</Typography>
+                      </NavLink>
                     )}
                   </MenuItem>
                 ))}
