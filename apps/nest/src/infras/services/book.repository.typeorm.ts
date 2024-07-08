@@ -60,8 +60,6 @@ export class BookRepositoryTyperom implements BookRepository {
 
   async getBooksByUser(userId: number): Promise<GetBooksByUserResponse[]> {
     try {
-      console.log(`Recherche de livres avec l'userId : ${userId}`);
-
       const books = this.repository.find({
         where: { userId },
       });
@@ -96,6 +94,20 @@ export class BookRepositoryTyperom implements BookRepository {
       }
       throw new InternalServerErrorException(
         'Impossible de récupérer le livre.',
+      );
+    }
+  }
+
+  async deleteBook(id: number): Promise<void> {
+    try {
+      await this.repository.delete(id);
+    } catch (error) {
+      console.error("Erreur lors de la supression d'un livre :", error);
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'Impossible de supprimer le livre.',
       );
     }
   }

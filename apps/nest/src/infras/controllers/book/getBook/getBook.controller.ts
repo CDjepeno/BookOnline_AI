@@ -27,7 +27,7 @@ export class GetBookController {
   })
   async getBook(@Param('id', ParseIntPipe) id: number): Promise<GetBookDto> {
     try {
-      const book = this.getBookUsecaseProxy.getInstance().execute(id);
+      const book = await this.getBookUsecaseProxy.getInstance().execute(id);
       if (!book) {
         throw new NotFoundException(`Aucun livre trouvé avec le nom "${id}"`);
       }

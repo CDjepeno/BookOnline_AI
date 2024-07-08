@@ -32,7 +32,7 @@ export class AddBookController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('coverFile'))
   @ApiOperation({
-    summary: 'Creates a Post',
+    summary: 'Create Book',
   })
   async addBook(
     @Body() createBookDto: CreateBookDto,
