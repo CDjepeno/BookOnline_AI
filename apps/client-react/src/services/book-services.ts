@@ -54,3 +54,12 @@ export const createBook = async (
   reset();
   return response;
 };
+
+export const deleteBook = async (id: string): Promise<void> => {
+  await UseRequestApi({
+    method: MethodHttpEnum.DELETE,
+    path: `${BOOK_ROUTE}/${id}`,
+    params: { id },
+    includeAuthorizationHeader: false,
+  });
+};

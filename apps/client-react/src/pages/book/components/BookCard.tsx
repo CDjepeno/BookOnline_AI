@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { getBookRoute } from "../../../request/route-http/route-http";
+import { BOOK_ROUTE } from "../../../request/route-http/route-http";
 import { formatDate } from "../../../utils/formatDate";
 
 interface BookCardProps {
@@ -63,7 +63,7 @@ export default function BookCard({
         <CardActions>
           <Button
             component={Link}
-            to={getBookRoute(id)}
+            to={`${BOOK_ROUTE}/${id}`}
             color="primary"
             size="small"
           >
