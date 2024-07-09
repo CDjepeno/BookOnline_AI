@@ -11,7 +11,7 @@ function BookDetailHook() {
     data: book,
     error,
   } = useQuery({
-    queryKey: [BookQueriesKeysEnum.Book, id],
+    queryKey: [BookQueriesKeysEnum.Book],
     queryFn: () => getBook(id!),
     enabled: !!id,
   });

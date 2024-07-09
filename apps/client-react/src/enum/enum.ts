@@ -1,6 +1,6 @@
 export enum BookQueriesKeysEnum {
   GetBooks = 'getbooks',
-  BookUser = 'booksUser',
+  BooksUser = 'booksUser',
   Login = 'login',
   addBook = 'addBook',
   Book = 'book'

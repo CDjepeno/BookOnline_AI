@@ -9,6 +9,7 @@ interface BookUserTableProps {
   description: string;
   releaseAt: Date | string;
   coverUrl: string;
+  onDelete: (id: string) => void;
 }
 
 export function BookUserTable({
@@ -18,6 +19,7 @@ export function BookUserTable({
   description,
   releaseAt,
   coverUrl,
+  onDelete,
 }: BookUserTableProps) {
   const releaseDate =
     typeof releaseAt === "string" ? new Date(releaseAt) : releaseAt;
@@ -43,7 +45,7 @@ export function BookUserTable({
         <IconButton aria-label="edit">
           <EditTwoToneIcon />
         </IconButton>
-        <IconButton aria-label="delete">
+        <IconButton onClick={() => onDelete(id)} aria-label="delete">
           <DeleteTwoToneIcon />
         </IconButton>
       </TableCell>
