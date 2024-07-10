@@ -1,9 +1,8 @@
-import { BookEntity } from "src/domaine/entities/Book.entity";
-import { BookRepository } from "src/domaine/repositories/book.repository";
-import { AwsS3Client } from "src/infras/clients/aws/aws-s3.client";
-import { AddBookRequest } from "./addBook.request";
-import { AddBookResponse } from "./addBook.response";
-
+import { BookEntity } from 'src/domaine/entities/Book.entity';
+import { BookRepository } from 'src/domaine/repositories/book.repository';
+import { AwsS3Client } from 'src/infras/clients/aws/aws-s3.client';
+import { AddBookRequest } from './addBook.request';
+import { AddBookResponse } from './addBook.response';
 
 export class AddBookUseCase {
   constructor(
@@ -28,6 +27,7 @@ export class AddBookUseCase {
 
       return res;
     } catch (error) {
+      console.error("Erreur lors de l'ajout du livre :", error);
       throw new Error(error);
     }
   }
