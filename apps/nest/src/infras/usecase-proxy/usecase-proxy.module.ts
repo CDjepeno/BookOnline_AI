@@ -5,6 +5,7 @@ import { DeleteBookUsecase } from 'src/application/usecases/book/deleteBook/dele
 import { GetAllBookUsecase } from 'src/application/usecases/book/getAllBook/getAllBook.usecase';
 import { GetBookUsecase } from 'src/application/usecases/book/getBook/getBook.usecase';
 import { GetBooksByUserUsecase } from 'src/application/usecases/book/getBooksByUser/getBooksByUser.usecase';
+import { UpdateBookUseCase } from 'src/application/usecases/book/updateBook/updateBook.usecase';
 import { AddUserUseCase } from 'src/application/usecases/user/adduser/add.user.usecase';
 import { GetCurrentUserUseCase } from 'src/application/usecases/user/auth/get.current.user.usecase';
 import { LoginUserUseCase } from 'src/application/usecases/user/getuser/login.user.usecase';
@@ -30,6 +31,7 @@ export class UsecaseProxyModule {
   static GET_BOOKS_BY_USER_USECASE_PROXY = 'getBookByUserUsecaseProxy';
   static GET_BOOK_USECASE_PROXY = 'getBookUsecaseProxy';
   static DELETE_BOOK_USECASE_PROXY = 'deleteBookUsecaseProxy';
+  static UPDATE_BOOK_USECASE_PROXY = 'updateBookUsecaseProxy';
 
   static register(): DynamicModule {
     return {
@@ -91,6 +93,17 @@ export class UsecaseProxyModule {
           useFactory: (bookRepository: BookRepositoryTyperom) =>
             new UseCaseProxy(new DeleteBookUsecase(bookRepository)),
         },
+        {
+          inject: [BookRepositoryTyperom, AwsS3Client],
+          provide: UsecaseProxyModule.UPDATE_BOOK_USECASE_PROXY,
+          useFactory: (
+            bookRepository: BookRepositoryTyperom,
+            awsS3Client: AwsS3Client,
+          ) =>
+            new UseCaseProxy(
+              new UpdateBookUseCase(bookRepository, awsS3Client),
+            ),
+        },
       ],
 
       exports: [
@@ -103,6 +116,7 @@ export class UsecaseProxyModule {
         UsecaseProxyModule.GET_BOOKS_BY_USER_USECASE_PROXY,
         UsecaseProxyModule.GET_BOOK_USECASE_PROXY,
         UsecaseProxyModule.DELETE_BOOK_USECASE_PROXY,
+        UsecaseProxyModule.UPDATE_BOOK_USECASE_PROXY,
       ],
     };
   }

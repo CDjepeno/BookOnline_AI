@@ -7,6 +7,7 @@ import { AddBookResponse } from 'src/application/usecases/book/addBook/addBook.r
 import { GetAllBookResponse } from 'src/application/usecases/book/getAllBook/getAllBook.response';
 import { GetBookResponse } from 'src/application/usecases/book/getBook/getBook.response';
 import { GetBooksByUserResponse } from 'src/application/usecases/book/getBooksByUser/getBooksByUser.response';
+import { UpdateBookResponse } from 'src/application/usecases/book/updateBook/updateBook.response';
 import { BookEntity } from 'src/domaine/entities/Book.entity';
 import { BookRepository } from 'src/domaine/repositories/book.repository';
 import { Repository } from 'typeorm';
@@ -98,14 +99,35 @@ export class BookRepositoryTyperom implements BookRepository {
     }
   }
 
-  async deleteBook(id: number): Promise<void> {
+  async updateBook(
+    id: number,
+    book: Partial<BookEntity>,
+  ): Promise<UpdateBookResponse> {
     try {
-      await this.repository.delete(id);
+      await this.repository.update(id, book);
+      const updatedBook = await this.repository.findOneBy({ id });
+      if (!updatedBook) {
+        throw new NotFoundException(`Aucun livre trouvé avec l'id "${id}"`);
+      }
+      return updatedBook;
     } catch (error) {
-      console.error("Erreur lors de la supression d'un livre :", error);
+      console.error("Erreur lors de la modification d'un livre :", error);
       if (error instanceof NotFoundException) {
         throw error;
       }
+      throw new InternalServerErrorException(
+        'Impossible de modifier le livre.',
+      );
+    }
+  }
+
+  async deleteBook(id: number): Promise<void> {
+    try {
+      const result = await this.repository.delete(id);
+      if (result.affected === 0) {
+        throw new NotFoundException(`Aucun livre trouvé avec l'id "${id}"`);
+      }
+    } catch (error) {
       throw new InternalServerErrorException(
         'Impossible de supprimer le livre.',
       );
