@@ -40,7 +40,15 @@ export class BookRepositoryTyperom implements BookRepository {
       book.coverUrl = addBookRequest.coverUrl;
       book.userId = addBookRequest.userId;
 
-      return this.repository.save(book);
+      const result = await this.repository.save(book);
+      const { name, description, author, releaseAt, coverUrl } = result;
+      return {
+        name,
+        description,
+        author,
+        releaseAt,
+        coverUrl,
+      };
     } catch (error) {
       console.error("Erreur lors de l'ajout du livre :", error);
       throw new InternalServerErrorException("Impossible d'ajouter le livre.");

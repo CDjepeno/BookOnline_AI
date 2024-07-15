@@ -1,17 +1,20 @@
 import { DevTool } from "@hookform/devtools";
-import { Container, TextField } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
+import {
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { fr } from "date-fns/locale";
 import DatePicker, { registerLocale } from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { Controller } from "react-hook-form";
 import { createGlobalStyle } from "styled-components";
-import FormInput from "../../components/FormInput";
-import AddBookHook from "./Add-book.hook";
+import FormInput from "../../../../components/FormInput";
+import { UpdateBookFormType } from "../../../../types/book/book.types";
+import BookUpdateHook from "./BookUpdate.hook";
 
 registerLocale("fr", fr);
 
@@ -22,8 +25,14 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export default function AddBook() {
-  const { submit, handleSubmit, errors, control } = AddBookHook();
+type BookUpdateFormProps = {
+  bookUpdate: UpdateBookFormType | null;
+};
+
+function BookUpdateForm({ bookUpdate }: BookUpdateFormProps) {
+  console.log(bookUpdate?.coverUrl);
+
+  const { submit, handleSubmit, errors, control } = BookUpdateHook();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -32,14 +41,13 @@ export default function AddBook() {
 
       <Box
         sx={{
-          marginTop: 8,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <Typography component="h1" variant="h5">
-          Ajouter un Livre
+        <Typography variant="h6" component="h2" gutterBottom>
+          Mettre à jour un Livre
         </Typography>
         <Box
           component="form"
@@ -52,6 +60,7 @@ export default function AddBook() {
               <FormInput
                 name="name"
                 label="Nom"
+                defaultValue={bookUpdate?.name}
                 control={control}
                 errors={errors}
               />
@@ -60,6 +69,7 @@ export default function AddBook() {
               <FormInput
                 name="description"
                 label="Description"
+                defaultValue={bookUpdate?.description}
                 control={control}
                 errors={errors}
               />
@@ -68,6 +78,7 @@ export default function AddBook() {
               <FormInput
                 name="author"
                 label="Auteur"
+                defaultValue={bookUpdate?.author}
                 control={control}
                 errors={errors}
               />
@@ -76,10 +87,13 @@ export default function AddBook() {
             <Grid item xs={12}>
               <Controller
                 name="releaseAt"
+                defaultValue={
+                  bookUpdate?.releaseAt ? bookUpdate.releaseAt : undefined
+                }
                 control={control}
                 render={({ field: { onChange, value, ref } }) => (
                   <DatePicker
-                    selected={value}
+                    selected={value ? new Date(value) : null}
                     onChange={onChange}
                     ref={ref}
                     locale="fr"
@@ -103,12 +117,13 @@ export default function AddBook() {
                 sx={{
                   width: "100%",
                   padding: "15px",
-                  border: errors.coverFile ? "1px solid red" : "1px solid #bbb",
+                  border: errors.coverUrl ? "1px solid red" : "1px solid #bbb",
                   borderRadius: "5px",
                 }}
               >
                 <Controller
-                  name="coverFile"
+                  name="coverUrl"
+                  defaultValue="ok"
                   control={control}
                   render={({ field: { onChange, ref } }) => (
                     <input
@@ -124,10 +139,11 @@ export default function AddBook() {
                     />
                   )}
                 />
+                {/* <img src={bookUpdate?.coverUrl} alt="Current" style={{ width: '30px', height: '30px' }} />  */}
               </Box>
-              {errors.coverFile && (
+              {errors.coverUrl && (
                 <Typography color="error" m="4px 15px" variant="body2">
-                  {errors.coverFile.message}
+                  {errors.coverUrl.message}
                 </Typography>
               )}
             </Grid>
@@ -139,7 +155,7 @@ export default function AddBook() {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Ajouter un livre
+            Mettre à jour
           </Button>
         </Box>
       </Box>
@@ -148,3 +164,5 @@ export default function AddBook() {
     </Container>
   );
 }
+
+export default BookUpdateForm;

@@ -3,10 +3,10 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { RouterEnum } from "../../enum/enum";
-import { UseQueryWorkflowCallback } from "../../request/commons/useQueryWorkflowCallback";
-import { registerUser } from "../../services/user-services";
-import { RegisterFormInput } from "../../types/user/form.types";
+import { RouterEnum } from "../../../enum/enum";
+import { UseQueryWorkflowCallback } from "../../../request/commons/useQueryWorkflowCallback";
+import { registerUser } from "../../../services/user.services";
+import { RegisterFormInput } from "../../../types/user/form.types";
 
 export default function RegisterHook() {
   const navigate = useNavigate();
@@ -50,7 +50,6 @@ export default function RegisterHook() {
     setError,
     watch,
     control,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues, resolver: yupResolver(signupSchema) });
 
@@ -61,7 +60,7 @@ export default function RegisterHook() {
   const { onSuccessCommon } = UseQueryWorkflowCallback();
 
   const { mutateAsync: submit } = useMutation({
-    mutationFn: (input: RegisterFormInput) => registerUser(input, reset),
+    mutationFn: (input: RegisterFormInput) => registerUser(input),
     onSuccess: () => {
       onSuccessCommon(
         "Votre compte a bien ete cree!, un mail vous a été envoyer"

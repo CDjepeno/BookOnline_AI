@@ -53,11 +53,14 @@ export class UpdateBookController {
         .getInstance()
         .execute({ ...updateBookDto, id, coverFile });
 
+      const { name, description, author, releaseAt, coverUrl } = result;
+
       return {
-        status: 'updated',
-        code: 201,
-        message: 'Data edited successfully',
-        data: result,
+        name,
+        description,
+        author,
+        releaseAt,
+        coverUrl,
       };
     } catch (error) {
       console.error('Error occurred while updating book:', error);

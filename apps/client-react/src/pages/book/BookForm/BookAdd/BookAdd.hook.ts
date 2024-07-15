@@ -4,16 +4,17 @@ import { AxiosError } from "axios";
 import { useContext } from "react";
 import { DefaultValues, useForm } from "react-hook-form";
 import * as yup from "yup";
-import { AuthContext } from "../../context";
-import { BookQueriesKeysEnum, RouterEnum } from "../../enum/enum";
-import { UseQueryWorkflowCallback } from "../../request/commons/useQueryWorkflowCallback";
-import { createBook } from "../../services/book-services";
+import { AuthContext } from "../../../../context";
+import { BookQueriesKeysEnum, RouterEnum } from "../../../../enum/enum";
+import { UseQueryWorkflowCallback } from "../../../../request/commons/useQueryWorkflowCallback";
+import { createBook } from "../../../../services/book.services";
 import {
   AddBookFormType,
   AddBookInput,
+  AddBookResponse,
   ErrorResponse,
-} from "../../types/book/book.types";
-import { AuthContextValue } from "../../types/user/auth.context.value";
+} from "../../../../types/book/book.types";
+import { AuthContextValue } from "../../../../types/user/auth.context.value";
 
 const defaultValues: DefaultValues<AddBookFormType> = {
   name: "",
@@ -36,13 +37,12 @@ const bookSchema = yup.object({
     ),
 });
 
-function AddBookHook() {
+function BookAddHook() {
   const { user } = useContext(AuthContext) as AuthContextValue;
   const queryClient = new QueryClient();
 
   const {
     register,
-    reset,
     handleSubmit,
     control,
     formState: { errors, isSubmitting },
@@ -54,8 +54,12 @@ function AddBookHook() {
   const { onSuccessCommon, onErrorCommon } = UseQueryWorkflowCallback();
   const userId = user && user.id;
 
-  const { mutateAsync: addBook } = useMutation({
-    mutationFn: async (data: FormData) => createBook(data, userId, reset),
+  const { mutateAsync: addBook } = useMutation<
+    AddBookResponse,
+    AxiosError<unknown>,
+    FormData
+  >({
+    mutationFn: async (data: FormData) => createBook(data, userId),
 
     onSuccess: () => {
       onSuccessCommon("Votre livre a bien été créé", RouterEnum.HOME);
@@ -104,7 +108,7 @@ function AddBookHook() {
   return { register, submit, handleSubmit, isSubmitting, errors, control };
 }
 
-export default AddBookHook;
+export default BookAddHook;
 
 function isAxiosError(error: unknown): error is AxiosError {
   return (

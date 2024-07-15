@@ -24,11 +24,12 @@ export class UsersController {
       const result = await this.createUserUsecaseProxy
         .getInstance()
         .execute(createUserDto);
+
+      const { name, email, phone } = result;
       return {
-        status: 'Created',
-        code: 201,
-        message: 'Insert data success',
-        data: result,
+        name,
+        email,
+        phone,
       };
     } catch (err) {
       throw err;
