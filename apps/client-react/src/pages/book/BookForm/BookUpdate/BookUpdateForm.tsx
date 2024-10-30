@@ -9,8 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import { fr } from "date-fns/locale";
+import { useEffect, useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
-import { Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { createGlobalStyle } from "styled-components";
 import FormInput from "../../../../components/FormInput";
 import { UpdateBookFormType } from "../../../../types/book/book.types";
@@ -26,13 +27,29 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 type BookUpdateFormProps = {
-  bookUpdate: UpdateBookFormType | null;
+  bookUpdate: UpdateBookFormType;
 };
 
 function BookUpdateForm({ bookUpdate }: BookUpdateFormProps) {
   console.log(bookUpdate?.coverUrl);
 
-  const { submit, handleSubmit, errors, control } = BookUpdateHook();
+  const [fileName, setFileName] = useState(bookUpdate?.coverUrl || "");
+  const [file, setFile] = useState<FileList | null>(null);
+  console.log(file);
+  
+  const {
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UpdateBookFormType>();
+
+  useEffect(() => {
+    reset(bookUpdate);
+    setFileName(bookUpdate?.coverUrl || "");
+  }, [bookUpdate, reset]);
+
+  const { submit } = BookUpdateHook();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -60,7 +77,6 @@ function BookUpdateForm({ bookUpdate }: BookUpdateFormProps) {
               <FormInput
                 name="name"
                 label="Nom"
-                defaultValue={bookUpdate?.name}
                 control={control}
                 errors={errors}
               />
@@ -69,7 +85,6 @@ function BookUpdateForm({ bookUpdate }: BookUpdateFormProps) {
               <FormInput
                 name="description"
                 label="Description"
-                defaultValue={bookUpdate?.description}
                 control={control}
                 errors={errors}
               />
@@ -78,7 +93,6 @@ function BookUpdateForm({ bookUpdate }: BookUpdateFormProps) {
               <FormInput
                 name="author"
                 label="Auteur"
-                defaultValue={bookUpdate?.author}
                 control={control}
                 errors={errors}
               />
@@ -87,9 +101,6 @@ function BookUpdateForm({ bookUpdate }: BookUpdateFormProps) {
             <Grid item xs={12}>
               <Controller
                 name="releaseAt"
-                defaultValue={
-                  bookUpdate?.releaseAt ? bookUpdate.releaseAt : undefined
-                }
                 control={control}
                 render={({ field: { onChange, value, ref } }) => (
                   <DatePicker
@@ -123,23 +134,33 @@ function BookUpdateForm({ bookUpdate }: BookUpdateFormProps) {
               >
                 <Controller
                   name="coverUrl"
-                  defaultValue="ok"
                   control={control}
                   render={({ field: { onChange, ref } }) => (
-                    <input
-                      type="file"
-                      id="file-upload"
-                      accept=".jpg,.jpeg,.png"
-                      onChange={(e) => {
-                        console.log(e.target.files);
-                        onChange(e.target.files);
-                      }}
-                      ref={ref}
-                      style={{ width: "100%" }}
-                    />
+                    <>
+                      <input
+                        type="file"
+                        id="file-upload"
+                        accept=".jpg,.jpeg,.png"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+
+                            const selectedFile = e.target.files;
+                            onChange(selectedFile);
+                            setFile(selectedFile);
+                            setFileName(selectedFile[0].name);
+                          }
+                        }}
+                        ref={ref}
+                        style={{ width: "100%" }}
+                      />
+                      {fileName && typeof fileName === "string" && (
+                        <Typography variant="body2" mt={2}>
+                          Fichier actuel : {fileName}
+                        </Typography>
+                      )}
+                    </>
                   )}
                 />
-                {/* <img src={bookUpdate?.coverUrl} alt="Current" style={{ width: '30px', height: '30px' }} />  */}
               </Box>
               {errors.coverUrl && (
                 <Typography color="error" m="4px 15px" variant="body2">

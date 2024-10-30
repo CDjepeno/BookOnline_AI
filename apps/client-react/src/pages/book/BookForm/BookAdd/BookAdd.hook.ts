@@ -20,7 +20,7 @@ const defaultValues: DefaultValues<AddBookFormType> = {
   name: "",
   description: "",
   author: "",
-  releaseAt: new Date(),
+  releaseAt: "",
   coverFile: undefined,
 };
 
@@ -90,8 +90,8 @@ function BookAddHook() {
       formData.append("name", data.name);
       formData.append("description", data.description);
       formData.append("author", data.author);
-      formData.append("releaseAt", data.releaseAt.toISOString());
-
+      formData.append("releaseAt", data.releaseAt.toString());
+      console.log(data.coverFile[0]);
       if (data.coverFile && data.coverFile.length > 0) {
         formData.append("coverFile", data.coverFile[0]);
       } else {

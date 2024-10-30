@@ -30,7 +30,14 @@ const headCells = [
 
 export default function BookListUser() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [book, setBook] = useState<UpdateBookFormType | null>(null);
+  const [book, setBook] = useState<UpdateBookFormType>({
+    id: "",
+    name: "",
+    description: "",
+    author: "",
+    releaseAt: "",
+    coverUrl: "",
+  });
   const { user } = useContext(AuthContext) as AuthContextValue;
 
   const { books, isPending, error } = BookListUserHook();
@@ -47,7 +54,6 @@ export default function BookListUser() {
   const editBook = (book: UpdateBookFormType) => {
     setBook(book);
     setIsFormOpen(true);
-    // id && setIdToUpdate(id);
   };
 
   const rows =

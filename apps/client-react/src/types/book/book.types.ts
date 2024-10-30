@@ -59,5 +59,5 @@ export type UpdateBookFormType = {
   description: string;
   author: string;
   releaseAt: string;
-  coverUrl: FileList | string;
+  coverUrl?: FileList;
 };
