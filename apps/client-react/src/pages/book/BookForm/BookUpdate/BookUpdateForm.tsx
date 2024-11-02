@@ -28,28 +28,31 @@ const GlobalStyle = createGlobalStyle`
 
 type BookUpdateFormProps = {
   bookUpdate: UpdateBookFormType;
+  setIsFormOpen: (value: boolean) => void;
 };
 
-function BookUpdateForm({ bookUpdate }: BookUpdateFormProps) {
-  console.log(bookUpdate?.coverUrl);
-
+function BookUpdateForm({ bookUpdate, setIsFormOpen }: BookUpdateFormProps) {
+  
   const [fileName, setFileName] = useState(bookUpdate?.coverUrl || "");
-  const [file, setFile] = useState<FileList | null>(null);
-  console.log(file);
   
   const {
     control,
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<UpdateBookFormType>();
+  } = useForm<UpdateBookFormType>({
+    defaultValues: {
+      ...bookUpdate,
+      coverUrl: bookUpdate.coverUrl
+    }
+  });
 
   useEffect(() => {
     reset(bookUpdate);
     setFileName(bookUpdate?.coverUrl || "");
   }, [bookUpdate, reset]);
 
-  const { submit } = BookUpdateHook();
+  const { submit } = BookUpdateHook(setIsFormOpen);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -146,7 +149,6 @@ function BookUpdateForm({ bookUpdate }: BookUpdateFormProps) {
 
                             const selectedFile = e.target.files;
                             onChange(selectedFile);
-                            setFile(selectedFile);
                             setFileName(selectedFile[0].name);
                           }
                         }}
@@ -187,3 +189,6 @@ function BookUpdateForm({ bookUpdate }: BookUpdateFormProps) {
 }
 
 export default BookUpdateForm;
+
+
+

@@ -79,7 +79,7 @@ function BookAddForm() {
                 control={control}
                 render={({ field: { onChange, value, ref } }) => (
                   <DatePicker
-                    selected={value}
+                    selected={value ? new Date(value) : null}
                     onChange={onChange}
                     ref={ref}
                     locale="fr"
@@ -103,12 +103,12 @@ function BookAddForm() {
                 sx={{
                   width: "100%",
                   padding: "15px",
-                  border: errors.coverFile ? "1px solid red" : "1px solid #bbb",
+                  border: errors.coverUrl ? "1px solid red" : "1px solid #bbb",
                   borderRadius: "5px",
                 }}
               >
                 <Controller
-                  name="coverFile"
+                  name="coverUrl"
                   control={control}
                   render={({ field: { onChange, ref } }) => (
                     <input
@@ -125,9 +125,9 @@ function BookAddForm() {
                   )}
                 />
               </Box>
-              {errors.coverFile && (
+              {errors.coverUrl && (
                 <Typography color="error" m="4px 15px" variant="body2">
-                  {errors.coverFile.message}
+                  {errors.coverUrl.message}
                 </Typography>
               )}
             </Grid>

@@ -9,6 +9,7 @@ import {
   ParseFilePipeBuilder,
   ParseIntPipe,
   Put,
+  Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -20,7 +21,7 @@ import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { UpdateBookDto } from './updateBook.dto';
 
-@ApiTags('Book')
+@ApiTags('book')
 @Controller('book')
 export class UpdateBookController {
   constructor(
@@ -29,7 +30,7 @@ export class UpdateBookController {
   ) {}
 
   @Put(':id')
-  @UseInterceptors(FileInterceptor('coverFile'))
+  @UseInterceptors(FileInterceptor('coverUrl'))
   @ApiOperation({
     summary: 'Update Book',
   })
@@ -40,20 +41,25 @@ export class UpdateBookController {
       new ParseFilePipeBuilder()
         .addFileTypeValidator({ fileType: /.(png|jpe?g)$/ })
         .addMaxSizeValidator({ maxSize: 3 * 1024 * 1024 })
-        .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+          fileIsRequired: false,
+        }),
     )
-    coverFile: Express.Multer.File,
+    coverUrl: Express.Multer.File,
   ) {
     try {
-      if (!coverFile && !updateBookDto.coverUrl) {
-        throw new BadRequestException('Cover file is required');
+      if (!coverUrl && !updateBookDto.coverUrl) {
+        throw new BadRequestException('Cover fileeeeee is required');
       }
 
+      const dataToUpdate = {...updateBookDto, id, coverUrl}
+      
       const result = await this.updateUsecaseProxy
         .getInstance()
-        .execute({ ...updateBookDto, id, coverFile });
+        .execute(dataToUpdate);
 
-      const { name, description, author, releaseAt, coverUrl } = result;
+      const { name, description, author, releaseAt } = result;
 
       return {
         name,

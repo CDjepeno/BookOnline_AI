@@ -12,20 +12,19 @@ interface ErrorResponse {
   message: string;
 }
 
-function BookUpdateHook() {
+function BookUpdateHook(setIsFormOpen: (value: boolean) => void) {
   const queryClient = useQueryClient();
   const { onSuccessCommon, onErrorCommon } = UseQueryWorkflowCallback();
-
-  console.log("update hookkkkk");
 
   const { mutateAsync: updateBookMutation } = useMutation<
     UpdateBookResponse,
     AxiosError<unknown>,
-    { id: string; data: FormData }
+    { id: string; data: FormData | Record<string, unknown> }
   >({
     mutationFn: async ({ id, data }) => updateBook(id, data),
 
     onSuccess: () => {
+      setIsFormOpen(false)
       onSuccessCommon("Le livre a été mis à jour avec succès");
       queryClient.invalidateQueries({
         queryKey: [BookQueriesKeysEnum.BooksUser],
@@ -35,6 +34,7 @@ function BookUpdateHook() {
     onError: (error: Error | AxiosError<unknown>) => {
       let errorMessage =
         "Une erreur est survenue lors de la mise à jour du livre";
+
 
       if ((error as AxiosError<unknown>).isAxiosError) {
         if (
@@ -53,23 +53,24 @@ function BookUpdateHook() {
 
   const submit = async (formData: UpdateBookFormType) => {
     try {
-      console.log("data update", formData);
       const { id, name, description, author, releaseAt, coverUrl } = formData;
 
-      const data = new FormData();
-      data.append("name", name);
-      data.append("description", description);
-      data.append("author", author);
-      data.append("releaseAt", releaseAt ? releaseAt.toString() : "");
-      console.log(coverUrl && coverUrl[0]);
-      
-      if (coverUrl && coverUrl instanceof FileList) {
-        console.log('Fillllllllllllllleeeeeeeeeeeeee');
-        
+      if (coverUrl instanceof FileList) {
+        const data = new FormData();
+
         data.append("coverUrl", coverUrl[0]);
+        data.append("name", name);
+        data.append("description", description);
+        data.append("author", author);
+        data.append("releaseAt", releaseAt ? releaseAt.toString() : "");
+
+        await updateBookMutation({ id, data });
+        return
       }
 
-      await updateBookMutation({ id, data });
+      console.log(coverUrl && coverUrl[0]);
+
+      await updateBookMutation({ id, data: formData });
     } catch (error) {
       console.error("Erreur lors de la mise à jour du livre", error);
     }

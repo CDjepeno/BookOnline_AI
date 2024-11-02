@@ -20,9 +20,10 @@ export class UpdateBookUseCase {
       }
 
       let coverUrl = existingBook.coverUrl;
-      if (request.coverFile) {
-        coverUrl = await this.awsS3Client.uploadFile(request.coverFile);
-      }
+
+      if (typeof request.coverUrl === `object`) {
+        coverUrl = await this.awsS3Client.uploadFile(request.coverUrl);
+      } 
 
       const updatedBook = new BookEntity(
         request.id,
@@ -33,7 +34,7 @@ export class UpdateBookUseCase {
         coverUrl,
         request.userId,
       );
-
+      
       const res = await this.bookRepository.updateBook(request.id, updatedBook);
 
       return res;

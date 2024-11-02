@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { IsDate, IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class UpdateBookDto {
   @IsString()
@@ -18,12 +18,8 @@ export class UpdateBookDto {
   author: string;
 
   @IsNotEmpty()
-  @IsDate()
-  @ApiProperty({ description: 'Date de publication du livre' })
-  releaseAt: Date;
-
-  @IsNotEmpty()
+  @IsOptional()
   @IsUrl()
   @ApiProperty({ description: 'URL de la couverture du livre' })
-  coverUrl: string;
+  coverUrl?: string;
 }

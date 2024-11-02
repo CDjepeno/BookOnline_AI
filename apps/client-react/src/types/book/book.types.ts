@@ -33,7 +33,7 @@ export interface AddBookInput {
   description: string;
   author: string;
   releaseAt: string;
-  coverFile: FileList;
+  coverUrl: FileList;
 }
 
 export type AddBookFormType = {
@@ -41,8 +41,9 @@ export type AddBookFormType = {
   description: string;
   author: string;
   releaseAt: string;
-  coverFile: FileList;
+  coverUrl: FileList;
 };
+
 
 export interface UpdateBookResponse {
   id: string;
@@ -59,5 +60,5 @@ export type UpdateBookFormType = {
   description: string;
   author: string;
   releaseAt: string;
-  coverUrl?: FileList;
+  coverUrl?: string | FileList;
 };

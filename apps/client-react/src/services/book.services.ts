@@ -66,27 +66,17 @@ export const deleteBook = async (id: string): Promise<void> => {
 
 export const updateBook = async (
   id: string,
-  data: FormData
+  data: FormData | Record<string, unknown> 
 ): Promise<UpdateBookResponse> => {
+  const isFormdata = data instanceof FormData
   return await UseRequestApi({
     method: MethodHttpEnum.PUT,
     path: `${BOOK_ROUTE}/${id}`,
     params: data,
     includeAuthorizationHeader: true,
+    headers: {
+      "Content-Type": isFormdata ? "multipart/form-data" : "application/json",
+    },
   });
 };
 
-// export const updateBook = async (
-//   id: string,
-//   formatData: FormData
-// ): Promise<void> => {
-//   await UseRequestApi({
-//     method: MethodHttpEnum.PUT,
-//     path: `${BOOK_ROUTE}/${id}`,
-//     params: formatData,
-//     includeAuthorizationHeader: true,
-//     headers: {
-//       "Content-Type": "multipart/form-data",
-//     },
-//   });
-// };

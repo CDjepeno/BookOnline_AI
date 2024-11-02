@@ -21,15 +21,15 @@ const defaultValues: DefaultValues<AddBookFormType> = {
   description: "",
   author: "",
   releaseAt: "",
-  coverFile: undefined,
+  coverUrl: undefined,
 };
 
 const bookSchema = yup.object({
   name: yup.string().required("Le nom doit être renseigné"),
   description: yup.string().required("La description doit être renseignée"),
   author: yup.string().required("L'auteur doit être renseigné"),
-  releaseAt: yup.date().required("La date de sortie doit être renseignée"),
-  coverFile: yup
+  releaseAt: yup.string ().required("La date de sortie doit être renseignée"),
+  coverUrl: yup
     .mixed<FileList>()
     .required("L'image de couverture est requise")
     .test("fileSize", "L'image doit faire moins de 5MB", (value) =>
@@ -91,11 +91,11 @@ function BookAddHook() {
       formData.append("description", data.description);
       formData.append("author", data.author);
       formData.append("releaseAt", data.releaseAt.toString());
-      console.log(data.coverFile[0]);
-      if (data.coverFile && data.coverFile.length > 0) {
-        formData.append("coverFile", data.coverFile[0]);
+      console.log(data.coverUrl[0]);
+      if (data.coverUrl && data.coverUrl.length > 0) {
+        formData.append("coverUrl", data.coverUrl[0]);
       } else {
-        console.error("CoverFile is required");
+        console.error("coverUrl is required");
         return;
       }
 

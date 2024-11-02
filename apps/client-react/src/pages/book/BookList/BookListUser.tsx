@@ -36,7 +36,7 @@ export default function BookListUser() {
     description: "",
     author: "",
     releaseAt: "",
-    coverUrl: "",
+    coverUrl: undefined,
   });
   const { user } = useContext(AuthContext) as AuthContextValue;
 
@@ -145,7 +145,7 @@ export default function BookListUser() {
             boxShadow: 24,
           }}
         >
-          <BookUpdateForm bookUpdate={book} />
+          <BookUpdateForm bookUpdate={book} setIsFormOpen={setIsFormOpen} />
         </Box>
       </Modal>
     </Container>
