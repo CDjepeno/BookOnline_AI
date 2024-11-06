@@ -6,6 +6,7 @@ import { TypeOModule } from './infras/clients/typeorm/type-orm.module';
 import { ControllerModule } from './infras/controllers/controller.module';
 import { UsersController } from './infras/controllers/user/users.controller';
 import { UsecaseProxyModule } from './infras/usecase-proxy/usecase-proxy.module';
+import { BookingBookUseCase } from './application/usecases/booking/bookingBook/bookingBook.usecase';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { UsecaseProxyModule } from './infras/usecase-proxy/usecase-proxy.module'
     TypeOModule,
   ],
   controllers: [UsersController],
-  providers: [AddUserUseCase, AddBookUseCase],
-  exports: [AddUserUseCase, AddBookUseCase],
+  providers: [AddUserUseCase, AddBookUseCase,BookingBookUseCase],
+  exports: [AddUserUseCase, AddBookUseCase,BookingBookUseCase],
 })
 export class AppModule {}

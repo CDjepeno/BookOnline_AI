@@ -17,6 +17,8 @@ import { BookRepositoryTyperom } from '../services/book.repository.typeorm';
 import { RepositoriesModule } from '../services/repositories.module';
 import { UserRepositoryTyperom } from '../services/user.repository.typeorm';
 import { UseCaseProxy } from './usecase-proxy';
+import { BookingRepositoryTypeorm } from '../services/booking.repository.typeorm';
+import { BookingBookUseCase } from 'src/application/usecases/booking/bookingBook/bookingBook.usecase';
 
 @Module({
   imports: [RepositoriesModule, NodemailerModules, AwsS3Module],
@@ -32,6 +34,7 @@ export class UsecaseProxyModule {
   static GET_BOOK_USECASE_PROXY = 'getBookUsecaseProxy';
   static DELETE_BOOK_USECASE_PROXY = 'deleteBookUsecaseProxy';
   static UPDATE_BOOK_USECASE_PROXY = 'updateBookUsecaseProxy';
+  static BOOKING_BOOK_USECASE_PROXY = 'BookingBookUsecaseProxy';
 
   static register(): DynamicModule {
     return {
@@ -104,19 +107,29 @@ export class UsecaseProxyModule {
               new UpdateBookUseCase(bookRepository, awsS3Client),
             ),
         },
+        {
+          inject: [BookingRepositoryTypeorm],
+          provide: UsecaseProxyModule.BOOKING_BOOK_USECASE_PROXY,
+          useFactory: (
+            bookingRepository: BookingRepositoryTypeorm,
+          ) =>
+            new UseCaseProxy(
+              new BookingBookUseCase(bookingRepository),
+            ),
+        },
       ],
 
       exports: [
         UsecaseProxyModule.CREATE_USER_USECASE_PROXY,
         UsecaseProxyModule.LOGIN_USER_USECASE_PROXY,
         UsecaseProxyModule.GET_CURRENT_USER_USECASE_PROXY,
-
         UsecaseProxyModule.ADD_BOOK_USECASE_PROXY,
         UsecaseProxyModule.GET_ALL_BOOK_USECASE_PROXY,
         UsecaseProxyModule.GET_BOOKS_BY_USER_USECASE_PROXY,
         UsecaseProxyModule.GET_BOOK_USECASE_PROXY,
         UsecaseProxyModule.DELETE_BOOK_USECASE_PROXY,
         UsecaseProxyModule.UPDATE_BOOK_USECASE_PROXY,
+        UsecaseProxyModule.BOOKING_BOOK_USECASE_PROXY,
       ],
     };
   }

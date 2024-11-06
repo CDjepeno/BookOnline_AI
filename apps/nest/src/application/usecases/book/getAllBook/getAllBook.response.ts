@@ -7,4 +7,5 @@ export class GetAllBookResponse {
   coverUrl: string;
   created_at?: Date;
   update_at?: Date;
+  booking?: string  ;
 }

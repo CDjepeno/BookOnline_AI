@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import {
   IsEmail,
+  IsInt,
   IsNotEmpty,
   IsString,
   Length,
@@ -16,6 +17,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Book } from './book.model';
+import { Booking } from './booking.model';
 
 @Entity()
 export class User {
@@ -45,7 +47,11 @@ export class User {
   phone: string;
 
   @OneToMany(() => Book, (book) => book.user)
-  books: Book[];
+  books?: Book[];
+  
+  
+  @OneToMany(() => Booking, (booking) => booking.user)
+  bookings?: Booking[];
 
   @CreateDateColumn()
   created_at: Date;

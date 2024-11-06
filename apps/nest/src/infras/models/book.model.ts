@@ -3,12 +3,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { IsDateFormat } from '../common/decorators/is-date-format.decorator';
 import { User } from './user.model';
+import { Booking } from './booking.model';
 
 @Entity()
 export class Book {
@@ -40,6 +43,7 @@ export class Book {
   userId: number;
 
   @ManyToOne(() => User, (user) => user.books)
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @CreateDateColumn()
@@ -47,4 +51,7 @@ export class Book {
 
   @UpdateDateColumn()
   updated_at: Date;
+  
+  @OneToMany(() => Booking, (bookings) => bookings.book)
+  bookings: Booking[];
 }

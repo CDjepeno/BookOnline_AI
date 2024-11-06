@@ -26,4 +26,7 @@ export class GetAllBookDto {
   @ApiProperty()
   @IsUrl()
   coverUrl: string;
+
+  @ApiProperty()
+  bookings?: string;
 }
