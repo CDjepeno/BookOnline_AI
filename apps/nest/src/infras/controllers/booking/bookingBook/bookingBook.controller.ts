@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   HttpStatus,
   Inject,
@@ -13,15 +14,15 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { badrequestexception } from 'src/domaine/errors/book.error';
 import { JwtAuthGuard } from 'src/infras/common/guards/jwt-auth.guard';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { BookingBookUseCase } from 'src/application/usecases/booking/bookingBook/bookingBook.usecase';
 import { BookingBookDto } from './bookingBook.dto';
+import { badrequestexception } from 'src/domaine/errors/book.error';
 
 @ApiTags('Booking')
-@Controller('book/booking')
+@Controller('booking/book')
 export class BookingBookController {
   constructor(
     @Inject(UsecaseProxyModule.BOOKING_BOOK_USECASE_PROXY)
@@ -32,25 +33,27 @@ export class BookingBookController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('coverUrl'))
   @ApiOperation({
-    summary: 'Create Book',
+    summary: 'Booking Book',
   })
-  async addBook(
+  async bookingBook(
     @Body() BookingBookDto: BookingBookDto,
   ) {
     try {
-
+      
       const result = await this.bookingBookUsecaseProxy
         .getInstance()
         .execute(BookingBookDto);
 
       return result;
     } catch (error) {
-      console.error('Error occurred while creating book:', error);
-
-      if (error instanceof badrequestexception) {
-        throw new badrequestexception(error.message);
+      console.error('Error occurred while booking book:', typeof error);
+      if (error instanceof BadRequestException || error instanceof ConflictException) {
+        console.log("BadRequestException !!!!!!!!!!!");
+        
+        throw error;
       }
-      throw new InternalServerErrorException('Failed to create book');
+     
+      throw new InternalServerErrorException('Failed to booking book');
     }
   }
 }

@@ -19,10 +19,10 @@ export class Booking {
   @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @Column()
   startAt: Date;
 
-  @UpdateDateColumn()
+  @Column()
   endAt: Date;
 
   @Column()
@@ -31,13 +31,14 @@ export class Booking {
 
   @ManyToOne(() => User, (user) => user.bookings)
   @IsInt()
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @Column()
   @IsInt()
   bookId: number;
 
-  @ManyToOne(() => Book, (book) => book.user)
+  @ManyToOne(() => Book, (book) => book.bookings,{ nullable: false })
   @JoinColumn({ name: 'bookId' })
   book: Book;
 }

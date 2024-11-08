@@ -1,9 +1,8 @@
 import { InjectRepository } from "@nestjs/typeorm";
 import { BookingBookRequest } from "src/application/usecases/booking/bookingBook/bookingBook.request";
 import { BookingBookResponse } from "src/application/usecases/booking/bookingBook/bookingBook.response";
-import { BookingEntity } from "src/domaine/entities/Booking.entity";
 import { BookingRepository } from "src/domaine/repositories/booking.repository";
-import { Repository } from "typeorm";
+import { Between, Repository } from "typeorm";
 import { Booking } from "../models/booking.model";
 import { InternalServerErrorException } from "@nestjs/common";
 
@@ -31,6 +30,17 @@ export class BookingRepositoryTypeorm implements BookingRepository {
       console.error("Erreur lors de l'ajout du livre :", error);
       throw new InternalServerErrorException("Impossible de reserver le livre.");
     }
+  }
+
+  async isBookReserved(bookId: number, startAt: Date, endAt: Date): Promise<boolean> {
+    const existingBooking = await this.repository.findOne({
+      where: [
+        { bookId, startAt: Between(startAt, endAt) },
+        { bookId, endAt: Between(startAt, endAt) },
+      ],
+    });
+  
+    return !!existingBooking; // Retourne true si une réservation existe, sinon false
   }
     
   

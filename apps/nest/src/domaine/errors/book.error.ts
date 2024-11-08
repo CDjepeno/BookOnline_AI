@@ -5,6 +5,17 @@ export class InvalidPhoneNumberException extends Error {
 export class badrequestexception extends Error {
   statusCode = 400;
 }
+
+export class ConflictException extends Error {
+  statusCode: number;
+
+  constructor(message: string) {
+    super(message);
+    this.name = 'ConflictException';
+    this.statusCode = 409;
+  }
+}
+
 export class EmailExistsException extends Error {
   constructor(message: string) {
     super(message);

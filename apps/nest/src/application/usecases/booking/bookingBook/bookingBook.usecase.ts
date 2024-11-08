@@ -2,6 +2,7 @@ import { BookingEntity } from "src/domaine/entities/Booking.entity";
 import { BookingBookRequest } from "./bookingBook.request";
 import { BookingBookResponse } from "./bookingBook.response";
 import { BookingRepository } from "src/domaine/repositories/booking.repository";
+import { BadRequestException, ConflictException } from "@nestjs/common";
 
 export class BookingBookUseCase {
   constructor(
@@ -11,19 +12,37 @@ export class BookingBookUseCase {
   async execute(request: BookingBookRequest): Promise<BookingBookResponse> {
     try {
 
-      const book = new BookingEntity(
+      if (request.startAt >= request.endAt) {
+        throw new BadRequestException('La date de début doit être antérieure à la date de fin.');
+      }
+
+      // Vérifier la disponibilité du livre
+      const isBookReserved = await this.bookingRepository.isBookReserved(
         request.bookId,
+        request.startAt,
+        request.endAt,
+      );
+
+      if (isBookReserved) {
+        throw new ConflictException('Le livre est déjà réservé pour cette période.');
+      }
+      
+      const book = new BookingEntity(
+        request.id,
         request.createdAt,
         request.startAt,
         request.endAt,
         request.userId,
-        request.id,
+        request.bookId,
       );
+
       const res = await this.bookingRepository.Order(book);
 
       return res;
     } catch (error) {
-      console.error("Erreur lors de l'ajout du livre :", error);
+      if (error instanceof BadRequestException || error instanceof ConflictException) {
+        throw error;
+      }
       throw new Error(error);
     }
   }
