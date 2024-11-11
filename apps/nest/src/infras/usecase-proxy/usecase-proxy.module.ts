@@ -19,6 +19,7 @@ import { UserRepositoryTyperom } from '../services/user.repository.typeorm';
 import { UseCaseProxy } from './usecase-proxy';
 import { BookingRepositoryTypeorm } from '../services/booking.repository.typeorm';
 import { BookingBookUseCase } from 'src/application/usecases/booking/bookingBook/bookingBook.usecase';
+import { GetBookingsBookUseCase } from 'src/application/usecases/booking/getBookings/getBookingsBook.usecase';
 
 @Module({
   imports: [RepositoriesModule, NodemailerModules, AwsS3Module],
@@ -26,15 +27,17 @@ import { BookingBookUseCase } from 'src/application/usecases/booking/bookingBook
 export class UsecaseProxyModule {
   static CREATE_USER_USECASE_PROXY = 'createUserUsecaseProxy';
   static LOGIN_USER_USECASE_PROXY = 'loginUserUseCaseProxy';
-  static GET_CURRENT_USER_USECASE_PROXY = 'getCurrentUserUseCaseProxy';
-
+  static BOOKING_BOOK_USECASE_PROXY = 'BookingBookUsecaseProxy';
   static ADD_BOOK_USECASE_PROXY = 'addBookUsecaseProxy';
+  
+  static GET_CURRENT_USER_USECASE_PROXY = 'getCurrentUserUseCaseProxy';
   static GET_ALL_BOOK_USECASE_PROXY = 'getAllBookUsecaseProxy';
   static GET_BOOKS_BY_USER_USECASE_PROXY = 'getBookByUserUsecaseProxy';
   static GET_BOOK_USECASE_PROXY = 'getBookUsecaseProxy';
+  static GET_BOOKINGS_BOOK_USECASE_PROXY = 'getBookingBookUsecaseProxy';
+
   static DELETE_BOOK_USECASE_PROXY = 'deleteBookUsecaseProxy';
   static UPDATE_BOOK_USECASE_PROXY = 'updateBookUsecaseProxy';
-  static BOOKING_BOOK_USECASE_PROXY = 'BookingBookUsecaseProxy';
 
   static register(): DynamicModule {
     return {
@@ -117,6 +120,16 @@ export class UsecaseProxyModule {
               new BookingBookUseCase(bookingRepository),
             ),
         },
+        {
+          inject: [BookingRepositoryTypeorm],
+          provide: UsecaseProxyModule.GET_BOOKINGS_BOOK_USECASE_PROXY,
+          useFactory: (
+            bookingRepository: BookingRepositoryTypeorm,
+          ) =>
+            new UseCaseProxy(
+              new GetBookingsBookUseCase(bookingRepository),
+            ),
+        },
       ],
 
       exports: [
@@ -130,6 +143,7 @@ export class UsecaseProxyModule {
         UsecaseProxyModule.DELETE_BOOK_USECASE_PROXY,
         UsecaseProxyModule.UPDATE_BOOK_USECASE_PROXY,
         UsecaseProxyModule.BOOKING_BOOK_USECASE_PROXY,
+        UsecaseProxyModule.GET_BOOKINGS_BOOK_USECASE_PROXY,
       ],
     };
   }
