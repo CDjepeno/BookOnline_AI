@@ -3,7 +3,9 @@ import BookCardDetail from "../components/BookDetailCard";
 import BookDetailHook from "./BookDetail.hook";
 
 function BookDetail() {
-  const { isPending, book, error } = BookDetailHook();
+  const { isPending, book, error, bookingsBook } = BookDetailHook();
+  console.log(bookingsBook);
+  
   if (isPending) {
     return (
       <Container>
