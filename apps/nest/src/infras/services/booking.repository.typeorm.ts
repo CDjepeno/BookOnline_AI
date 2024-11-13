@@ -17,7 +17,7 @@ export class BookingRepositoryTypeorm implements BookingRepository {
     try {
       const newBooking = new Booking();
       newBooking.createdAt = bookReserved.createdAt;
-      newBooking.startAt = bookReserved.endAt;
+      newBooking.startAt = bookReserved.startAt;
       newBooking.endAt = bookReserved.endAt;
       newBooking.userId = bookReserved.userId;
       newBooking.bookId = bookReserved.bookId;

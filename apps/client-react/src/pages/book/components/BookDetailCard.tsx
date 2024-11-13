@@ -4,6 +4,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { formatDate } from "../../../utils/formatDate";
+import { GetBookingsBookResponse } from "../../../types/booking/booking.types";
+import { useState } from "react";
+import { DateRange } from "@mui/x-date-pickers-pro/models";
+import dayjs, { Dayjs } from "dayjs";
 
 interface BookCardDetailProps {
   name: string;
@@ -11,6 +15,7 @@ interface BookCardDetailProps {
   description: string;
   releaseAt: Date | string;
   coverUrl: string;
+  bookingsBookData: GetBookingsBookResponse[]
 }
 
 export default function BookCardDetail({
@@ -19,7 +24,23 @@ export default function BookCardDetail({
   description,
   releaseAt,
   coverUrl,
+  bookingsBookData
 }: BookCardDetailProps) {
+
+  const [dateRange, setDateRange] = useState<DateRange<Dayjs>>([null, null]);
+
+  // Convertir les dates existantes en objets Dayjs
+  const bookings = bookingsBookData.map((reservation) => ({
+    startAt: dayjs(reservation.startAt),
+    endAt: dayjs(reservation.endAt),
+  }));
+
+  const shouldDisableDate = (date: Dayjs) => {
+    return bookings.some((booking) => {
+      return date.isAfter(booking.startAt, 'day') && date.isBefore(booking.endAt, 'day');
+    });
+  };
+
   const releaseDate =
     typeof releaseAt === "string" ? new Date(releaseAt) : releaseAt;
 
@@ -65,7 +86,11 @@ export default function BookCardDetail({
           <Box sx={{ width: "50%"  }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DateRangeCalendar']}>
-                  <DateRangeCalendar />
+                  <DateRangeCalendar 
+                    value={dateRange}
+                    onChange={(newValue) => setDateRange(newValue)}
+                    shouldDisableDate={shouldDisableDate}
+                  />
                 </DemoContainer>
               </LocalizationProvider>
           </Box>

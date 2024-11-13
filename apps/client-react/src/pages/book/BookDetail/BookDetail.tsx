@@ -4,7 +4,6 @@ import BookDetailHook from "./BookDetail.hook";
 
 function BookDetail() {
   const { isPending, book, error, bookingsBook } = BookDetailHook();
-  console.log(bookingsBook);
   
   if (isPending) {
     return (
@@ -61,6 +60,7 @@ function BookDetail() {
         description={book.description}
         releaseAt={book.releaseAt}
         coverUrl={book.coverUrl}
+        bookingsBookData={bookingsBook ? bookingsBook : [] }
       />
     </Container>
   );
