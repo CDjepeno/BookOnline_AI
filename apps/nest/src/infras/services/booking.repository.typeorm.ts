@@ -24,7 +24,7 @@ export class BookingRepositoryTypeorm implements BookingRepository {
 
       const result = await this.repository.save(newBooking);
 
-      return result;
+      return {bookId: result.bookId};
     } catch (error) {
       console.error("Erreur lors de l'ajout du livre :", error);
       throw new InternalServerErrorException(
