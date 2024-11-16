@@ -11,3 +11,11 @@ export type RegisterResponse = {
   name: string;
   phone: string;
 };
+
+
+export type BookingBookFormInput = {
+  bookId: number,
+  userId: number,
+  startAt: string,
+  endAt: string
+};

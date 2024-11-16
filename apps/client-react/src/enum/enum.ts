@@ -8,6 +8,7 @@ export enum BookQueriesKeysEnum {
 
 export enum BookingsQueriesKeysEnum {
   GetBookingsBook = 'getbookingsBook',
+  BookingBook = 'bookingBook',
 }
 
 export enum UserQueriesKeysEnum {

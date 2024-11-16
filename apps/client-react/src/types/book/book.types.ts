@@ -3,7 +3,7 @@ export interface ErrorResponse {
 }
 
 export interface GetBookResponse {
-  id: string;
+  id: number;
   name: string;
   description: string;
   author: string;
