@@ -15,6 +15,7 @@ import { AuthController } from './user/auth.controller';
 import { UsersController } from './user/users.controller';
 import { BookingBookController } from './booking/bookingBook/bookingBook.controller';
 import { GetBookingBookController } from './booking/getBookingBook/getbookingBook.controller';
+import { GetBookByNameController } from './book/getBooByName/getBookByName.controller';
 
 
 @Module({
@@ -34,7 +35,8 @@ import { GetBookingBookController } from './booking/getBookingBook/getbookingBoo
     DeleteBookController,
     UpdateBookController,
     BookingBookController,
-    GetBookingBookController
+    GetBookingBookController,
+    GetBookByNameController
   ],
   providers: [JwtAuthGuard, JwtService, AwsS3Client],
 })

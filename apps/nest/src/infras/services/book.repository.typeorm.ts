@@ -13,6 +13,7 @@ import { BookRepository } from 'src/domaine/repositories/book.repository';
 import { Repository } from 'typeorm';
 import { Book } from '../models/book.model';
 import { User } from '../models/user.model';
+import { GetBookByNameResponse } from 'src/application/usecases/book/getBookByName/getBookByName.response';
 
 export class BookRepositoryTyperom implements BookRepository {
   constructor(
@@ -135,6 +136,21 @@ export class BookRepositoryTyperom implements BookRepository {
       if (result.affected === 0) {
         throw new NotFoundException(`Aucun livre trouvé avec l'id "${id}"`);
       }
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Impossible de supprimer le livre.',
+      );
+    }
+  }
+
+  async getBookByName(nameBook: string): Promise<GetBookByNameResponse> {
+    try {
+      const book = await this.repository.findOneBy({name: nameBook})
+    
+      if (!book) {
+        throw new NotFoundException(`Aucun livre trouvé avec le nom "${nameBook}"`);
+      }
+      return book
     } catch (error) {
       throw new InternalServerErrorException(
         'Impossible de supprimer le livre.',

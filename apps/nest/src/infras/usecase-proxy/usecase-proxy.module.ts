@@ -20,6 +20,7 @@ import { UseCaseProxy } from './usecase-proxy';
 import { BookingRepositoryTypeorm } from '../services/booking.repository.typeorm';
 import { BookingBookUseCase } from 'src/application/usecases/booking/bookingBook/bookingBook.usecase';
 import { GetBookingsBookUseCase } from 'src/application/usecases/booking/getBookings/getBookingsBook.usecase';
+import { GetBookByNameUsecase } from 'src/application/usecases/book/getBookByName/getBookByName.usecase';
 
 @Module({
   imports: [RepositoriesModule, NodemailerModules, AwsS3Module],
@@ -34,6 +35,7 @@ export class UsecaseProxyModule {
   static GET_ALL_BOOK_USECASE_PROXY = 'getAllBookUsecaseProxy';
   static GET_BOOKS_BY_USER_USECASE_PROXY = 'getBookByUserUsecaseProxy';
   static GET_BOOK_USECASE_PROXY = 'getBookUsecaseProxy';
+  static GET_BOOK_BY_NAME_USECASE_PROXY = 'getBookByNameUsecaseProxy';
   static GET_BOOKINGS_BOOK_USECASE_PROXY = 'getBookingBookUsecaseProxy';
 
   static DELETE_BOOK_USECASE_PROXY = 'deleteBookUsecaseProxy';
@@ -130,6 +132,16 @@ export class UsecaseProxyModule {
               new GetBookingsBookUseCase(bookingRepository),
             ),
         },
+        {
+          inject: [BookRepositoryTyperom],
+          provide: UsecaseProxyModule.GET_BOOK_BY_NAME_USECASE_PROXY,
+          useFactory: (
+            bookRepository: BookRepositoryTyperom,
+          ) =>
+            new UseCaseProxy(
+              new GetBookByNameUsecase(bookRepository),
+            ),
+        },
       ],
 
       exports: [
@@ -144,6 +156,7 @@ export class UsecaseProxyModule {
         UsecaseProxyModule.UPDATE_BOOK_USECASE_PROXY,
         UsecaseProxyModule.BOOKING_BOOK_USECASE_PROXY,
         UsecaseProxyModule.GET_BOOKINGS_BOOK_USECASE_PROXY,
+        UsecaseProxyModule.GET_BOOK_BY_NAME_USECASE_PROXY,
       ],
     };
   }
