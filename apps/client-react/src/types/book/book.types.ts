@@ -2,6 +2,10 @@ export interface ErrorResponse {
   message: string;
 }
 
+export interface GetBookByNameInput {
+  name: string;
+}
+
 export interface GetBookResponse {
   id: number;
   name: string;
@@ -12,7 +16,7 @@ export interface GetBookResponse {
 }
 
 export interface GetBooksResponse {
-  id: string;
+  id: number;
   name: string;
   description: string;
   author: string;
@@ -46,7 +50,6 @@ export type AddBookFormType = {
 
 
 export interface UpdateBookResponse {
-  id: string;
   name: string;
   description: string;
   author: string;

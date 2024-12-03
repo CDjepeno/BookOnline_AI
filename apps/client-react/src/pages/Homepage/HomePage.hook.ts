@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { BookQueriesKeysEnum } from "../../enum/enum";
 import { getBooks } from "../../services/book.services";
+import { useForm } from "react-hook-form";
+import { GetBookByNameInput } from "../../types/book/book.types";
 
 export default function HomePageHook() {
   const {
@@ -12,5 +14,12 @@ export default function HomePageHook() {
     queryFn: getBooks,
   });
 
-  return { isPending, books, error };
+  const {
+    control,
+    formState: { errors },
+  } = useForm<GetBookByNameInput>();
+
+  
+
+  return { isPending, books, error, control, errors };
 }

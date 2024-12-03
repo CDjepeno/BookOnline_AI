@@ -1,10 +1,41 @@
+import SearchIcon from "@mui/icons-material/Search";
 import { Box, Container, Grid, Typography } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import FormInput from "../../components/FormInput";
 import Loading from "../../components/Loading/Loading";
+import { BookQueriesKeysEnum } from "../../enum/enum";
+import { getBookByName } from "../../services/book.services";
 import BookCard from "../book/components/BookCard";
 import HomePageHook from "./HomePage.hook";
 
 export function HomePage() {
-  const { isPending, books } = HomePageHook();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeSearchTerm, setActiveSearchTerm] = useState("");
+
+  const { isPending, books, errors, control } = HomePageHook();
+
+  const { data: book } = useQuery({
+    queryKey: [BookQueriesKeysEnum.Book, activeSearchTerm],
+    queryFn: () => getBookByName(activeSearchTerm),
+    enabled: !!activeSearchTerm,
+  });
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearchClick = () => {
+    setActiveSearchTerm(searchTerm.trim());
+  };
+
+  const displayedBooks = activeSearchTerm
+    ? book
+      ? [book]
+      : []
+    : books?.filter((b) =>
+        b.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+      ) || [];
 
   return (
     <main>
@@ -23,6 +54,27 @@ export function HomePage() {
             Bienvenue sur OnlineBook, le numéro 1 de la bibliothèque en ligne de
             livres libres de droits.
           </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", mt: 3 }}>
+            <FormInput
+              name="name"
+              label="Nom du livre"
+              control={control}
+              errors={errors}
+              required={false}
+              inputProps={{
+                onChange: handleSearchChange,
+              }}
+            />
+            <SearchIcon
+              sx={{
+                color: "primary.main",
+                fontSize: "2rem",
+                cursor: "pointer",
+                ml: 2,
+              }}
+              onClick={handleSearchClick}
+            />
+          </Box>
         </Container>
       </Box>
       <Container sx={{ py: 8 }} maxWidth="md">
@@ -30,8 +82,8 @@ export function HomePage() {
           <Loading />
         ) : (
           <Grid container spacing={4}>
-            {books &&
-              books?.map((book) => (
+            {displayedBooks && displayedBooks.length > 0 ? (
+              displayedBooks.map((book) => (
                 <BookCard
                   key={book.id}
                   id={book.id}
@@ -41,7 +93,14 @@ export function HomePage() {
                   description={book.description}
                   releaseAt={book.releaseAt}
                 />
-              ))}
+              ))
+            ) : (
+              <Typography align="center" color="text.secondary">
+                {activeSearchTerm
+                  ? `Aucun livre trouvé pour le terme "${activeSearchTerm}".`
+                  : "Aucun livre disponible."}
+              </Typography>
+            )}
           </Grid>
         )}
       </Container>

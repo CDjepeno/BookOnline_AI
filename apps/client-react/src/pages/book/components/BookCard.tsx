@@ -12,7 +12,7 @@ import { BOOK_ROUTE } from "../../../request/route-http/route-http";
 import { formatDate } from "../../../utils/formatDate";
 
 interface BookCardProps {
-  id: string;
+  id: number;
   name: string;
   author: string;
   description: string;
