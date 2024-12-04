@@ -8,7 +8,7 @@ import { GetBookByNameResponse } from 'src/application/usecases/book/getBookByNa
 
 export interface BookRepository {
   addBook(book: BookEntity): Promise<AddBookResponse>;
-  getAllBook(): Promise<GetAllBookResponse[]>;
+  getAllBook(page: number, limit: number): Promise<GetAllBookResponse[]>;
   getBooksByUser(userId: number): Promise<GetBooksByUserResponse[]>;
   getBook(id: number): Promise<GetBookResponse>;
   getBookByName(nameBook: string): Promise<GetBookByNameResponse>;

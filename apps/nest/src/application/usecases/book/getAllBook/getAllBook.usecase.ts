@@ -3,9 +3,9 @@ import { GetAllBookResponse } from './getAllBook.response';
 
 export class GetAllBookUsecase {
   constructor(private readonly repository: BookRepository) {}
-  async execute(): Promise<GetAllBookResponse[]> {
+  async execute(page: number, limit: number): Promise<GetAllBookResponse[]> {
     try {
-      return await this.repository.getAllBook();
+      return await this.repository.getAllBook(page, limit);
     } catch (error) {
       throw error;
     }

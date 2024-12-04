@@ -1,4 +1,4 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get, Inject, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GetAllBookUsecase } from 'src/application/usecases/book/getAllBook/getAllBook.usecase';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
@@ -17,14 +17,20 @@ export class GetAllBookController {
   @ApiOperation({
     summary: 'GetAll Book',
   })
-  async getAllBook(): Promise<GetAllBookDto[]> {
+  async getAllBook(
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '6',
+  ): Promise<GetAllBookDto[]> {
     try {
-      const result = await this.getAllBookUsecaseProxy.getInstance().execute();
-
-      console.log(result);
+      console.log(page, limit);
       
+      const pageNumber = parseInt(page, 10);
+      const limitNumber = parseInt(limit, 10);
+      const result = await this.getAllBookUsecaseProxy
+        .getInstance()
+        .execute(pageNumber, limitNumber);
 
-      return result
+      return result;
     } catch (error) {
       throw error;
     }

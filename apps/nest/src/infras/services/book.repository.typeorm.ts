@@ -56,9 +56,13 @@ export class BookRepositoryTyperom implements BookRepository {
     }
   }
 
-  async getAllBook(): Promise<GetAllBookResponse[]> {
+  async getAllBook(page: number, limit: number): Promise<GetAllBookResponse[]> {
     try {
-      const books = await this.repository.find();
+      const currentPage = Math.max(0, page - 1); 
+      const take = limit > 0 ? limit : 6; 
+      const skip = currentPage * take;
+
+      const books = await this.repository.find({skip,take});
       return books;
     } catch (error) {
       console.error('Erreur lors de la récupération des livres :', error);
