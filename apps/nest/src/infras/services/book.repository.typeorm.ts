@@ -4,8 +4,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AddBookResponse } from 'src/application/usecases/book/addBook/addBook.response';
-import { GetAllBookResponse } from 'src/application/usecases/book/getAllBook/getAllBook.response';
+import { GetAllBookResponsePagination } from 'src/application/usecases/book/getAllBook/getAllBook.response';
 import { GetBookResponse } from 'src/application/usecases/book/getBook/getBook.response';
+import { GetBookByNameResponse } from 'src/application/usecases/book/getBookByName/getBookByName.response';
 import { GetBooksByUserResponse } from 'src/application/usecases/book/getBooksByUser/getBooksByUser.response';
 import { UpdateBookResponse } from 'src/application/usecases/book/updateBook/updateBook.response';
 import { BookEntity } from 'src/domaine/entities/Book.entity';
@@ -13,7 +14,6 @@ import { BookRepository } from 'src/domaine/repositories/book.repository';
 import { Repository } from 'typeorm';
 import { Book } from '../models/book.model';
 import { User } from '../models/user.model';
-import { GetBookByNameResponse } from 'src/application/usecases/book/getBookByName/getBookByName.response';
 
 export class BookRepositoryTyperom implements BookRepository {
   constructor(
@@ -56,14 +56,28 @@ export class BookRepositoryTyperom implements BookRepository {
     }
   }
 
-  async getAllBook(page: number, limit: number): Promise<GetAllBookResponse[]> {
+  async getAllBook(
+    page: number,
+    limit: number,
+  ): Promise<GetAllBookResponsePagination> {
     try {
-      const currentPage = Math.max(0, page - 1); 
-      const take = limit > 0 ? limit : 6; 
+      const currentPage = Math.max(0, page - 1);
+      const take = limit > 0 ? limit : 6;
       const skip = currentPage * take;
 
-      const books = await this.repository.find({skip,take});
-      return books;
+      const totalBooks = await this.repository.count();
+
+      const books = await this.repository.find({ skip, take });
+      console.log(books);
+
+      return {
+        books,
+        meta: {
+          totalBooks,
+          currentPage: page,
+          totalPages: Math.ceil(totalBooks / take),
+        },
+      };;
     } catch (error) {
       console.error('Erreur lors de la récupération des livres :', error);
       throw new InternalServerErrorException(
@@ -149,12 +163,14 @@ export class BookRepositoryTyperom implements BookRepository {
 
   async getBookByName(nameBook: string): Promise<GetBookByNameResponse> {
     try {
-      const book = await this.repository.findOneBy({name: nameBook})
-    
+      const book = await this.repository.findOneBy({ name: nameBook });
+
       if (!book) {
-        throw new NotFoundException(`Aucun livre trouvé avec le nom "${nameBook}"`);
+        throw new NotFoundException(
+          `Aucun livre trouvé avec le nom "${nameBook}"`,
+        );
       }
-      return book
+      return book;
     } catch (error) {
       throw new InternalServerErrorException(
         'Impossible de supprimer le livre.',

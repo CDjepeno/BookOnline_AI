@@ -24,6 +24,16 @@ export interface GetBooksResponse {
   coverUrl: string;
 }
 
+export type GetAllBookResponsePagination = {
+  books: GetBooksResponse[],
+  meta: {
+    totalBooks: number,
+    currentPage: number,
+    totalPages: number,
+  },
+}
+
+
 export interface AddBookResponse {
   name: string;
   description: string;

@@ -1,32 +1,42 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
-export class GetAllBookDto {
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  description: string;
+// export class GetAllBookDto {
+//   @IsString()
+//   @IsNotEmpty()
+//   @ApiProperty()
+//   name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  author: string;
+//   @IsString()
+//   @IsNotEmpty()
+//   @ApiProperty()
+//   description: string;
 
-  @IsNotEmpty()
-  @IsDate()
-  @ApiProperty()
-  releaseAt: Date;
+//   @IsString()
+//   @IsNotEmpty()
+//   @ApiProperty()
+//   author: string;
 
-  @IsNotEmpty()
-  @ApiProperty()
-  @IsUrl()
-  coverUrl: string;
+//   @IsNotEmpty()
+//   @IsDate()
+//   @ApiProperty()
+//   releaseAt: Date;
 
-  @ApiProperty()
-  bookings?: string;
+//   @IsNotEmpty()
+//   @ApiProperty()
+//   @IsUrl()
+//   coverUrl: string;
+
+//   @ApiProperty()
+//   bookings?: string;
+// }
+
+export type GetAllBookDto = {
+  name: string,
+  description: string,
+  author: string,
+  releaseAt: string,
+  coverUrl: string,
+  userId: number,
+  created_at: string,
+  updated_at: string,
 }

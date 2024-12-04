@@ -1,5 +1,5 @@
 import { AddBookResponse } from 'src/application/usecases/book/addBook/addBook.response';
-import { GetAllBookResponse } from 'src/application/usecases/book/getAllBook/getAllBook.response';
+import { GetAllBookResponsePagination } from 'src/application/usecases/book/getAllBook/getAllBook.response';
 import { GetBookResponse } from 'src/application/usecases/book/getBook/getBook.response';
 import { GetBooksByUserResponse } from 'src/application/usecases/book/getBooksByUser/getBooksByUser.response';
 import { BookEntity } from '../entities/Book.entity';
@@ -8,7 +8,7 @@ import { GetBookByNameResponse } from 'src/application/usecases/book/getBookByNa
 
 export interface BookRepository {
   addBook(book: BookEntity): Promise<AddBookResponse>;
-  getAllBook(page: number, limit: number): Promise<GetAllBookResponse[]>;
+  getAllBook(page: number, limit: number): Promise<GetAllBookResponsePagination>;
   getBooksByUser(userId: number): Promise<GetBooksByUserResponse[]>;
   getBook(id: number): Promise<GetBookResponse>;
   getBookByName(nameBook: string): Promise<GetBookByNameResponse>;

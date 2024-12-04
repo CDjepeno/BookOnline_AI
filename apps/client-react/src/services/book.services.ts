@@ -3,14 +3,15 @@ import { UseRequestApi } from "../request/commons/useApiRequest";
 import { BOOKS_ROUTE, BOOK_ROUTE } from "../request/route-http/route-http";
 import {
   AddBookResponse,
+  GetAllBookResponsePagination,
   GetBookResponse,
   GetBooksResponse,
   UpdateBookResponse,
 } from "../types/book/book.types";
 
-export const getBooks = async (): Promise<GetBooksResponse[]> => {
-  return await UseRequestApi<GetBooksResponse[], null>({
-    path: BOOKS_ROUTE,
+export const getBooks = async (page: number, limit: number): Promise<GetAllBookResponsePagination> => {
+  return await UseRequestApi<GetAllBookResponsePagination, null>({
+    path: `${BOOKS_ROUTE}?page=${page}?limit=${limit}`,
     method: MethodHttpEnum.GET,
     includeAuthorizationHeader: false,
   });

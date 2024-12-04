@@ -1,5 +1,5 @@
 import SearchIcon from "@mui/icons-material/Search";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Container, Grid, Pagination, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import FormInput from "../../components/FormInput";
@@ -12,9 +12,14 @@ import HomePageHook from "./HomePage.hook";
 export function HomePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearchTerm, setActiveSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit] = useState(6);
 
-  const { isPending, books, errors, control } = HomePageHook();
-
+  const { isPending, books, errors, control, totalPages } = HomePageHook(
+    currentPage,
+    limit
+  );
+  
   const { data: book } = useQuery({
     queryKey: [BookQueriesKeysEnum.Book, activeSearchTerm],
     queryFn: () => getBookByName(activeSearchTerm),
@@ -25,8 +30,16 @@ export function HomePage() {
     setSearchTerm(event.target.value);
   };
 
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page); 
+  };
+
   const handleSearchClick = () => {
     setActiveSearchTerm(searchTerm.trim());
+    setCurrentPage(1);
   };
 
   const displayedBooks = activeSearchTerm
@@ -104,6 +117,24 @@ export function HomePage() {
           </Grid>
         )}
       </Container>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mt: 1,
+          backgroundColor: "background.default",
+          padding: 1,
+          borderRadius: "8px",
+        }}
+      >
+        <Pagination
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </Box>
     </main>
   );
 }

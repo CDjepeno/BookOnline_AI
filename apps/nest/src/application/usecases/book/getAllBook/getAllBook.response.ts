@@ -1,4 +1,4 @@
-export class GetAllBookResponse {
+export type GetAllBookResponse = {
   id?: number;
   name: string;
   description: string;
@@ -8,4 +8,13 @@ export class GetAllBookResponse {
   created_at?: Date;
   update_at?: Date;
   booking?: string  ;
+}
+
+export type GetAllBookResponsePagination = {
+    books: GetAllBookResponse[],
+    meta: {
+      totalBooks: number,
+      currentPage: number,
+      totalPages: number,
+    },
 }

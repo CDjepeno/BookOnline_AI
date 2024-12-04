@@ -4,14 +4,14 @@ import { getBooks } from "../../services/book.services";
 import { useForm } from "react-hook-form";
 import { GetBookByNameInput } from "../../types/book/book.types";
 
-export default function HomePageHook() {
+export default function HomePageHook(page: number, limit: number) {
   const {
     isPending,
-    data: books,
+    data: booksPagination,
     error,
   } = useQuery({
-    queryKey: [BookQueriesKeysEnum.GetBooks],
-    queryFn: getBooks,
+    queryKey: [BookQueriesKeysEnum.GetBooks, page, limit],
+    queryFn: () => getBooks(page, limit),
   });
 
   const {
@@ -19,7 +19,9 @@ export default function HomePageHook() {
     formState: { errors },
   } = useForm<GetBookByNameInput>();
 
+  const totalPages = booksPagination?.meta.totalPages  
+  const books = booksPagination?.books  
   
 
-  return { isPending, books, error, control, errors };
+  return { isPending, books, error, control, errors, totalPages };
 }
