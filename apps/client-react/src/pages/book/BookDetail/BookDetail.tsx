@@ -9,20 +9,18 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import BookDetailHook from "./BookDetail.hook";
-import { formatDate } from "../../../utils/formatDate";
-import { truncateDescription } from "../../../utils/truncateText";
+import { DateRangeCalendar } from "@mui/x-date-pickers-pro/DateRangeCalendar";
+import { DateRange } from "@mui/x-date-pickers-pro/models";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateRangeCalendar } from "@mui/x-date-pickers-pro/DateRangeCalendar";
-import { useState } from "react";
-import { DateRange } from "@mui/x-date-pickers-pro/models";
 import dayjs, { Dayjs } from "dayjs";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../../context";
 import { AuthContextValue } from "../../../types/user/auth.context.value";
-
+import { formatDate } from "../../../utils/formatDate";
+import { truncateDescription } from "../../../utils/truncateText";
+import BookDetailHook from "./BookDetail.hook";
 
 function BookDetail() {
   const [dateRange, setDateRange] = useState<DateRange<Dayjs>>([null, null]);
@@ -39,7 +37,7 @@ function BookDetail() {
     if (!bookings) {
       return false;
     }
-    
+
     return bookings?.some((booking) => {
       const startAt = dayjs(booking.startAt);
       const endAt = dayjs(booking.endAt);
@@ -50,7 +48,7 @@ function BookDetail() {
         date.isSame(endAt, "day") || date.isBefore(endAt, "day");
 
       return isSameOrAfter && isSameOrBefore;
-    }) 
+    });
   };
 
   const handleclick = () => {
@@ -66,8 +64,6 @@ function BookDetail() {
 
     onSubmit(inputForm);
   };
-
-
 
   if (isPending) {
     return (
@@ -126,7 +122,12 @@ function BookDetail() {
             flexDirection: "column",
           }}
         >
-          <CardMedia component="img" height="400" image={book.coverUrl} alt={book.name} />
+          <CardMedia
+            component="img"
+            height="400"
+            image={book.coverUrl}
+            alt={book.name}
+          />
           <CardContent sx={{ flexGrow: 1 }}>
             <Box
               sx={{
@@ -176,15 +177,17 @@ function BookDetail() {
                     />
                   </DemoContainer>
                 </LocalizationProvider>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  onClick={handleclick}
-                >
-                  Réserver
-                </Button>
+                {user && (
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                    onClick={handleclick}
+                  >
+                    Réserver
+                  </Button>
+                )}
               </Box>
             </Box>
           </CardContent>
