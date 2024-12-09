@@ -16,8 +16,29 @@ import { UsersController } from './user/users.controller';
 import { BookingBookController } from './booking/bookingBook/bookingBook.controller';
 import { GetBookingBookController } from './booking/getBookingBook/getbookingBook.controller';
 import { GetBookByNameController } from './book/getBooByName/getBookByName.controller';
+import * as path from 'path';
+import * as glob from 'glob';
 
-
+function loadControllers(): any[] {
+  const controllers: any[] = [];
+  const files = glob.sync(
+    path.join(__dirname, './**/*.controller.{ts,js}'),
+  );
+  console.log('files---------------------------------------------------');
+  console.log(files);
+  console.log(__dirname);
+  
+  for (const file of files) {
+    const module = require(file);
+    for (const exported in module) {
+      if (module[exported].prototype) {
+        controllers.push(module[exported]);
+      }
+    }
+  }
+  return controllers;
+}
+loadControllers()
 @Module({
   imports: [
     UsecaseProxyModule.register(),
@@ -25,19 +46,11 @@ import { GetBookByNameController } from './book/getBooByName/getBookByName.contr
       storage: multer.memoryStorage(),
     }),
   ],
-  controllers: [
-    UsersController,
-    AuthController,
-    AddBookController,
-    GetAllBookController,
-    GetBookController,
-    GetBookByUserController,
-    DeleteBookController,
-    UpdateBookController,
-    BookingBookController,
-    GetBookingBookController,
-    GetBookByNameController
-  ],
+  controllers: loadControllers(),
   providers: [JwtAuthGuard, JwtService, AwsS3Client],
 })
 export class ControllerModule {}
+
+// onlineBookApi/apps/nest/src/infras/controllers/book
+// onlineBookApi/apps/nest/src/infras/controllers/booking
+// onlineBookApi/apps/nest/src/infras/controllers/user
