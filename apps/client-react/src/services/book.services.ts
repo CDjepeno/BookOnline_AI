@@ -69,7 +69,7 @@ export const deleteBook = async (id: string): Promise<void> => {
     method: MethodHttpEnum.DELETE,
     path: `${BOOK_ROUTE}/${id}`,
     params: { id },
-    includeAuthorizationHeader: false,
+    includeAuthorizationHeader: true,
   });
 };
 

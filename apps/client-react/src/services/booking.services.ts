@@ -10,7 +10,7 @@ export const getBookingsBook = async (id: string): Promise<GetBookingsBookRespon
     path: `${GET_BOOKINGS_BOOK_ROUTE}/${id}`,
     method: MethodHttpEnum.GET,
     params: { id },
-    includeAuthorizationHeader: true,
+    includeAuthorizationHeader: false,
   });
 };
 

@@ -10,7 +10,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/infras/common/guards/jwt-auth.guard';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { GetBookingsBookUseCase } from 'src/application/usecases/booking/getBookings/getBookingsBook.usecase';
@@ -24,7 +23,6 @@ export class GetBookingBookController {
   ) {}
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'getBookings Book',
   })
