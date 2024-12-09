@@ -2,7 +2,7 @@ export class InvalidPhoneNumberException extends Error {
   statusCode = 400;
 }
 
-export class badrequestexception extends Error {
+export class badRequestException extends Error {
   statusCode = 400;
 }
 
