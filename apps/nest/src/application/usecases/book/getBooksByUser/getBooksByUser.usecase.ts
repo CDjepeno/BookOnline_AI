@@ -14,7 +14,7 @@ export class GetBooksByUserUsecase {
         error,
       );
       if (error instanceof NotFoundError) {
-        throw new Error(
+        throw new NotFoundError(
           `Aucun livre trouvé pour l'utilisateur avec l'ID ${userId}.`,
         );
       } else {
