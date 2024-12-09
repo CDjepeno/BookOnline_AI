@@ -15,7 +15,9 @@ import { JwtAuthGuard } from 'src/infras/common/guards/jwt-auth.guard';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { AuthDto } from './auth.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -26,6 +28,9 @@ export class AuthController {
   ) {}
 
   @Post('login')
+  @ApiOperation({
+    summary: 'Log a user',
+  })
   async login(@Body() auth: AuthDto) {
     const user = await this.loginUsecaseProxy.getInstance().execute(auth);
     if (!user) {
@@ -37,6 +42,9 @@ export class AuthController {
   }
 
   @Get('current')
+  @ApiOperation({
+    summary: 'Get a current user',
+  })
   @UseGuards(JwtAuthGuard)
   async getCurrentUser(@Req() request) {
     return await this.getCurrentUserUseCase

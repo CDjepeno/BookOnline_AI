@@ -19,7 +19,6 @@ import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { BookingBookUseCase } from 'src/application/usecases/booking/bookingBook/bookingBook.usecase';
 import { BookingBookDto } from './bookingBook.dto';
-import { badrequestexception } from 'src/domaine/errors/book.error';
 
 @ApiTags('Booking')
 @Controller('booking/book')

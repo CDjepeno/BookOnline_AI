@@ -14,7 +14,6 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AddBookUseCase } from 'src/application/usecases/book/addBook/addBook.usecase';
-import { badrequestexception } from 'src/domaine/errors/book.error';
 import { JwtAuthGuard } from 'src/infras/common/guards/jwt-auth.guard';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
@@ -57,8 +56,8 @@ export class AddBookController {
     } catch (error) {
       console.error('Error occurred while creating book:', error);
 
-      if (error instanceof badrequestexception) {
-        throw new badrequestexception(error.message);
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message);
       }
       throw new InternalServerErrorException('Failed to create book');
     }

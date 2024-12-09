@@ -16,12 +16,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UpdateBookUseCase } from 'src/application/usecases/book/updateBook/updateBook.usecase';
-import { badrequestexception } from 'src/domaine/errors/book.error';
 import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { UpdateBookDto } from './updateBook.dto';
 
-@ApiTags('book')
+@ApiTags('Book')
 @Controller('book')
 export class UpdateBookController {
   constructor(
@@ -71,8 +70,8 @@ export class UpdateBookController {
     } catch (error) {
       console.error('Error occurred while updating book:', error);
 
-      if (error instanceof badrequestexception) {
-        throw new badrequestexception(error.message);
+      if (error instanceof BadRequestException) {
+        throw new BadRequestException(error.message);
       }
       throw new InternalServerErrorException('Failed to update book');
     }

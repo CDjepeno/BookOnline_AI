@@ -5,7 +5,7 @@ import { UseCaseProxy } from 'src/infras/usecase-proxy/usecase-proxy';
 import { UsecaseProxyModule } from 'src/infras/usecase-proxy/usecase-proxy.module';
 import { GetAllBookResponsePagination } from 'src/application/usecases/book/getAllBook/getAllBook.response';
 
-@ApiTags('Books')
+@ApiTags('Book')
 @Controller('books')
 export class GetAllBookController {
   constructor(
@@ -15,7 +15,7 @@ export class GetAllBookController {
 
   @Get()
   @ApiOperation({
-    summary: 'GetAll Book',
+    summary: 'Get first six Book',
   })
   async getAllBook(
     @Query('page') page: string = '1',

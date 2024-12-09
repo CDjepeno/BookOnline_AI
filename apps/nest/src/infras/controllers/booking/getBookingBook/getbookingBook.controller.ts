@@ -24,7 +24,7 @@ export class GetBookingBookController {
 
   @Get(':id')
   @ApiOperation({
-    summary: 'getBookings Book',
+    summary: 'get Bookings for a Book',
   })
   async getbookingsBook(
     @Param('id', ParseIntPipe) bookId: number,
