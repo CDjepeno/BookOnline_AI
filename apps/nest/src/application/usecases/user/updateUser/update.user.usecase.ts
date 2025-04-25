@@ -33,6 +33,7 @@ export class UpdateUserUseCase {
         request.email,
         request.phone,
         request.sexe,
+        false
       );
 
       await this.userRepository.updateUser(user, existingUser);

@@ -5,4 +5,5 @@ export type CurrentUserResponse = {
   email: string;
   phone: string;
   sexe: string;
+  admin: boolean;
 };

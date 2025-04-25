@@ -43,6 +43,7 @@ export class UserRepositoryTypeorm implements UsersRepository {
       user.name = addUserRequest.name;
       user.phone = addUserRequest.phone;
       user.sexe = addUserRequest.sexe;
+      user.admin = false;
 
       await this.repository.save(user);
     } catch (error) {

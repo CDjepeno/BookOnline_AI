@@ -12,6 +12,7 @@ export class GetUserByIdUseCase {
       email: user.email,
       phone: user.phone,
       sexe: user.sexe,
+      admin: user.admin
     };
     return responses;
   }

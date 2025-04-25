@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsString,
@@ -53,6 +54,10 @@ export class User {
   @Column({ nullable: true })
   @IsString()
   phone: string;
+
+  @Column({ nullable: true, default: false })
+  @IsBoolean()
+  admin: boolean;
 
   @OneToMany(() => Book, (book) => book.user)
   books?: Book[];
