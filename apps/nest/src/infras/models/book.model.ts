@@ -1,4 +1,4 @@
-import { IsDate, IsInt, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsInt, IsString } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -9,8 +9,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user.model';
 import { Booking } from './booking.model';
+import { User } from './user.model';
 
 @Entity()
 export class Book {
@@ -50,7 +50,11 @@ export class Book {
 
   @UpdateDateColumn()
   updated_at!: Date;
-  
+
   @OneToMany(() => Booking, (bookings) => bookings.book)
   bookings!: Booking[];
+
+  @Column({ nullable: true, default: false })
+  @IsBoolean()
+  approuve: boolean;
 }

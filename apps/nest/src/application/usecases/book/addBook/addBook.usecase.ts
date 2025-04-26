@@ -25,6 +25,7 @@ export class AddBookUseCase {
         request.releaseAt,
         coverUrl,
         request.userId,
+        false
       );
       await this.bookRepository.addBook(book);
 

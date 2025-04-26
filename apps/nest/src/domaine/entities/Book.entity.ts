@@ -7,5 +7,6 @@ export class BookEntity {
     readonly releaseAt: Date,
     readonly coverUrl: string,
     readonly userId: number,
+    readonly approuve: boolean,
   ) {}
 }
