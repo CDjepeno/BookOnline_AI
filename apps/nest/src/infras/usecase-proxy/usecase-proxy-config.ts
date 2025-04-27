@@ -25,15 +25,15 @@ import { AwsS3Client } from 'src/infras/clients/aws/aws-s3.client';
 import NodemailerClient from 'src/infras/clients/nodemailer/nodemailer.client';
 // import { ConsumerKafkajsClient } from '../clients/kafka/consumer.client';
 // import { ProducerKafkaClient } from '../clients/kafka/producer.client';
+import { OAuthGoogleUseCase } from 'src/application/usecases/user/auth/OAuthGoogle/OAuthGoogle.usecase';
+import { DeleteUserUsecase } from 'src/application/usecases/user/deleteUser/delete.user.usecase';
+import { RedisClient } from '../clients/redis/redis.client';
 import { SocketClient } from '../clients/socket/socket.client';
 import { BookRepositoryTypeorm } from '../services/book.repository.typeorm';
 import { BookingRepositoryTypeorm } from '../services/booking.repository.typeorm';
 import { ContactRepositoryTypeorm } from '../services/contact.repository.typeorm';
 import { UserRepositoryTypeorm } from '../services/user.repository.typeorm';
 import { UseCaseProxy } from './usecase-proxy';
-import { RedisClient } from '../clients/redis/redis.client';
-import { DeleteUserUsecase } from 'src/application/usecases/user/deleteUser/delete.user.usecase';
-import { OAuthGoogleUseCase } from 'src/application/usecases/user/auth/OAuthGoogle/OAuthGoogle.usecase';
 
 export enum UsecaseProxyEnum {
   CREATE_USER_USECASE_PROXY = 'createUserUsecaseProxy',
@@ -103,7 +103,7 @@ export const useCasesConfig = [
       redisClient: RedisClient,
     ) =>
       new UseCaseProxy(
-        new LoginUserUseCase(userRepository,redisClient, nodeMailerClient),
+        new LoginUserUseCase(userRepository, redisClient, nodeMailerClient),
       ),
   },
   {
@@ -152,12 +152,19 @@ export const useCasesConfig = [
       new UseCaseProxy(new GetBookByNameUsecase(bookRepository)),
   },
   {
-    inject: [BookRepositoryTypeorm, AwsS3Client],
+    inject: [
+      BookRepositoryTypeorm,
+      AwsS3Client,
+      NodemailerClient,
+      UserRepositoryTypeorm,
+    ],
     provide: UsecaseProxyEnum.ADD_BOOK_USECASE_PROXY,
     useFactory: (
       bookRepository: BookRepositoryTypeorm,
       awsS3Client: AwsS3Client,
-    ) => new UseCaseProxy(new AddBookUseCase(bookRepository, awsS3Client)),
+      nodemailerClient: NodemailerClient,
+      usersRepository: UserRepositoryTypeorm,
+    ) => new UseCaseProxy(new AddBookUseCase(bookRepository, awsS3Client,nodemailerClient, usersRepository)),
   },
   {
     inject: [BookRepositoryTypeorm],
