@@ -58,7 +58,11 @@ export class BookRepositoryTypeorm implements BookRepository {
 
       const totalBooks = await this.repository.count();
 
-      const books = await this.repository.find({ skip, take });
+      const books = await this.repository.find({
+        where: { approuve: true },
+        skip,
+        take,
+      });
 
       if (!books) {
         throw new Error(ErrorsMessagesEnum.NOT_FOUND);
