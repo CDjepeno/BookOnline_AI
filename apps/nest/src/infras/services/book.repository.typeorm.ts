@@ -99,7 +99,7 @@ export class BookRepositoryTypeorm implements BookRepository {
       });
 
       const books = await this.repository.find({
-        where: { userId },
+        where: { userId, approuve: true  },
         take,
         skip,
         relations: ['bookings'],
