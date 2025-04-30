@@ -6,4 +6,5 @@ export type UpdateBookRequest = {
   releaseAt?: Date,
   coverUrl?: Express.Multer.File,
   userId?: number
+  approuve: boolean
 }

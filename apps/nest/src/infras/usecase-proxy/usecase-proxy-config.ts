@@ -25,6 +25,7 @@ import { AwsS3Client } from 'src/infras/clients/aws/aws-s3.client';
 import NodemailerClient from 'src/infras/clients/nodemailer/nodemailer.client';
 // import { ConsumerKafkajsClient } from '../clients/kafka/consumer.client';
 // import { ProducerKafkaClient } from '../clients/kafka/producer.client';
+import { ApprouveBookUseCase } from 'src/application/usecases/book/approuveBook/approuveBook.usecase';
 import { OAuthGoogleUseCase } from 'src/application/usecases/user/auth/OAuthGoogle/OAuthGoogle.usecase';
 import { DeleteUserUsecase } from 'src/application/usecases/user/deleteUser/delete.user.usecase';
 import { RedisClient } from '../clients/redis/redis.client';
@@ -55,6 +56,7 @@ export enum UsecaseProxyEnum {
   DELETE_BOOK_USECASE_PROXY = 'deleteBookUsecaseProxy',
   DELETE_BOOKS_USECASE_PROXY = 'deleteBooksUsecaseProxy',
   UPDATE_BOOK_USECASE_PROXY = 'updateBookUsecaseProxy',
+  APPROUVE_BOOK_USECASE_PROXY = 'approuveBookUsecaseProxy',
 
   BOOKING_BOOK_USECASE_PROXY = 'BookingBookUsecaseProxy',
   GET_BOOKINGS_DATES_BY_BOOK_USECASE_PROXY = 'getBookingDatesByBookUsecaseProxy',
@@ -164,7 +166,15 @@ export const useCasesConfig = [
       awsS3Client: AwsS3Client,
       nodemailerClient: NodemailerClient,
       usersRepository: UserRepositoryTypeorm,
-    ) => new UseCaseProxy(new AddBookUseCase(bookRepository, awsS3Client,nodemailerClient, usersRepository)),
+    ) =>
+      new UseCaseProxy(
+        new AddBookUseCase(
+          bookRepository,
+          awsS3Client,
+          nodemailerClient,
+          usersRepository,
+        ),
+      ),
   },
   {
     inject: [BookRepositoryTypeorm],
@@ -203,6 +213,22 @@ export const useCasesConfig = [
     provide: UsecaseProxyEnum.DELETE_BOOKS_USECASE_PROXY,
     useFactory: (bookRepository: BookRepositoryTypeorm) =>
       new UseCaseProxy(new DeleteBooksUsecase(bookRepository)),
+  },
+  {
+    inject: [BookRepositoryTypeorm, NodemailerClient, UserRepositoryTypeorm],
+    provide: UsecaseProxyEnum.APPROUVE_BOOK_USECASE_PROXY,
+    useFactory: (
+      bookRepository: BookRepositoryTypeorm,
+      nodemailerClient: NodemailerClient,
+      userRepository: UserRepositoryTypeorm,
+    ) =>
+      new UseCaseProxy(
+        new ApprouveBookUseCase(
+          bookRepository,
+          nodemailerClient,
+          userRepository,
+        ),
+      ),
   },
 
   // -------------------------------- BOOKING -------------------------------------

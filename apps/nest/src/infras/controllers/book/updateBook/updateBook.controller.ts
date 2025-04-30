@@ -49,7 +49,7 @@ export class UpdateBookController {
       throw new BadRequestException('Cover fileeeeee is required');
     }
 
-    const dataToUpdate = { ...updateBookDto, id, coverUrl };
+    const dataToUpdate = { ...updateBookDto, id, coverUrl, approuve: true };
 
     return await this.updateUsecaseProxy.getInstance().execute(dataToUpdate);
   }

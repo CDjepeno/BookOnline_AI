@@ -1,3 +1,4 @@
+import { BookResponse } from 'src/application/usecases/book/approuveBook/approuveBook.response';
 import { GetAllBookResponsePagination } from 'src/application/usecases/book/getAllBook/getAllBook.response';
 import { GetBookResponse } from 'src/application/usecases/book/getBook/getBook.response';
 import { GetBookByNameResponse } from 'src/application/usecases/book/getBookByName/getBookByName.response';
@@ -23,4 +24,5 @@ export interface BookRepository {
   ): Promise<void>;
   deleteBook(id: number): Promise<void>;
   deleteBooks(id: Array<string>): Promise<void>;
+  approuveBook(id: number): Promise<BookResponse>;
 }

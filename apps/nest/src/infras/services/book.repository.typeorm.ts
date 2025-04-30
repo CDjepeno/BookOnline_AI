@@ -11,6 +11,7 @@ import { QueryFailedError, Repository } from 'typeorm';
 import { handleDatabaseError } from '../common/errors/errorsSwitch';
 import { Book } from '../models/book.model';
 import { User } from '../models/user.model';
+import { BookResponse } from 'src/application/usecases/book/approuveBook/approuveBook.response';
 
 export class BookRepositoryTypeorm implements BookRepository {
   constructor(
@@ -200,6 +201,27 @@ export class BookRepositoryTypeorm implements BookRepository {
     }
   }
 
+  async approuveBook(id: number): Promise<BookResponse> {
+    try {
+      const book = await this.repository.findOne({
+        where: { id },
+      });
+
+      if (!book) {
+        throw new Error(ErrorsMessagesEnum.NOT_FOUND);
+      }
+
+      book.approuve = true;
+      await this.repository.save(book);
+
+      return book;
+    } catch (error) {
+      if (error instanceof QueryFailedError) {
+        handleDatabaseError(error);
+      }
+      throw error;
+    }
+  }
   async getBookByName(nameBook: string): Promise<GetBookByNameResponse> {
     try {
       const book = await this.repository.findOneBy({ title: nameBook });
