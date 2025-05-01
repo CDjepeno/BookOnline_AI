@@ -35,6 +35,7 @@ import { BookingRepositoryTypeorm } from '../services/booking.repository.typeorm
 import { ContactRepositoryTypeorm } from '../services/contact.repository.typeorm';
 import { UserRepositoryTypeorm } from '../services/user.repository.typeorm';
 import { UseCaseProxy } from './usecase-proxy';
+import { DisaprouveBookUseCase } from 'src/application/usecases/book/disaprouveBook/approuveBook.usecase';
 
 export enum UsecaseProxyEnum {
   CREATE_USER_USECASE_PROXY = 'createUserUsecaseProxy',
@@ -57,6 +58,7 @@ export enum UsecaseProxyEnum {
   DELETE_BOOKS_USECASE_PROXY = 'deleteBooksUsecaseProxy',
   UPDATE_BOOK_USECASE_PROXY = 'updateBookUsecaseProxy',
   APPROUVE_BOOK_USECASE_PROXY = 'approuveBookUsecaseProxy',
+  DISAPROUVE_BOOK_USECASE_PROXY = 'disaprouveBookUsecaseProxy',
 
   BOOKING_BOOK_USECASE_PROXY = 'BookingBookUsecaseProxy',
   GET_BOOKINGS_DATES_BY_BOOK_USECASE_PROXY = 'getBookingDatesByBookUsecaseProxy',
@@ -224,6 +226,22 @@ export const useCasesConfig = [
     ) =>
       new UseCaseProxy(
         new ApprouveBookUseCase(
+          bookRepository,
+          nodemailerClient,
+          userRepository,
+        ),
+      ),
+  },
+  {
+    inject: [BookRepositoryTypeorm, NodemailerClient, UserRepositoryTypeorm],
+    provide: UsecaseProxyEnum.DISAPROUVE_BOOK_USECASE_PROXY,
+    useFactory: (
+      bookRepository: BookRepositoryTypeorm,
+      nodemailerClient: NodemailerClient,
+      userRepository: UserRepositoryTypeorm,
+    ) =>
+      new UseCaseProxy(
+        new DisaprouveBookUseCase(
           bookRepository,
           nodemailerClient,
           userRepository,
