@@ -3,6 +3,7 @@ import { GetAllBookResponsePagination } from 'src/application/usecases/book/getA
 import { GetBookResponse } from 'src/application/usecases/book/getBook/getBook.response';
 import { GetBookByNameResponse } from 'src/application/usecases/book/getBookByName/getBookByName.response';
 import { GetBooksByUserPaginationResponse } from 'src/application/usecases/book/getBooksByUser/getBooksByUser.response';
+import { GetPendingBooksResponsePagination } from 'src/application/usecases/book/getPendingBooks /getPendingBooks.response';
 import { BookEntity } from 'src/domaine/entities/Book.entity';
 
 export interface BookRepository {
@@ -11,6 +12,10 @@ export interface BookRepository {
     page: number,
     limit: number,
   ): Promise<GetAllBookResponsePagination>;
+  getPendingBooks(
+    page: number,
+    limit: number,
+  ): Promise<GetPendingBooksResponsePagination>;
   getBooksByUser(
     userId: number,
     page: number,

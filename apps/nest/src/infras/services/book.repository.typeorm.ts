@@ -12,6 +12,7 @@ import { handleDatabaseError } from '../common/errors/errorsSwitch';
 import { Book } from '../models/book.model';
 import { User } from '../models/user.model';
 import { BookResponse } from 'src/application/usecases/book/approuveBook/approuveBook.response';
+import { GetPendingBooksResponsePagination } from 'src/application/usecases/book/getPendingBooks /getPendingBooks.response';
 
 export class BookRepositoryTypeorm implements BookRepository {
   constructor(
@@ -61,6 +62,40 @@ export class BookRepositoryTypeorm implements BookRepository {
 
       const books = await this.repository.find({
         where: { approuve: true },
+        skip,
+        take,
+      });
+
+      if (!books) {
+        throw new Error(ErrorsMessagesEnum.NOT_FOUND);
+      }
+
+      return {
+        books,
+        pagination: {
+          totalBooks,
+          currentPage: page,
+          totalPages: Math.ceil(totalBooks / take),
+        },
+      };
+    } catch (error) {
+      if (error instanceof QueryFailedError) {
+        handleDatabaseError(error);
+      }
+      throw error;
+    }
+  }
+
+  async getPendingBooks(page: number, limit: number): Promise<GetPendingBooksResponsePagination> {
+    try {
+      const currentPage = Math.max(0, page - 1);
+      const take = limit > 0 ? limit : 10;
+      const skip = currentPage * take;
+
+      const totalBooks = await this.repository.count();
+
+      const books = await this.repository.find({
+        where: { approuve: false },
         skip,
         take,
       });
@@ -237,4 +272,6 @@ export class BookRepositoryTypeorm implements BookRepository {
       throw error;
     }
   }
+
+  
 }

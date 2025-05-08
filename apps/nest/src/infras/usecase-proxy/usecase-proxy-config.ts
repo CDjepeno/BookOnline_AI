@@ -36,6 +36,7 @@ import { ContactRepositoryTypeorm } from '../services/contact.repository.typeorm
 import { UserRepositoryTypeorm } from '../services/user.repository.typeorm';
 import { UseCaseProxy } from './usecase-proxy';
 import { DisaprouveBookUseCase } from 'src/application/usecases/book/disaprouveBook/approuveBook.usecase';
+import { GetPendingBooksUsecase } from 'src/application/usecases/book/getPendingBooks /getPendingBooks.usecase';
 
 export enum UsecaseProxyEnum {
   CREATE_USER_USECASE_PROXY = 'createUserUsecaseProxy',
@@ -51,6 +52,7 @@ export enum UsecaseProxyEnum {
 
   ADD_BOOK_USECASE_PROXY = 'addBookUsecaseProxy',
   GET_ALL_BOOK_USECASE_PROXY = 'getAllBookUsecaseProxy',
+  GET_PENDING_BOOKS_USECASE_PROXY = 'getPendingBooksUsecaseProxy',
   GET_BOOKS_BY_USER_USECASE_PROXY = 'getBookByUserUsecaseProxy',
   GET_BOOK_USECASE_PROXY = 'getBookUsecaseProxy',
   GET_BOOK_BY_NAME_USECASE_PROXY = 'getBookByNameUsecaseProxy',
@@ -245,6 +247,18 @@ export const useCasesConfig = [
           bookRepository,
           nodemailerClient,
           userRepository,
+        ),
+      ),
+  },
+  {
+    inject: [BookRepositoryTypeorm],
+    provide: UsecaseProxyEnum.GET_PENDING_BOOKS_USECASE_PROXY,
+    useFactory: (
+      bookRepository: BookRepositoryTypeorm,
+    ) =>
+      new UseCaseProxy(
+        new GetPendingBooksUsecase(
+          bookRepository,
         ),
       ),
   },

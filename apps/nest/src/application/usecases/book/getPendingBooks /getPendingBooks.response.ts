@@ -1,0 +1,21 @@
+export type GetAllBookResponse = {
+  id?: number;
+  title: string;
+  description: string;
+  author: string;
+  releaseAt: Date;
+  coverUrl: string;
+  created_at?: Date;
+  update_at?: Date;
+  booking?: string;
+  approuve: boolean
+}
+
+export type GetPendingBooksResponsePagination = {
+    books: GetAllBookResponse[],
+    pagination: {
+      totalBooks: number,
+      currentPage: number,
+      totalPages: number,
+    },
+}
