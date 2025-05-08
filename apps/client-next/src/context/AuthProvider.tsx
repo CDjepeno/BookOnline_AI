@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   
   const [user, setUser] = useState<CurrentUserResponse | null>(null);
   const router = useRouter(); // Remplace useNavigate
-
+  
   const getUser = async () => {
     try {
       const token = localStorage.getItem("BookToken");
@@ -53,7 +53,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (token || tokenCookies) {
         getUser();
     }
-  }, [user]);
+  }, []);
 
   const signin = async (credentials: LoginFormInput) => {
     return await UseRequestApi<SigninResponse, unknown>({

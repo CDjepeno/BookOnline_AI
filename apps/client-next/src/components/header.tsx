@@ -1,5 +1,8 @@
 "use client";
 
+import { AuthContext, AuthContextValue } from "@/context/AuthContext";
+import { BASE_URL } from "@/request/route-http/route-http";
+import { RouterEnum } from "@/types/enum/enum";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -15,14 +18,11 @@ import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { AuthContext, AuthContextValue } from "@/context/AuthContext";
-import { RouterEnum } from "@/types/enum/enum";
-import { BASE_URL } from "@/request/route-http/route-http";
 
 type LinkMap = {
   [key: string]: string;
@@ -46,6 +46,7 @@ function Header() {
   const [notificationCount, setNotificationCount] = useState<null | number>(
     null
   );
+  console.log(user);
   const [openNotifications, setOpenNotifications] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [currentPath, setCurrentPath] = useState<string | null>(null);
@@ -55,7 +56,7 @@ function Header() {
 
   useEffect(() => {
     setIsMounted(true);
-    setCurrentPath(pathname)
+    setCurrentPath(pathname);
   }, [pathname]);
   const isLoginPage = currentPath === "/login";
   const isSigUpPage = currentPath === "/register";
@@ -78,16 +79,16 @@ function Header() {
 
   const toggleNotifications = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-    setOpenNotifications((prev) => !prev); 
+    setOpenNotifications((prev) => !prev);
     if (openNotifications) {
-      setNotificationCount(0); 
+      setNotificationCount(0);
     }
   };
 
   useEffect(() => {
     setIsMounted(true);
     const socket = io(BASE_URL);
-    if (user) {
+    if (user?.id) {
       const eventKey = `notification:${user.id}`;
 
       socket.on("connect", () => {
@@ -102,16 +103,16 @@ function Header() {
         console.log("Nouvelle notification reçue :", data);
         setNotifications((prev) => [...prev, data]);
 
-        setNotificationCount((prev) => prev! + 1); 
+        setNotificationCount((prev) => prev! + 1);
       });
     }
 
     return () => {
       socket.disconnect();
     };
-  }, [user]);
+  }, [user?.id]);
   if (!isMounted || currentPath === null) {
-    return null; 
+    return null;
   }
 
   return (
@@ -202,8 +203,8 @@ function Header() {
             {user && (
               <IconButton color="inherit" onClick={toggleNotifications}>
                 <Badge
-                  badgeContent={notificationCount} 
-                  color="error" 
+                  badgeContent={notificationCount}
+                  color="error"
                   overlap="circular"
                 >
                   <NotificationsIcon style={{ color: "white" }} />
@@ -219,8 +220,8 @@ function Header() {
                       maxHeight: "300px",
                       overflowY: "auto",
                       bgcolor: "background.paper",
-                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)", 
-                      borderRadius: 2, 
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+                      borderRadius: 2,
                       zIndex: 1000,
                       padding: 2,
                     }}
@@ -351,6 +352,16 @@ function Header() {
                     )}
                   </MenuItem>
                 ))}
+                {user.admin && (
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Link
+                      href={RouterEnum.MODERATION}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <Typography textAlign="center">Modération</Typography>
+                    </Link>
+                  </MenuItem>
+                )}
               </Menu>
             </Box>
           ) : (

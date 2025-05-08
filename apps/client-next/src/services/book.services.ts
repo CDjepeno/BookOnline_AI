@@ -1,7 +1,7 @@
 
-import { AddBookResponse, DeleteBookResponse, DeleteBooksResponse, GetAllBookResponsePagination, GetBookByUserPaginationResponse, GetBookResponse, UpdateBookResponse } from "@/types/book/response.types";
+import { AddBookResponse, ApprouveBookResponse, DeleteBookResponse, DeleteBooksResponse, DisaprouveBookResponse, GetAllBookResponsePagination, GetBookByUserPaginationResponse, GetBookResponse, GetPendingBookPaginationResponse, UpdateBookResponse } from "@/types/book/response.types";
 import { UseRequestApi } from "../request/commons/useApiRequest";
-import { BOOKS_ROUTE, BOOK_ROUTE } from "../request/route-http/route-http";
+import { APPROUVRE_BOOK_ROUTE, BOOKS_ROUTE, BOOK_ROUTE, DISAPROUVRE_BOOK_ROUTE, PENDING_BOOKS_ROUTE } from "../request/route-http/route-http";
 import { MethodHttpEnum } from "@/types/enum/enum";
 
 export const getBooks = async (
@@ -47,6 +47,17 @@ export const getBooksByUser = async (
   });
 };
 
+export const getPendingBooks = async (
+  page: number,
+  limit: number
+): Promise<GetPendingBookPaginationResponse> => {
+  return await UseRequestApi<GetPendingBookPaginationResponse, null>({
+    path: `${PENDING_BOOKS_ROUTE}/page=${page}?limit=${limit}`,
+    method: MethodHttpEnum.GET,
+    includeAuthorizationHeader: true,
+  });
+};
+
 export const createBook = async (
   formData: FormData,
   userId: number
@@ -70,6 +81,24 @@ export const deleteBook = async (id: number): Promise<DeleteBookResponse> => {
   return await UseRequestApi({
     method: MethodHttpEnum.DELETE,
     path: `${BOOK_ROUTE}/${id}`,
+    params: { id },
+    includeAuthorizationHeader: true,
+  });
+};
+
+export const approuveBook = async (id: number): Promise<ApprouveBookResponse> => {
+  return await UseRequestApi({
+    method: MethodHttpEnum.PUT,
+    path: `${APPROUVRE_BOOK_ROUTE}/${id}`,
+    params: { id },
+    includeAuthorizationHeader: true,
+  });
+};
+
+export const disaprouveBook = async (id: number): Promise<DisaprouveBookResponse> => {
+  return await UseRequestApi({
+    method: MethodHttpEnum.DELETE,
+    path: `${DISAPROUVRE_BOOK_ROUTE}/${id}`,
     params: { id },
     includeAuthorizationHeader: true,
   });

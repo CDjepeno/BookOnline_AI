@@ -20,6 +20,7 @@ export type CurrentUserResponse = {
   email: string;
   phone: string;
   sexe: string;
+  admin: boolean;
 };
 
 export interface UpdateUserResponse {

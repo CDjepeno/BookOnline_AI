@@ -40,4 +40,5 @@ export enum RouterEnum {
   PROFILE = '/profile',
   HOME = '/',
   CONTACT = '/contact',
+  MODERATION = '/moderation',
 }

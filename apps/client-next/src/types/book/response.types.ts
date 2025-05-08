@@ -23,6 +23,14 @@ export type DeleteBookResponse = {
   msg: string;
 }
 
+export type ApprouveBookResponse = {
+  msg: string,
+}
+
+export type DisaprouveBookResponse = {
+  msg: string,
+}
+
 export type GetBooksResponse = {
   id: number;
   title: string;
@@ -47,6 +55,15 @@ export type GetAllBookResponsePagination = {
 }
 
 export type GetBookByUserPaginationResponse = {
+  books: GetBooksResponse[],
+  pagination: {
+    totalBooks: number,
+    currentPage: number,
+    totalPages: number,
+  },
+}
+
+export type GetPendingBookPaginationResponse = {
   books: GetBooksResponse[],
   pagination: {
     totalBooks: number,

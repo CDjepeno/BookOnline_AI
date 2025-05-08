@@ -190,11 +190,11 @@ export class BookRepositoryTypeorm implements BookRepository {
 
   async updateBook(id: number, book: Partial<BookEntity>): Promise<void> {
     try {
-      await this.repository.update(id, book);
       const updatedBook = await this.repository.findOneBy({ id });
       if (!updatedBook) {
         throw new Error(ErrorsMessagesEnum.NOT_FOUND);
       }
+      await this.repository.update(id, book);
     } catch (error) {
       if (error instanceof QueryFailedError) {
         handleDatabaseError(error);
