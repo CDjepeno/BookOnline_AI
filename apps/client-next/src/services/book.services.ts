@@ -40,7 +40,7 @@ export const getBooksByUser = async (
   limit: number
 ): Promise<GetBookByUserPaginationResponse> => {
   return await UseRequestApi<GetBookByUserPaginationResponse, { id: number }>({
-    path: `${BOOKS_ROUTE}/${id}?page=${page}?limit=${limit}`,
+    path: `${BOOKS_ROUTE}/${id}?page=${page}&limit=${limit}`,
     method: MethodHttpEnum.GET,
     params: { id },
     includeAuthorizationHeader: false,
@@ -52,9 +52,9 @@ export const getPendingBooks = async (
   limit: number
 ): Promise<GetPendingBookPaginationResponse> => {
   return await UseRequestApi<GetPendingBookPaginationResponse, null>({
-    path: `${PENDING_BOOKS_ROUTE}/page=${page}?limit=${limit}`,
+    path: `${PENDING_BOOKS_ROUTE}?page=${page}&limit=${limit}`,
     method: MethodHttpEnum.GET,
-    includeAuthorizationHeader: true,
+    includeAuthorizationHeader: false,
   });
 };
 

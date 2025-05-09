@@ -18,15 +18,13 @@ export class GetAllBookController {
     summary: 'Get first six Book',
   })
   async getAllBook(
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '6',
+    @Query('page') page: string,
+    @Query('limit') limit: string,
   ): Promise<GetAllBookResponsePagination> {
-    const pageNumber = parseInt(page, 10);
-    const limitNumber = parseInt(limit, 10);
-    const { books, pagination } = await this.getAllBookUsecaseProxy
+    const pageNumber = parseInt(page, 10) || 1;
+    const limitNumber = parseInt(limit, 10) || 6;
+    return await this.getAllBookUsecaseProxy
       .getInstance()
       .execute(pageNumber, limitNumber);
-
-    return { books, pagination };
   }
 }

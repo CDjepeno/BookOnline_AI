@@ -62,10 +62,10 @@ export default function ProfileDetail({
 
   const { data: bookPaginate } = useQuery({
     queryKey: [BookQueriesKeysEnum.BooksUser, currentPage],
-    queryFn: () => getBooksByUser(user!.id, currentPage, totalPages),
+    queryFn: () => getBooksByUser(user!.id, currentPage, 6),
     enabled: !!currentPage,
   });
-
+  
   const books = bookPaginate?.books?.length
     ? bookPaginate.books
     : booksPagination.books;

@@ -11,7 +11,7 @@ export type AddBookInput = {
 }
 
 export type UpdateBookInput = {
-  id?: number
+  id: number
   title: string;
   description: string;
   author: string;

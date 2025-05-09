@@ -46,7 +46,6 @@ function Header() {
   const [notificationCount, setNotificationCount] = useState<null | number>(
     null
   );
-  console.log(user);
   const [openNotifications, setOpenNotifications] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [currentPath, setCurrentPath] = useState<string | null>(null);
