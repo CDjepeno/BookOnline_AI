@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { Module, OnModuleInit } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigTypeOrmModule } from './infras/clients/typeorm/typeorm.module';
 import { ControllerModule } from './infras/controllers/controller.module';
 import { RegisterController } from './infras/controllers/user/register/register.controller';
@@ -17,10 +17,12 @@ import { User } from './infras/models/user.model';
 import { RepositoriesModule } from './infras/services/repositories.module';
 import { UserRepositoryTypeorm } from './infras/services/user.repository.typeorm';
 // import { ConfigKafkaModule } from './infras/clients/kafka/kafka.module';
-import { AddUserUseCase } from './application/usecases/user/adduser/add.user.usecase';
 import { AddBookUseCase } from './application/usecases/book/addBook/addBook.usecase';
 import { BookingBookUseCase } from './application/usecases/booking/bookingBook/bookingBook.usecase';
+import { AddUserUseCase } from './application/usecases/user/adduser/add.user.usecase';
 import { GoogleStrategy } from './infras/clients/googleOAuth/google.strategy';
+import { FixtureModule } from './infras/fixtures/fixtures.module';
+import { FixtureService } from './infras/fixtures/fixtures.service';
 
 @Module({
   imports: [
@@ -41,10 +43,38 @@ import { GoogleStrategy } from './infras/clients/googleOAuth/google.strategy';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '24h' },
     }),
-    ConfigModule,
+    FixtureModule,
   ],
   controllers: [RegisterController],
-  providers: [UserRepositoryTypeorm, AddUserUseCase, AddBookUseCase, BookingBookUseCase, GoogleStrategy],
+  providers: [
+    UserRepositoryTypeorm,
+    AddUserUseCase,
+    AddBookUseCase,
+    BookingBookUseCase,
+    GoogleStrategy,
+  ],
   exports: [AddUserUseCase, AddBookUseCase, BookingBookUseCase],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(
+    private readonly fixtureService: FixtureService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  async onModuleInit() {
+      const isDev = this.configService.get('NODE_ENV', 'development') === 'development';
+
+    if (isDev) {
+      console.log('🌱 Chargement automatique des fixtures au démarrage...');
+      try {
+        await this.fixtureService.loadFixtures();
+      } catch (error) {
+        console.error('❌ Erreur lors du chargement des fixtures:', error);
+      }
+    } else {
+      console.log(
+        'ℹ️  Chargement des fixtures désactivé (LOAD_FIXTURES=false)',
+      );
+    }
+  }
+}

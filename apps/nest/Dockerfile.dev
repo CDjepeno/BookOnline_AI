@@ -4,6 +4,8 @@ FROM node:20 as development
 # Étape de nettoyage avant la construction
 RUN rm -rf /app/dist/*
 
+RUN apt-get update && apt-get install -y netcat-openbsd && rm -rf /var/lib/apt/lists/*
+
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
@@ -17,6 +19,8 @@ COPY ./src/infras/clients/kafka/certs /app/dist/infras/clients/kafka/certs
 COPY . .
 
 
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 # Installer les dépendances nécessaires pour le développement
 RUN npm install
 
@@ -25,7 +29,7 @@ ENV NODE_ENV=development
 
 
 # Exposer le port utilisé par votre application NestJS (par défaut 3000)
-EXPOSE 3000
+EXPOSE 8000
 
 # Commande pour démarrer l'application en mode développement
 # npm run dev

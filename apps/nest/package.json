@@ -19,7 +19,14 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/e2e`/jest-e2e.json",
     "test:integration": "jest --config ./test/integration/jest.json",
-    "test:unitaire": "jest --config ./test/unitaire/jest.json"
+    "test:unitaire": "jest --config ./test/unitaire/jest.json",
+    "migration:generate": "typeorm migration:generate -d src/database/data-source.ts",
+    "migration:create": "typeorm migration:create",
+    "migration:run": "typeorm migration:run -d src/database/data-source.ts",
+    "migration:revert": "typeorm migration:revert -d src/database/data-source.ts",
+    "fixtures:load": "ts-node -r tsconfig-paths/register src/infras/fixtures/load-fixtures.ts",
+    "fixtures:load:prod": "node dist/infras/fixtures/load-fixtures.js",
+    "seed": "npm run migration:run && npm run fixtures:load"
   },
   "dependencies": {
     "@golevelup/ts-jest": "^0.4.0",
