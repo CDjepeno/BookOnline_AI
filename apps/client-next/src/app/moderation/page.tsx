@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getPendingBooks } from "@/services/book.services";
 import ModerationDetail from "./moderationDetail";
 

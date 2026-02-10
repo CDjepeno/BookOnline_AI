@@ -24,4 +24,3 @@ export const BOOKING_BOOK_ROUTE = "/booking/book";
 export const DELETE_BOOKING_USER_ROUTE = "/booking/user";
 export const DELETE_BOOKINGS_USER_ROUTE = "/bookings/user";
 
-
