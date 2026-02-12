@@ -29,6 +29,7 @@
     "seed": "npm run migration:run && npm run fixtures:load"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.3.0",
     "@golevelup/ts-jest": "^0.4.0",
     "@nestjs/common": "^11.0.12",
     "@nestjs/config": "^4.0.2",

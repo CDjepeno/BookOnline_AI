@@ -10,11 +10,15 @@ COPY package.json package-lock.json ./
 # Install dependencies
 RUN npm install --frozen-lockfile
 
+# Définir un ARG pour Next.js
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # Copy the rest of the application code
 COPY . .
 
 # Build the Next.js app
-RUN npm run build
+# RUN npm run build
 
 # Expose the Next.js default port
 EXPOSE 3000

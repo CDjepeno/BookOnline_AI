@@ -1,5 +1,5 @@
 // Routes http
-export const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://backend:8000";
 export const PROD_URL = "https://nest-api-onlinebook-eac8a2a7.koyeb.app/";
 export const CURRENT_USER_ROUTE = "/auth/current";
 export const GET_USER_BY_ID_ROUTE = "/user";

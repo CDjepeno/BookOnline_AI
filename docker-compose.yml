@@ -4,15 +4,14 @@ services:
     build:
       context: ./apps/nest
       dockerfile: Dockerfile.dev
-    container_name: nest_backend
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - ./apps/nest:/app
-      - nest_node_modules:/apps/node_modules 
-      - ./apps/nest/src/infras/clients/kafka/certs:/app/src/infras/clients/kafka/certs
+      # - ia_nest_node_modules:/app/node_modules
+      - ./app/nest/src/infras/clients/kafka/certs:/app/src/infras/clients/kafka/certs
     env_file:
       - .env
     environment:
@@ -38,109 +37,103 @@ services:
       redis:
         condition: service_started
     networks:
-      - onelineBook_network
+      - ia_onelineBook_network
   ############################# Frontend NEXT.JS
   nextjs:
     build:
       context: ./apps/client-next
       dockerfile: Dockerfile
-    container_name: next_frontend
     ports:
-      - "3001:3000"  # 🔥 On mappe le port 3000 du conteneur vers 3001 sur l'hôte
+      - "3001:3000" # 🔥 On mappe le port 3000 du conteneur vers 3001 sur l'hôte
     volumes:
       - ./apps/client-next:/app
-      - next_node_modules:/apps/client-next/node_modules
+      - ia_next_node_modules:/app/node_modules
     environment:
       NODE_ENV: development
+      NEXT_PUBLIC_API_URL: http://backend:8000 
+    env_file:
+      - .env
     command: npm run dev
     networks:
-      - onelineBook_network
+      - ia_onelineBook_network
 
   ############################# Database MYSQL
   db:
-    image: mysql:8.0 
-    container_name: mysql_db
+    image: mysql:8.0
     restart: always
     ports:
-      - "3307:3306"           
+      - "3308:3306"
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
     volumes:
-      - db_data:/var/lib/mysql
+      - ia_db_data:/var/lib/mysql
     networks:
-      - onelineBook_network
+      - ia_onelineBook_network
   ############################# Zookeeper
   zookeeper:
-    container_name: zookeeper
-    image: docker.io/bitnami/zookeeper:3.9
-    ports:
-      - "2181:2181"
-    volumes:
-      - "zookeeper_data:/bitnami"
+    # latest en local c'est c'est ok mais  en prod il faut un tag precis
+    image: confluentinc/cp-zookeeper:7.5.0
     environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     networks:
-      - onelineBook_network
+      - ia_onelineBook_network
   ############################# Message Broker KAFKA
   kafka:
-    container_name: kafka
-    image: docker.io/bitnami/kafka:3.4
+    image: confluentinc/cp-kafka:7.5.0
     ports:
-      - "9094:9094"
-    volumes:
-      - "kafka_data:/bitnami"
+    - "9092:9092"
     environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://kafka:9094
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
-      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
     networks:
-      - onelineBook_network
+      - ia_onelineBook_network
     healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server kafka:9092 --list || exit 1"]
+      test:
+        [
+          "CMD-SHELL", "kafka-broker-api-versions --bootstrap-server kafka:9092 || exit 1"
+        ]
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 10
   ############################# Message Broker KAFKA
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
-    container_name: kafka_ui
     ports:
       - "8080:8080"
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9094
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
     networks:
-      - onelineBook_network
+      - ia_onelineBook_network
   ############################# Redis
   redis:
     image: redis:latest
-    container_name: my_redis
     restart: always
-    ports:
-      - "6379:6379"
     command: redis-server --requirepass mystrongpassword
     environment:
       - REDIS_PASSWORD=mystrongpassword
     networks:
-      - onelineBook_network
-     
+      - ia_onelineBook_network
 
 volumes:
-  db_data:
-  react_node_modules:
-  nest_node_modules:
-  next_node_modules:
-  zookeeper_data:
+  ia_db_data:
+  ia_react_node_modules:
+  ia_nest_node_modules:
+  ia_next_node_modules:
+  ia_zookeeper_data:
     driver: local
-  kafka_data:
+  ia_kafka_data:
     driver: local
 
 networks:
-  onelineBook_network:  # 🔥 Définition du réseau
+  ia_onelineBook_network: # 🔥 Définition du réseau
     driver: bridge

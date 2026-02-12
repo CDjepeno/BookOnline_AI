@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 echo "🚀 Démarrage de l'application NestJS..."
