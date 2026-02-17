@@ -6,7 +6,7 @@ export enum BookQueriesKeysEnum {
   Deletebooks = 'DeleteBooks',
   Login = 'login',
   addBook = 'addBook',
-  Book = 'book'
+  GetSearchBook = 'getSearchbook'
 }
 
 export enum BookingsQueriesKeysEnum {

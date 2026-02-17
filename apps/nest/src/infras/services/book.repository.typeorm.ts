@@ -1,8 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
+import { BookResponse } from 'src/application/usecases/book/approuveBook/approuveBook.response';
 import { GetAllBookResponsePagination } from 'src/application/usecases/book/getAllBook/getAllBook.response';
 import { GetBookResponse } from 'src/application/usecases/book/getBook/getBook.response';
 import { GetBookByNameResponse } from 'src/application/usecases/book/getBookByName/getBookByName.response';
 import { GetBooksByUserPaginationResponse } from 'src/application/usecases/book/getBooksByUser/getBooksByUser.response';
+import { GetPendingBooksResponsePagination } from 'src/application/usecases/book/getPendingBooks /getPendingBooks.response';
 import { BookEntity } from 'src/domaine/entities/Book.entity';
 import { TypeOrmException } from 'src/domaine/errors/onlineBook.error';
 import { ErrorsMessagesEnum } from 'src/enums/errors.enums';
@@ -11,8 +13,6 @@ import { QueryFailedError, Repository } from 'typeorm';
 import { handleDatabaseError } from '../common/errors/errorsSwitch';
 import { Book } from '../models/book.model';
 import { User } from '../models/user.model';
-import { BookResponse } from 'src/application/usecases/book/approuveBook/approuveBook.response';
-import { GetPendingBooksResponsePagination } from 'src/application/usecases/book/getPendingBooks /getPendingBooks.response';
 
 export class BookRepositoryTypeorm implements BookRepository {
   constructor(
@@ -39,6 +39,7 @@ export class BookRepositoryTypeorm implements BookRepository {
       book.releaseAt = addBookRequest.releaseAt;
       book.coverUrl = addBookRequest.coverUrl;
       book.userId = addBookRequest.userId;
+      book.approuve = addBookRequest.approuve;
 
       await this.repository.save(book);
     } catch (error: unknown) {
@@ -56,19 +57,19 @@ export class BookRepositoryTypeorm implements BookRepository {
     try {
       const currentPage = Math.max(0, page - 1);
       const take = limit > 0 ? limit : 10;
-      const skip = currentPage * take;
+      const skip = take * currentPage;
 
       const totalBooks = await this.repository.count();
 
-      const books = await this.repository.find({
-        where: { approuve: true },
-        skip,
-        take,
+      const [books, total] = await this.repository.findAndCount({
+        order: { id: 'DESC' },
+        skip: (page - 1) * limit,
+        take: limit,
       });
-
       if (!books) {
         throw new Error(ErrorsMessagesEnum.NOT_FOUND);
       }
+      console.log({ page, skip, take, total });
 
       return {
         books,
@@ -86,7 +87,10 @@ export class BookRepositoryTypeorm implements BookRepository {
     }
   }
 
-  async getPendingBooks(page: number, limit: number): Promise<GetPendingBooksResponsePagination> {
+  async getPendingBooks(
+    page: number,
+    limit: number,
+  ): Promise<GetPendingBooksResponsePagination> {
     try {
       const currentPage = Math.max(0, page - 1);
       const take = limit > 0 ? limit : 10;
@@ -135,7 +139,7 @@ export class BookRepositoryTypeorm implements BookRepository {
       });
 
       const books = await this.repository.find({
-        where: { userId, approuve: true  },
+        where: { userId, approuve: true },
         take,
         skip,
         relations: ['bookings'],
@@ -272,6 +276,4 @@ export class BookRepositoryTypeorm implements BookRepository {
       throw error;
     }
   }
-
-  
 }

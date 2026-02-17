@@ -33,8 +33,11 @@ export default function Login() {
 
   const handleLogin = async (data: LoginFormInput) => {
     try {
+      console.log(data);
+      
       setEmail(data.email);
       const submitLogin = await onSubmitLogin(data);
+      console.log("submitLogin:", submitLogin);
       if (submitLogin) {
         setOpenOtp(true); // Ouvrir la modal OTP
       }

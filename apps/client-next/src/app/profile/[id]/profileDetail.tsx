@@ -201,7 +201,7 @@ export default function ProfileDetail({
     "Couverture",
     "Actions",
   ];
-
+  
   const rows =
     books?.map((book) => ({
       cells: [

@@ -7,6 +7,7 @@ import { Book } from '../models/book.model';
 import { Booking } from '../models/booking.model';
 import { Contact } from '../models/contact.model';
 import { User } from '../models/user.model';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class FixtureService {
@@ -57,14 +58,15 @@ export class FixtureService {
 
   private async createUsers(): Promise<User[]> {
     const users: User[] = [];
+    const hashedPassword = await bcrypt.hash('Admin123!', 10);
     const usersData = [
       {
-        email: 'admin@example.com',
-        password: 'Admin123!',
-        name: 'Admin User',
+        email: 'cdjepeno@yahoo.com',
+        password: hashedPassword,
+        name: 'Admin Djepeno',
         phone: '+33 6 12 34 56 78',
         sexe: Sexe.HOMME,
-        role: 'admin', // 👈 rôle admin
+        admin: true // 👈 rôle admin
       },
     ];
 
@@ -78,7 +80,7 @@ export class FixtureService {
         }),
         phone: simpleFaker.string.uuid(),
         sexe: Math.random() > 0.5 ? Sexe.HOMME : Sexe.FEMME,
-        role: 'user',
+        admin: false,
       });
     }
 
@@ -102,13 +104,13 @@ export class FixtureService {
       booksData.push({
         title: faker.lorem.words(3),
         author: faker.person.fullName(),
-        description: faker.lorem.sentences(2),
+        approuve: true,
+        description: `Description livre n ${i}`,
         releaseAt: faker.date.between({
           from: '1995-01-01',
           to: new Date(),
         }),
-        coverUrl: `https://picsum.photos/seed/book${i}/200/300`,
-        userId: user.id,
+        coverUrl: `https://picsum.photos/seed/book${i}/600/800`,
         user,
       });
     }

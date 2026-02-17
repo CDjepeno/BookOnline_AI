@@ -108,10 +108,10 @@ export class UserRepositoryTypeorm implements UsersRepository {
       }
 
       const match = await bcrypt.compare(
-        password.trim().toLowerCase(),
+        password,
         user.password,
       );
-
+      
       if (!match) {
         throw new Error(ErrorsMessagesEnum.INVALID_PASSPORT);
       }
