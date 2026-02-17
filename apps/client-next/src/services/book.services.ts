@@ -9,7 +9,7 @@ export const getBooks = async (
   limit: number
 ): Promise<GetAllBookResponsePagination> => {
   return await UseRequestApi<GetAllBookResponsePagination, null>({
-    path: `${BOOKS_ROUTE}?page=${page}?limit=${limit}`,
+    path: `${BOOKS_ROUTE}?page=${page}&limit=${limit}`,
     method: MethodHttpEnum.GET,
     includeAuthorizationHeader: false,
   });
@@ -46,7 +46,6 @@ export const getBooksByUser = async (
     includeAuthorizationHeader: false,
   });
 };
-
 export const getPendingBooks = async (
   page: number,
   limit: number

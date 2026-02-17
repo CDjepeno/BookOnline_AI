@@ -8,13 +8,14 @@ import { BookQueriesKeysEnum } from "@/types/enum/enum";
 import SearchIcon from "@mui/icons-material/Search";
 import { Box, Container, Grid2, Pagination, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function BookList({
   initialBooks,
   totalPages,
-  initalPage
+  // initalPage,
 }: {
   initialBooks: GetBooksResponse[];
   totalPages: number;
@@ -22,8 +23,9 @@ export default function BookList({
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSearchTerm, setActiveSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(initalPage);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter();
+
   const {
     control,
     formState: { errors },
@@ -31,28 +33,30 @@ export default function BookList({
     defaultValues: { title: "" },
   });
 
-  const { data: book } = useQuery({
-    queryKey: [BookQueriesKeysEnum.Book, activeSearchTerm],
+  const { data: GetSearchBook } = useQuery({
+    queryKey: [BookQueriesKeysEnum.GetSearchBook, activeSearchTerm],
     queryFn: () => getBookByName(activeSearchTerm),
     enabled: !!activeSearchTerm,
   });
 
   const { data: booksPaginate } = useQuery({
-    queryKey: [BookQueriesKeysEnum.Book, currentPage],
+    queryKey: [BookQueriesKeysEnum.GetBooks, currentPage],
     queryFn: () => getBooks(currentPage, 6),
     enabled: !!currentPage,
+    placeholderData: (previousData) => previousData,
   });
 
   const handleSearchChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setSearchTerm(event.target.value);
   };
 
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
-    page: number
+    page: number,
   ) => {
+    router.push(`/?page=${page}`);
     setCurrentPage(page);
   };
 
@@ -61,15 +65,24 @@ export default function BookList({
     setCurrentPage(1);
   };
 
-  const displayedBooks = activeSearchTerm
-    ? book
-      ? [book] // Afficher le livre trouvé par la recherche
-      : []
-    : booksPaginate?.books?.length
-    ? booksPaginate.books // Si la pagination a des livres, on les affiche
-    : initialBooks?.filter((b: GetBooksResponse) =>
-        b.title.toLowerCase().includes(searchTerm.toLowerCase()) // Filtrer par terme de recherche dans les livres initiaux
-      ) || []; // Si pas de pagination, on affiche initialBooks filtré
+  const displayedBooks: GetBooksResponse[] = (() => {
+    // 🔎 Si une recherche est active
+    if (activeSearchTerm) {
+      if (GetSearchBook) {
+        return [GetSearchBook]; // on affiche le livre trouvé
+      }
+      return []; // recherche active mais rien trouvé
+    }
+
+    // 📄 Si pagination déjà chargée
+    if (booksPaginate?.books) {
+      return booksPaginate.books;
+    }
+
+    // 🟢 Fallback initial SSR
+    return initialBooks ?? [];
+  })();
+
 
   return (
     <main>

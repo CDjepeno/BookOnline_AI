@@ -10,7 +10,7 @@ services:
       - "8001:8000"
     volumes:
       - ./apps/nest:/app
-      - ia_nest_node_modules:/app/node_modules
+      # - ia_nest_node_modules:/app/node_modules
       - ./app/nest/src/infras/clients/kafka/certs:/app/src/infras/clients/kafka/certs
     env_file:
       - .env
@@ -50,6 +50,7 @@ services:
       - ia_next_node_modules:/app/node_modules
     environment:
       NODE_ENV: development
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     env_file:
       - .env
     command: npm run dev

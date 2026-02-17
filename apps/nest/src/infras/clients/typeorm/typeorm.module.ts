@@ -6,7 +6,6 @@ import { Booking } from 'src/infras/models/booking.model';
 import { Contact } from 'src/infras/models/contact.model';
 import { User } from 'src/infras/models/user.model';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,12 +21,16 @@ import { User } from 'src/infras/models/user.model';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         entities: [User, Book, Booking, Contact],
+        synchronize:
+        configService.get('NODE_ENV', 'development') === 'development',
+        logging: configService.get('NODE_ENV', 'development') === 'development',
+        charset: 'utf8mb4',
+        timezone: 'Z',
         // entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: true,
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User]),
   ],
 })
 export class ConfigTypeOrmModule {}

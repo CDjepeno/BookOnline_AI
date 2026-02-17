@@ -1,5 +1,7 @@
-"use client"
+"use client";
 
+import { BOOK_ROUTE } from "@/request/route-http/route-http";
+import { formatDate } from "@/utils/formatDate";
 import {
   Button,
   Card,
@@ -8,9 +10,9 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import Grid2 from "@mui/material/Grid2";
+
 import Link from "next/link";
-import { BOOK_ROUTE } from "@/request/route-http/route-http";
-import { formatDate } from "@/utils/formatDate";
 
 interface BookCardProps {
   id: number;
@@ -38,35 +40,37 @@ export default function BookCard({
       : description;
   };
   return (
-    <Card
-      sx={{
-        height: "350px",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <CardMedia
-        component="div"
+    <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+      <Card
         sx={{
-          pt: "56.25%",
+          height: "350px",
+          display: "flex",
+          flexDirection: "column",
         }}
-        image={coverUrl || "default_image_url_here"}
-      />
-      <CardContent sx={{ flexGrow: 1 }}>
-        <Typography gutterBottom variant="h5" component="h2">
-          {title}
-        </Typography>
-        <Typography>{author}</Typography>
-        <Typography>{truncateDescription(description, 100)}</Typography>
-        <Typography>Date de parution : {formatDate(releaseDate)}</Typography>
-      </CardContent>
-      <CardActions>
-        <Link href={`${BOOK_ROUTE}/${id}`}>
-          <Button color="primary" size="small">
-            VOIR PLUS
-          </Button>
-        </Link>
-      </CardActions>
-    </Card>
+      >
+        <CardMedia
+          component="div"
+          sx={{
+            pt: "56.25%",
+          }}
+          image={coverUrl || "default_image_url_here"}
+        />
+        <CardContent sx={{ flexGrow: 1 }}>
+          <Typography gutterBottom variant="h5" component="h2">
+            {title}
+          </Typography>
+          <Typography>{author}</Typography>
+          <Typography>{truncateDescription(description, 100)}</Typography>
+          <Typography>Date de parution : {formatDate(releaseDate)}</Typography>
+        </CardContent>
+        <CardActions>
+          <Link href={`${BOOK_ROUTE}/${id}`}>
+            <Button color="primary" size="small">
+              VOIR PLUS
+            </Button>
+          </Link>
+        </CardActions>
+      </Card>
+    </Grid2>
   );
 }
